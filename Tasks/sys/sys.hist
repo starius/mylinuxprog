@@ -1,0 +1,747 @@
+==============================================================================
+
+18.06.2011
+==========
+
+$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2011_WORK/Linux-kernel/examples/DRAFT-modules/sys-xxx modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2011_WORK/Linux-kernel/examples/DRAFT-modules/sys-xxx/xxx.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2011_WORK/Linux-kernel/examples/DRAFT-modules/sys-xxx/xxx.mod.o
+  LD [M]  /home/olej/2011_WORK/Linux-kernel/examples/DRAFT-modules/sys-xxx/xxx.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+$ sudo insmod ./xxx.ko
+
+$ ls -l /sys/class/x-class
+итого 0
+-rw-rw-rw- 1 root root 4096 Мар 30 21:54 xxx
+
+$ ls -lR /sys/class/x-class
+/sys/class/x-class:
+итого 0
+-rw-rw-rw- 1 root root 4096 Мар 30 21:54 xxx
+
+$ cat /sys/class/x-class/xxx 
+Hello from module!
+
+$ echo 12345 >  /sys/class/x-class/xxx
+
+$ cat /sys/class/x-class/xxx 
+12345
+$ cat /sys/class/x-class/xxx 
+12345
+$ cat /sys/class/x-class/xxx 
+12345
+
+$ ls /sys/module/xxx/
+holders  initstate  notes  refcnt  sections  srcversion
+
+$ sudo rmmod xxx
+
+$ cat /sys/class/x-class/xxx 
+cat: /sys/class/x-class/xxx: Нет такого файла или каталога
+
+==============================================================================
+
+27.01.2012
+==========
+
+[olej@notebook sys]$ sudo insmod xxx.ko
+
+[olej@notebook sys]$ lsmod | head -n2
+Module                  Size  Used by
+xxx                     1047  0 
+
+[olej@notebook sys]$ ls -lR /sys/class/x-class
+/sys/class/x-class:
+итого 0
+-rw-rw-rw- 1 root root 4096 Янв 27 23:34 xxx
+
+[olej@notebook sys]$ tree /sys/class/x-class
+/sys/class/x-class
+└── xxx
+
+0 directories, 1 file
+
+[olej@notebook sys]$ ls -l /sys/module/xxx/
+итого 0
+drwxr-xr-x 2 root root    0 Янв 27 23:57 holders
+-r--r--r-- 1 root root 4096 Янв 27 23:57 initstate
+drwxr-xr-x 2 root root    0 Янв 27 23:57 notes
+-r--r--r-- 1 root root 4096 Янв 27 23:57 refcnt
+drwxr-xr-x 2 root root    0 Янв 27 23:57 sections
+-r--r--r-- 1 root root 4096 Янв 27 23:57 srcversion
+
+[olej@notebook sys]$ dmesg | tail -n18 | grep -v ^audit
+'xxx' module initialized
+
+[olej@notebook sys]$ cat /sys/class/x-class/xxx
+Hello from module!
+
+[olej@notebook sys]$ dmesg | tail -n15 | grep -v ^audit
+read 19
+
+[olej@notebook sys]$ echo это новое содержимое > /sys/class/x-class/xxx
+
+[olej@notebook sys]$ cat /sys/class/x-class/xxx
+это новое содержимое
+
+[olej@notebook sys]$ dmesg | tail -n10 | grep -v ^audit
+write 39
+read 39
+
+[olej@notebook sys]$ sudo rmmod xxx
+
+------------------------------------------------------------------------------
+
+[olej@notebook sys]$ sudo insmod xxm.ko
+
+[olej@notebook sys]$ ls -lR /sys/class/x-class
+/sys/class/x-class:
+итого 0
+-rw-rw-rw- 1 root root 4096 Янв 28 04:45 data1
+-rw-rw-rw- 1 root root 4096 Янв 28 04:45 data2
+-rw-rw-rw- 1 root root 4096 Янв 28 04:45 data3
+
+[olej@notebook sys]$ tree /sys/class/x-class
+/sys/class/x-class
+├── data1
+├── data2
+└── data3
+
+0 directories, 3 files
+
+
+[olej@notebook sys]$ cat /sys/class/x-class/data1
+не инициализировано data1
+
+[olej@notebook sys]$ cat /sys/class/x-class/data2
+не инициализировано data2
+
+[olej@notebook sys]$ cat /sys/class/x-class/data3
+не инициализировано data3
+
+[olej@notebook sys]$ echo строка 1 > /sys/class/x-class/data1
+
+[olej@notebook sys]$ echo строка 2 > /sys/class/x-class/data2
+
+[olej@notebook sys]$ echo строка 3 > /sys/class/x-class/data3
+
+[olej@notebook sys]$ cat /sys/class/x-class/data1
+строка 1
+
+[olej@notebook sys]$ cat /sys/class/x-class/data2
+строка 2
+
+[olej@notebook sys]$ cat /sys/class/x-class/data3
+строка 3
+
+==============================================================================
+
+24.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxx.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.c:22:12: ошибка: expected declaration specifiers or «...» before string constant
+    printk( "write %d\n", count );                                               \
+            ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.c:47:1: замечание: in expansion of macro «IOFUNCS»
+ IOFUNCS( data1 );
+ ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.c:22:26: ошибка: unknown type name «count»
+    printk( "write %d\n", count );                                               \
+                          ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.c:47:1: замечание: in expansion of macro «IOFUNCS»
+ IOFUNCS( data1 );
+
+...
+cc1: some warnings being treated as errors
+make[2]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.o] Ошибка 1
+make[1]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make: *** [default] Ошибка 2
+
+------------------------------------------------------------------------------
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxx.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxx.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+
+bash-4.2$ ls -l *.ko
+-rw-rw-r-- 1 Olej Olej 129296 апр 24 14:05 xxm.ko
+-rw-rw-r-- 1 Olej Olej 124964 апр 24 14:05 xxx.ko
+
+------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod xxx.ko 
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n2
+[ 3807.698712] xxx: module verification failed: signature and/or  required key missing - tainting kernel
+[ 3807.698982] 'xxx' module initialized
+
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+xxx                    12546  0 
+fuse                   80271  3 
+
+
+bash-4.2$ tree /sys/class/x-class 
+/sys/class/x-class
+└── xxx
+
+0 directories, 1 file
+
+
+
+bash-4.2$ ls -l /sys/class/x-class/
+итого 0
+-rw-rw-rw- 1 root root 4096 апр 24 14:18 xxx
+
+
+bash-4.2$ cat /sys/class/x-class/xxx 
+Hello from module!
+
+bash-4.2$ echo 'новое значение переменной' > /sys/class/x-class/xxx
+
+bash-4.2$ cat /sys/class/x-class/xxx 
+новое значение переменной
+
+
+bash-4.2$ dmesg | tail -n5
+[ 3807.698712] xxx: module verification failed: signature and/or  required key missing - tainting kernel
+[ 3807.698982] 'xxx' module initialized
+[ 4071.062817] read 19
+[ 4106.449818] write 49
+[ 4109.075240] read 49
+
+------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod xxm.ko 
+[sudo] password for Olej: 
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+xxm                    12786  0 
+fuse                   80271  3 
+
+
+bash-4.2$ dmesg | tail -n2
+[ 1624.433612] xxm: module verification failed: signature and/or  required key missing - tainting kernel
+[ 1624.434962] 'yxxx' module initialized
+
+
+bash-4.2$ tree /sys/class/x-class 
+/sys/class/x-class
+├── data1
+├── data2
+└── data3
+
+0 directories, 3 files
+
+
+bash-4.2$ ls -l /sys/class/x-class 
+итого 0
+-rw-rw-rw- 1 root root 4096 апр 24 15:03 data1
+-rw-rw-rw- 1 root root 4096 апр 24 15:03 data2
+-rw-rw-rw- 1 root root 4096 апр 24 15:03 data3
+
+
+bash-4.2$ cat /sys/class/x-class/data1 
+не инициализировано data1
+
+bash-4.2$ cat /sys/class/x-class/data2
+не инициализировано data2
+
+bash-4.2$ cat /sys/class/x-class/data3
+не инициализировано data3
+
+bash-4.2$ echo 'новые данные для data1' > /sys/class/x-class/data1 
+
+bash-4.2$ cat /sys/class/x-class/data1 
+новые данные для data1
+
+bash-4.2$ echo 'новые данные для data2' > /sys/class/x-class/data2 
+
+bash-4.2$ cat /sys/class/x-class/data2
+новые данные для data2
+
+bash-4.2$ echo 'новые данные для data3' > /sys/class/x-class/data3 
+
+bash-4.2$ cat /sys/class/x-class/data3
+новые данные для data3
+
+bash-4.2$ dmesg | tail -n11
+[ 1624.433612] xxm: module verification failed: signature and/or  required key missing - tainting kernel
+[ 1624.434962] 'yxxx' module initialized
+[ 1810.244775] read 44
+[ 1837.315808] write 37
+[ 1840.405056] read 37
+[ 1845.508900] read 44
+[ 1849.973213] read 44
+[ 1899.644554] write 37
+[ 1903.533698] read 37
+[ 1912.228435] write 37
+[ 1916.477928] read 37
+
+
+bash-4.2$ sudo rmmod xxm 
+[sudo] password for Olej: 
+
+bash-4.2$ ls -l /sys/class/x-class 
+ls: невозможно получить доступ к /sys/class/x-class: Нет такого файла или каталога
+
+------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod xxm.ko 
+
+bash-4.2$ dmesg | tail -n2
+[ 1916.477928] read 37
+[ 2240.562881] 'yxxx' module initialized
+
+bash-4.2$ sudo rmmod xxm 
+
+==============================================================================
+
+29.04.2014
+==========
+
+[Olej@modules ~]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[Olej@modules ~]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxx.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxm.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxx.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys/xxx.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+------------------------------------------------------------------------------
+
+[Olej@modules sys]$ sudo insmod xxx.ko
+[sudo] password for Olej: 
+
+[Olej@modules sys]$ tree /sys/class/x-class
+/sys/class/x-class
+└── xxx
+
+0 directories, 1 file
+
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+Hello from module!
+
+[Olej@modules sys]$ echo 'новое значение переменной' > /sys/class/x-class/xxx
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+новое значение переменной
+
+------------------------------------------------------------------------------
+
+[Olej@modules sys]$ sudo insmod xxm.ko
+
+[Olej@modules sys]$ tree /sys/class/x-class
+/sys/class/x-class
+└── xxx
+
+0 directories, 1 file
+
+
+[Olej@modules sys]$ dmesg | tail -n35
+[28682.703505] IP: [<ffffffff81418e3b>] class_create_file_ns+0xb/0x30
+[28682.703527] PGD 20956b067 PUD 20d6f2067 PMD 0 
+[28682.703546] Oops: 0000 [#1] SMP 
+[28682.703561] Modules linked in: xxm(OF+) xxx(OF) fuse ip6t_rpfilter ip6t_REJECT xt_conntrack cfg80211 bnep ebtable_nat ebtable_broute bridge stp llc ebtable_filter ebtables ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw ip6table_filter ip6_tables iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack iptable_mangle iptable_security iptable_raw iTCO_wdt iTCO_vendor_support hp_wmi sparse_keymap ppdev x86_pkg_temp_thermal coretemp kvm_intel kvm crct10dif_pclmul crc32_pclmul crc32c_intel snd_hda_codec_hdmi snd_hda_codec_idt ghash_clmulni_intel microcode joydev snd_hda_intel snd_usb_audio snd_hda_codec snd_seq snd_usbmidi_lib snd_hwdep serio_raw snd_rawmidi snd_seq_device btusb bluetooth rfkill uvcvideo videobuf2_vmalloc videobuf2_memops
+[28682.703845]  videobuf2_core videodev sdhci_pci media sdhci snd_pcm wacom lpc_ich mmc_core mfd_core snd_page_alloc snd_timer snd mei_me soundcore mei shpchp wmi tpm_tis parport_pc tpm_infineon parport tpm hp_accel lis3lv02d input_polldev nfsd auth_rpcgss nfs_acl lockd sunrpc i915 e1000e i2c_algo_bit drm_kms_helper drm firewire_ohci firewire_core ptp crc_itu_t pps_core i2c_core video
+[28682.704021] CPU: 1 PID: 11748 Comm: insmod Tainted: GF       W  O 3.13.10-200.fc20.x86_64 #1
+[28682.704062] Hardware name: Hewlett-Packard HP ProBook 6470b/179C, BIOS 68ICE Ver. F.46 01/17/2014
+[28682.704104] task: ffff8800a123d640 ti: ffff8801c6086000 task.ti: ffff8801c6086000
+[28682.704137] RIP: 0010:[<ffffffff81418e3b>]  [<ffffffff81418e3b>] class_create_file_ns+0xb/0x30
+[28682.704172] RSP: 0018:ffff8801c6087d30  EFLAGS: 00010282
+[28682.704189] RAX: 0000000000000010 RBX: 0000000000000000 RCX: 0000000000000006
+[28682.704210] RDX: 0000000000000000 RSI: ffffffffa06ef040 RDI: ffffffffffffffef
+[28682.704231] RBP: ffff8801c6087d40 R08: 000000000000000a R09: 0000000000000419
+[28682.704252] R10: 0000000000000000 R11: ffff8801c6087a76 R12: ffffffffa0322000
+[28682.704273] R13: ffffffffa06ef2a0 R14: ffffffffa06ef2f0 R15: 0000000000000001
+[28682.704294] FS:  00007fcee4a69740(0000) GS:ffff88023fa40000(0000) knlGS:0000000000000000
+[28682.704328] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[28682.704358] CR2: 000000000000005f CR3: 0000000222386000 CR4: 00000000001407e0
+[28682.704395] Stack:
+[28682.704409]  ffff8801c6087d40 ffffffffa0322050 ffff8801c6087db8 ffffffff8100214a
+[28682.704455]  0000000000001000 ffffffffa06ef2a0 ffffffffa06ef2f0 0000000000000001
+[28682.704502]  ffff8801c6087d90 ffffffff810548d3 0000000000000000 ffffffffa0324000
+[28682.704550] Call Trace:
+[28682.704570]  [<ffffffffa0322050>] ? x_init+0x50/0x1000 [xxm]
+[28682.704606]  [<ffffffff8100214a>] do_one_initcall+0xfa/0x1b0
+[28682.704644]  [<ffffffff810548d3>] ? set_memory_nx+0x43/0x50
+[28682.704685]  [<ffffffff810e07ed>] load_module+0x1e1d/0x25b0
+[28682.704720]  [<ffffffff810dc500>] ? store_uevent+0x40/0x40
+[28682.704756]  [<ffffffff810e10f6>] SyS_finit_module+0x86/0xb0
+[28682.704793]  [<ffffffff81696e69>] system_call_fastpath+0x16/0x1b
+[28682.704830] Code: 0f 1f 44 00 00 48 8b 87 78 01 00 00 55 48 89 e5 48 8b 40 58 5d c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 85 ff 74 16 55 <48> 8b 7f 70 48 89 e5 48 83 c7 18 e8 65 6f e1 ff 5d c3 0f 1f 00 
+[28682.705054] RIP  [<ffffffff81418e3b>] class_create_file_ns+0xb/0x30
+[28682.705092]  RSP <ffff8801c6087d30>
+[28682.705109] CR2: 000000000000005f
+[28682.708118] ---[ end trace 536b4de15a980da6 ]---
+
+
+[Olej@modules sys]$ lsmod | head -n5
+Module                  Size  Used by
+xxm                    12930  1 
+xxx                    12626  0 
+fuse                   86889  3 
+ip6t_rpfilter          12546  1 
+
+------------------------------------------------------------------------------
+
+[Olej@modules sys]$ sudo insmod xxm.ko
+
+[Olej@modules sys]$ lsmod | head -n3
+Module                  Size  Used by
+xxm                    12930  0 
+ip6t_rpfilter          12546  1 
+
+[Olej@modules sys]$ tree /sys/class/x-class
+/sys/class/x-class
+├── data1
+├── data2
+└── data3
+
+0 directories, 3 files
+
+
+[Olej@modules sys]$ cat /sys/class/x-class/data*
+не инициализировано data1
+не инициализировано data2
+не инициализировано data3
+
+[Olej@modules sys]$ echo новое значение для data1 > /sys/class/x-class/data1
+
+[Olej@modules sys]$ cat /sys/class/x-class/data1
+новое значение для data1
+
+==============================================================================
+
+16.05.2014
+==========
+
+bash-4.2$ uname -r
+3.13.6-200.fc20.i686
+
+bash-4.2$ cd /lib/modules/`uname -r`
+
+bash-4.2$ pwd
+/lib/modules/3.13.6-200.fc20.i686/build/include/uapi/asm-generic
+
+bash-4.2$ ls *errno*
+errno-base.h  errno.h
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxx.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxe.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxe.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxe.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxm.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxx.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/sys/xxx.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+bash-4.2$ sudo insmod xxe.ko
+[sudo] password for Olej: 
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+xxe                    12546  0 
+fuse                   80271  3 
+
+
+bash-4.2$ pwd
+/sys/class/x-class
+
+bash-4.2$ cat xxx
+cat: xxx: Ошибка ввода/вывода
+
+bash-4.2$ echo 1 > xxx
+bash: echo: ошибка записи: Ошибка ввода/вывода
+
+==============================================================================
+
+08.02.2014
+==========
+
+[Olej@modules sys]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.o
+In file included from include/linux/thread_info.h:11:0,
+                 from ./arch/x86/include/asm/preempt.h:6,
+                 from include/linux/preempt.h:18,
+                 from include/linux/spinlock.h:50,
+                 from include/linux/seqlock.h:35,
+                 from include/linux/time.h:5,
+                 from include/linux/stat.h:18,
+                 from include/linux/module.h:10,
+                 from /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.c:1:
+include/linux/bug.h:33:45: ошибка: битовое поле «<anonymous>» имеет отрицательный размер
+ #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
+                                             ^
+include/linux/kernel.h:815:3: замечание: in expansion of macro «BUILD_BUG_ON_ZERO»
+   BUILD_BUG_ON_ZERO((perms) & 2) +    \
+   ^
+include/linux/sysfs.h:75:12: замечание: in expansion of macro «VERIFY_OCTAL_PERMISSIONS»
+    .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },  \
+            ^
+include/linux/device.h:427:46: замечание: in expansion of macro «__ATTR»
+  struct class_attribute class_attr_##_name = __ATTR(_name, _mode, _show, _store)
+                                              ^
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.c:54:1: замечание: in expansion of macro «CLASS_ATTR»
+ CLASS_ATTR( xxx, 0666, &x_show, &x_store);
+ ^
+make[2]: *** [/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.o] Ошибка 1
+make[1]: *** [_module_/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+make: *** [default] Ошибка 2
+
+------------------------------------------------------------------------------
+
+</linux/sysfs.h>
+
+3.14 :
+======
+
+ 68 /**
+ 69  * Use these macros to make defining attributes easier. See include/linux/device.h
+ 70  * for examples..
+ 71  */
+ 72 
+ 73 #define __ATTR(_name, _mode, _show, _store) {                           \
+ 74         .attr = {.name = __stringify(_name), .mode = _mode },           \
+ 75         .show   = _show,                                                \
+ 76         .store  = _store,                                               \
+ 77 }
+
+3.15 - 3.18 :
+=============
+
+ 68 /**
+ 69  * Use these macros to make defining attributes easier. See include/linux/device.h
+ 70  * for examples..
+ 71  */
+ 72 
+ 73 #define __ATTR(_name, _mode, _show, _store) {                           \
+ 74         .attr = {.name = __stringify(_name),                            \
+ 75                  .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },             \
+ 76         .show   = _show,                                                \
+ 77         .store  = _store,                                               \
+ 78 }
+ 79 
+ 80 #define __ATTR_RO(_name) {                                              \
+ 81         .attr   = { .name = __stringify(_name), .mode = S_IRUGO },      \
+ 82         .show   = _name##_show,                                         \
+ 83 }
+ 84 
+ 85 #define __ATTR_WO(_name) {                                              \
+ 86         .attr   = { .name = __stringify(_name), .mode = S_IWUSR },      \
+ 87         .store  = _name##_store,                                        \
+ 88 }
+ 89 
+ 90 #define __ATTR_RW(_name) __ATTR(_name, (S_IWUSR | S_IRUGO),             \
+ 91                          _name##_show, _name##_store)
+
+</linux/kernel.h>
+
+807 /* Permissions on a sysfs file: you didn't miss the 0 prefix did you? */
+808 #define VERIFY_OCTAL_PERMISSIONS(perms)                                 \
+809         (BUILD_BUG_ON_ZERO((perms) < 0) +                               \
+810          BUILD_BUG_ON_ZERO((perms) > 0777) +                            \
+811          /* User perms >= group perms >= other perms */                 \
+812          BUILD_BUG_ON_ZERO(((perms) >> 6) < (((perms) >> 3) & 7)) +     \
+813          BUILD_BUG_ON_ZERO((((perms) >> 3) & 7) < ((perms) & 7)) +      \
+814          /* Other writable?  Generally considered a bad idea. */        \
+815          BUILD_BUG_ON_ZERO((perms) & 2) +                               \
+816          (perms))
+817 #endif
+
+------------------------------------------------------------------------------
+
+</linux/device.h>
+
+426 #define CLASS_ATTR(_name, _mode, _show, _store) \
+427         struct class_attribute class_attr_##_name = __ATTR(_name, _mode, _show, _store)
+428 #define CLASS_ATTR_RW(_name) \
+429         struct class_attribute class_attr_##_name = __ATTR_RW(_name)
+430 #define CLASS_ATTR_RO(_name) \
+431         struct class_attribute class_attr_##_name = __ATTR_RO(_name)
+
+==============================================================================
+
+[Olej@modules sys]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+[Olej@modules sys]$ sudo insmod ./xxx.ko
+[sudo] password for Olej: 
+
+[Olej@modules sys]$ lsmod | head -n2
+Module                  Size  Used by
+xxx                    12626  0 
+
+[Olej@modules sys]$ ls -l /sys/class/x-class
+итого 0
+-rw-r--r--. 1 root root 4096 фев  9 20:33 xxx
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+Hello from module!
+
+[Olej@modules sys]$ echo 12345 >  /sys/class/x-class/xxx
+bash: /sys/class/x-class/xxx: Отказано в доступе
+
+[Olej@modules sys]$ sudo echo 12345 >  /sys/class/x-class/xxx
+bash: /sys/class/x-class/xxx: Отказано в доступе
+
+[Olej@modules sys]$ echo 12345 | sudo tee /sys/class/x-class/xxx
+[sudo] password for Olej: 
+12345
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+12345
+
+[Olej@modules sys]$ dmesg | tail -n9
+[   17.411575] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[   17.621612] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[   31.578020] Adjusting tsc more than 11% (7516194 vs 7178857)
+[ 3793.398782] perf interrupt took too long (2506 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[39631.990792] xxx: module verification failed: signature and/or  required key missing - tainting kernel
+[39631.990997] 'xxx' module initialized
+[39694.685078] read 19
+[39975.563266] write 6
+[39983.048538] read 6
+
+[Olej@modules sys]$ sudo rmmod xxx.ko
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+cat: /sys/class/x-class/xxx: Нет такого файла или каталога
+
+------------------------------------------------------------------------------
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxm.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxe.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxe.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxe.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxm.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxm.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/sys/xxx.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+
+[Olej@modules sys]$ sudo insmod xxm.ko 
+[sudo] password for Olej: 
+
+[Olej@modules sys]$ tree /sys/class/x-class
+/sys/class/x-class
+├── data1
+├── data2
+└── data3
+
+0 directories, 3 files
+
+[Olej@modules sys]$ cat /sys/class/x-class/data*
+не инициализировано data1
+не инициализировано data2
+не инициализировано data3
+
+[Olej@modules sys]$ echo строка 1 | sudo tee 1>/dev/null /sys/class/x-class/data1
+
+[Olej@modules sys]$ echo строка 2 | sudo tee 1>/dev/null /sys/class/x-class/data2
+
+[Olej@modules sys]$ echo строка 3 | sudo tee 1>/dev/null /sys/class/x-class/data3
+
+[Olej@modules sys]$ cat /sys/class/x-class/data*
+строка 1
+строка 2
+строка 3
+
+[Olej@modules sys]$ sudo rmmod xxm.ko 
+
+------------------------------------------------------------------------------
+
+[Olej@modules sys]$ sudo insmod xxe.ko
+
+[Olej@modules sys]$ lsmod | head -n3
+Module                  Size  Used by
+xxe                    12626  0 
+fuse                   91410  3 
+
+[Olej@modules sys]$ ls -l /sys/class/x-class/xxx
+-rw-r--r--. 1 root root 4096 фев  9 21:23 /sys/class/x-class/xxx
+
+[Olej@modules sys]$ cat /sys/class/x-class/xxx
+cat: /sys/class/x-class/xxx: Ошибка ввода/вывода
+
+[Olej@modules sys]$ echo 11111111 | sudo tee 1>/dev/null /sys/class/x-class/xxx
+tee: /sys/class/x-class/xxx: Ошибка ввода/вывода
+
+[Olej@modules sys]$ sudo rmmod xxe.ko
+
+==============================================================================

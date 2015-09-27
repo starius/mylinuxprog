@@ -1,0 +1,63 @@
+28.07.2012
+==========
+
+[olej@notebook mobj]$ nm mobj.ko | grep T
+00000000 T cleanup_module
+00000000 T init_module
+00000000 T mod_func_1
+00000010 T mod_func_2
+00000020 T mod_func_3
+
+[olej@notebook mobj]$ cat Module.symvers
+0x00000000	mod_func_3	/home/olej/2011_WORK/LINUX-books/examples.DRAFT/mobj/mobj	EXPORT_SYMBOL
+0x00000000	mod_func_2	/home/olej/2011_WORK/LINUX-books/examples.DRAFT/mobj/mobj	EXPORT_SYMBOL
+0x00000000	mod_func_1	/home/olej/2011_WORK/LINUX-books/examples.DRAFT/mobj/mobj	EXPORT_SYMBOL
+
+[olej@notebook mobj]$ sudo insmod mcall.ko
+insmod: error inserting 'mcall.ko': -1 Unknown symbol in module
+
+[olej@notebook mobj]$ sudo insmod mobj.ko
+
+[olej@notebook mobj]$ cat /proc/kallsyms | grep mod_func_
+f9bd8084 r __ksymtab_mod_func_1	[mobj]
+f9bd809c r __kstrtab_mod_func_1	[mobj]
+f9bd808c r __ksymtab_mod_func_2	[mobj]
+f9bd80a7 r __kstrtab_mod_func_2	[mobj]
+f9bd8094 r __ksymtab_mod_func_3	[mobj]
+f9bd80b2 r __kstrtab_mod_func_3	[mobj]
+f9bd8000 T mod_func_1	[mobj]
+f9bd8010 T mod_func_2	[mobj]
+f9bd8020 T mod_func_3	[mobj]
+
+[olej@notebook mobj]$ sudo insmod mcall.ko
+insmod: error inserting 'mcall.ko': -1 Operation not permitted
+
+[olej@notebook mobj]$ dmesg | tail -n40 | grep mod_
+call: mod_func_1[f9bd8000]
+call: mod_func_2[f9bd8010]
+call: mod_func_3[f9bd8020]
+
+======================================================================================================================
+
+09.04.2014[MB^'
+==========
+
+[Olej@modules mobj]$ make
+make -C /lib/modules/3.13.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mod.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mfA.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mfB.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mfC.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mobj.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mcall.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mcall.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mcall.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mobj.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/mobj/mobj.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+
+
+======================================================================================================================

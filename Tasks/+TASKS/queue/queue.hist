@@ -1,0 +1,631 @@
+01.02.2015
+==========
+
+[Olej@modules queue]$ sudo insmod queues.ko
+[sudo] password for Olej: 
+
+[Olej@modules queue]$ lsmod | head -n3
+Module                  Size  Used by
+queues                 12704  0 
+fuse                   91410  2 
+
+[Olej@modules queue]$ ls -l /dev/q*
+crw-------. 1 root root 10, 57 фев  2 00:48 /dev/queue
+
+[Olej@modules queue]$ sudo echo 12345 > /dev/queue 
+bash: /dev/queue: Отказано в доступе
+
+[root@modules ~]# sudo echo 12345 > /dev/queue
+
+[root@modules ~]# cat /dev/queue 
+12345
+
+---------------------------------------------------------------------------------------
+
+[Olej@modules queue]$ sudo insmod queues.ko debug=1
+
+[Olej@modules queue]$ cat /dev/queue 
+
+[Olej@modules queue]$ echo 098765 > /dev/queue 
+
+[Olej@modules queue]$ cat /dev/queue 
+098765
+
+[Olej@modules queue]$ sudo rmmod queues
+
+[Olej@modules queue]$ dmesg | tail -n5
+[37078.080142] === read 65536 -> 0
+[37086.629115] === write 7 -> 7
+[37087.974550] === read 65536 -> 7
+[37087.974566] === read 65536 -> 0
+[37093.096613] === deregister device 10:57
+
+---------------------------------------------------------------------------------------
+
+[Olej@modules queue]$ sudo insmod queues.ko debug=0
+
+[Olej@modules queue]$ echo 098765 > /dev/queue 
+
+[Olej@modules queue]$ cat /dev/queue 
+098765
+
+[Olej@modules queue]$ echo 098765 > /dev/queue 
+
+[Olej@modules queue]$ cat /dev/queue 
+098765
+
+[Olej@modules queue]$ sudo rmmod queues
+
+[Olej@modules queue]$ dmesg | tail -n2
+[37343.260887] === register device 10:57
+[37378.242907] === deregister device 10:57
+
+=======================================================================================
+
+03.02.2015
+==========
+
+[Olej@modules queue]$ ls -l /dev | grep 10,
+crw-------. 1 root root     10, 235 фев  3 13:36 autofs
+crw-------. 1 root root     10, 234 фев  3 13:36 btrfs-control
+crw-------. 1 root root     10,  62 фев  3 13:36 cpu_dma_latency
+crw-------. 1 root root     10, 203 фев  3 13:36 cuse
+crw-------. 1 root root     10,  59 фев  3 13:36 freefall
+crw-rw-rw-. 1 root root     10, 229 фев  3 13:40 fuse
+crw-------. 1 root root     10, 228 фев  3 13:36 hpet
+crw-rw-rw-+ 1 root kvm      10, 232 фев  3 13:36 kvm
+crw-------. 1 root root     10, 237 фев  3 13:36 loop-control
+crw-------. 1 root root     10, 227 фев  3 13:36 mcelog
+crw-------. 1 root root     10,  61 фев  3 13:36 network_latency
+crw-------. 1 root root     10,  60 фев  3 13:36 network_throughput
+crw-------. 1 root root     10, 144 фев  3 13:36 nvram
+crw-rw-r--+ 1 root root     10,  58 фев  3 13:36 rfkill
+crw-------. 1 root root     10, 231 фев  3 13:36 snapshot
+crw-------. 1 root root     10, 224 фев  3 13:36 tpm0
+crw-------. 1 root root     10, 239 фев  3 13:36 uhid
+crw-------. 1 root root     10, 223 фев  3 13:36 uinput
+crw-------. 1 root root     10,  63 фев  3 13:36 vga_arbiter
+crw-------. 1 root root     10, 137 фев  3 13:36 vhci
+crw-------. 1 root root     10, 238 фев  3 13:36 vhost-net
+crw-------. 1 root root     10, 130 фев  3 13:36 watchdog
+
+[Olej@modules queue]$ sudo insmod queues.ko minor=130
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module queues.ko: Device or resource busy
+
+[Olej@modules queue]$ dmesg | tail -n5
+[ 3262.284742] perf interrupt took too long (2514 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[22033.056190] jifft: module verification failed: signature and/or  required key missing - tainting kernel
+[26231.726706] queues: module license 'GPL2' taints kernel.
+[26231.726710] Disabling lock debugging due to kernel taint
+[26231.727152] === unable to register misc device
+
+=======================================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ sudo insmod queuel.ko
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n4
+[   41.273041] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[ 2063.976303] queuel: module verification failed: signature and/or  required key missing - tainting kernel
+[ 2063.977046] ========================
+[ 2063.979246] === register device 10:58
+
+bash-4.2$ ls -l /dev | grep 10,
+crw-rw----  1 root video    10, 175 фев  4 02:12 agpgart
+crw-------  1 root root     10, 235 фев  4 02:12 autofs
+crw-------  1 root root     10, 234 фев  4 02:12 btrfs-control
+crw-------  1 root root     10,  62 фев  4 02:12 cpu_dma_latency
+crw-------  1 root root     10, 203 фев  4 02:12 cuse
+crw-rw-rw-  1 root root     10, 229 фев  4 02:12 fuse
+crw-------  1 root root     10, 228 фев  4 02:12 hpet
+crw-rw-rw-+ 1 root kvm      10, 232 фев  4 02:12 kvm
+crw-rw----  1 root disk     10, 237 фев  4 02:12 loop-control
+crw-------  1 root root     10, 227 фев  4 02:12 mcelog
+crw-------  1 root root     10,  61 фев  4 02:12 network_latency
+crw-------  1 root root     10,  60 фев  4 02:12 network_throughput
+crw-------  1 root root     10, 144 фев  4 02:12 nvram
+crw-rw-rw-  1 root root     10,  58 фев  4 02:46 queue
+crw-rw-r--+ 1 root root     10,  59 фев  4 02:12 rfkill
+crw-------  1 root root     10, 231 фев  4 02:12 snapshot
+crw-------  1 root root     10, 239 фев  4 02:12 uhid
+crw-------  1 root root     10, 223 фев  4 02:12 uinput
+crw-------  1 root root     10,  63 фев  4 02:12 vga_arbiter
+crw-------  1 root root     10, 137 фев  4 02:12 vhci
+crw-------  1 root root     10, 238 фев  4 02:12 vhost-net
+crw-------  1 root root     10, 130 фев  4 02:12 watchdog
+
+bash-4.2$ ls -l /dev | grep 10, | grep qu
+crw-rw-rw-  1 root root     10,  58 фев  4 02:46 queue
+
+bash-4.2$ sudo rmmod queuel.ko
+
+---------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod queuel.ko debug=1
+
+bash-4.2$ dmesg | tail -n5
+[ 2063.977046] ========================
+[ 2063.979246] === register device 10:58
+[ 2264.314807] === deregister device 10:58
+[ 2302.516193] ========================
+[ 2302.516857] === register device 10:58
+
+bash-4.2$ cat /dev/queue 
+
+bash-4.2$ dmesg | tail -n5
+[ 2063.979246] === register device 10:58
+[ 2264.314807] === deregister device 10:58
+[ 2302.516193] ========================
+[ 2302.516857] === register device 10:58
+[ 2313.459251] === read 65536 -> 0
+
+bash-4.2$ echo 1234 > /dev/queue 
+
+bash-4.2$ dmesg | tail -n5
+[ 2302.516193] ========================
+[ 2302.516857] === register device 10:58
+[ 2313.459251] === read 65536 -> 0
+[ 2323.729896] === allocate new block f7dfc000
+[ 2323.729906] === write 5 -> 5
+
+
+bash-4.2$ cat /dev/queue 
+1234
+
+bash-4.2$ dmesg | tail -n5
+[ 2313.459251] === read 65536 -> 0
+[ 2323.729896] === allocate new block f7dfc000
+[ 2323.729906] === write 5 -> 5
+[ 2370.524367] === read 65536 -> 5
+[ 2370.524384] === read 65536 -> 0
+
+bash-4.2$ echo 1234567890abcdefgh > /dev/queue 
+
+bash-4.2$ dmesg | tail -n5
+[ 2426.804113] === write 17 -> 7
+[ 2426.804120] === allocate new block f7f7d000
+[ 2426.804124] === write 10 -> 7
+[ 2426.804130] === allocate new block f7fac000
+[ 2426.804134] === write 3 -> 3
+
+bash-4.2$ cat /dev/queue 
+1234567890abcdefgh
+
+bash-4.2$ dmesg | tail -n9
+[ 2426.804134] === write 3 -> 3
+[ 2503.039109] === read 65536 -> 2
+[ 2503.039119] === erase head block f7dfc000
+[ 2503.039127] === read 65534 -> 7
+[ 2503.039131] === erase head block f7dfe000
+[ 2503.039136] === read 65527 -> 7
+[ 2503.039139] === erase head block f7f7d000
+[ 2503.039145] === read 65520 -> 3
+[ 2503.039157] === read 65536 -> 0
+
+bash-4.2$ cp queuel.c /dev/queue 
+
+bash-4.2$ dmesg | tail -n10
+[ 2734.620502] === allocate new block fa233000
+[ 2734.620505] === write 34 -> 7
+[ 2734.620507] === allocate new block fa235000
+[ 2734.620510] === write 27 -> 7
+[ 2734.620512] === allocate new block fa237000
+[ 2734.620515] === write 20 -> 7
+[ 2734.620518] === allocate new block fa239000
+[ 2734.620520] === write 13 -> 7
+[ 2734.620523] === allocate new block fa23b000
+[ 2734.620525] === write 6 -> 6
+
+bash-4.2$ cat /dev/queue > queuel.cp.c
+
+bash-4.2$ dmesg | tail -n10
+[ 2791.308845] === read 60723 -> 7
+[ 2791.308849] === erase head block fa233000
+[ 2791.308854] === read 60716 -> 7
+[ 2791.308857] === erase head block fa235000
+[ 2791.308863] === read 60709 -> 7
+[ 2791.308866] === erase head block fa237000
+[ 2791.308871] === read 60702 -> 7
+[ 2791.308878] === erase head block fa239000
+[ 2791.308883] === read 60695 -> 6
+[ 2791.308954] === read 65536 -> 0
+
+bash-4.2$ ls -l queuel*.c 
+-rw-r--r-- 1 Olej Olej 4847 фев  4 02:46 queuel.c
+-rw-rw-r-- 1 Olej Olej 4847 фев  4 02:59 queuel.cp.c
+
+bash-4.2$ diff queuel.c queuel.cp.c 
+
+bash-4.2$ echo $?
+0
+
+bash-4.2$ sudo rmmod queuel
+[sudo] password for Olej: 
+
+bash-4.2$ ls -l /dev/qu*
+ls: невозможно получить доступ к /dev/qu*: Нет такого файла или каталога
+
+=======================================================================================
+
+
+bash-4.2$ sudo insmod queuel.ko debug=1
+
+bash-4.2$ dmesg | tail -n1
+[ 4130.200974] === register device 10:58
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+queuel                 12755  0 
+ip6table_filter        12711  0 
+
+bash-4.2$ ls -l /dev/queue 
+crw-rw-rw- 1 root root 10, 58 фев  4 03:21 /dev/queue
+
+bash-4.2$ cp test.dat /dev/queue 
+
+bash-4.2$ dmesg | tail -n9
+[ 4130.200974] === register device 10:58
+[ 4170.962885] === allocate new block f7dfc000
+[ 4170.962895] === write 26 -> 7
+[ 4170.962901] === allocate new block f7dfe000
+[ 4170.962905] === write 19 -> 7
+[ 4170.962911] === allocate new block f7f7d000
+[ 4170.962915] === write 12 -> 7
+[ 4170.962921] === allocate new block f7fac000
+[ 4170.962924] === write 5 -> 5
+
+bash-4.2$ diff test.dat /dev/queue 
+
+bash-4.2$ echo $?
+0
+
+bash-4.2$ dmesg | tail -n17
+[ 4130.200974] === register device 10:58
+[ 4170.962885] === allocate new block f7dfc000
+[ 4170.962895] === write 26 -> 7
+[ 4170.962901] === allocate new block f7dfe000
+[ 4170.962905] === write 19 -> 7
+[ 4170.962911] === allocate new block f7f7d000
+[ 4170.962915] === write 12 -> 7
+[ 4170.962921] === allocate new block f7fac000
+[ 4170.962924] === write 5 -> 5
+[ 4227.187620] === read 4096 -> 7
+[ 4227.187631] === erase head block f7dfc000
+[ 4227.187640] === read 4089 -> 7
+[ 4227.187643] === erase head block f7dfe000
+[ 4227.187649] === read 4082 -> 7
+[ 4227.187652] === erase head block f7f7d000
+[ 4227.187658] === read 4075 -> 5
+[ 4227.187662] === read 4070 -> 0
+
+bash-4.2$ sudo rmmod queuel.ko 
+
+=======================================================================================
+
+bash-4.2$ sudo insmod queuel.ko debug=1
+
+bash-4.2$ cp test.dat /dev/queue 
+
+bash-4.2$ cat /dev/queue 
+1234567890
+abcdefghijklmn
+
+bash-4.2$ cat /dev/queue 
+
+bash-4.2$ sudo rmmod queuel.ko 
+
+bash-4.2$ dmesg | tail -n20
+[ 4431.167645] === register device 10:58
+[ 4443.680530] === allocate new block f7dfc000
+[ 4443.680536] === write 26 -> 7
+[ 4443.680540] === allocate new block f7dfe000
+[ 4443.680542] === write 19 -> 7
+[ 4443.680546] === allocate new block f7f7d000
+[ 4443.680548] === write 12 -> 7
+[ 4443.680552] === allocate new block f7fac000
+[ 4443.680554] === write 5 -> 5
+[ 4468.752545] === read 65536 -> 7
+[ 4468.752555] === erase head block f7dfc000
+[ 4468.752563] === read 65529 -> 7
+[ 4468.752567] === erase head block f7dfe000
+[ 4468.752572] === read 65522 -> 7
+[ 4468.752575] === erase head block f7f7d000
+[ 4468.752581] === read 65515 -> 5
+[ 4468.752631] === read 65536 -> 0
+[ 4482.432566] === read 65536 -> 0
+[ 4492.640370] === erase head block f7fac000
+[ 4492.640381] === deregister device 10:58
+
+=======================================================================================
+
+bash-4.2$ sudo insmod queuel.ko debug=1
+
+bash-4.2$ cp test.dat /dev/queue 
+
+bash-4.2$ sudo rmmod queuel.ko 
+
+bash-4.2$ dmesg | tail -n14
+[ 4623.660123] === register device 10:58
+[ 4628.500349] === allocate new block f7dfc000
+[ 4628.500359] === write 26 -> 7
+[ 4628.500364] === allocate new block f7dfe000
+[ 4628.500368] === write 19 -> 7
+[ 4628.500374] === allocate new block f7f7d000
+[ 4628.500378] === write 12 -> 7
+[ 4628.500384] === allocate new block f7fac000
+[ 4628.500387] === write 5 -> 5
+[ 4635.619547] === erase head block f7dfc000
+[ 4635.619557] === erase head block f7dfe000
+[ 4635.619560] === erase head block f7f7d000
+[ 4635.619564] === erase head block f7fac000
+[ 4635.619568] === deregister device 10:58
+
+=======================================================================================
+
+[Olej@modules queue]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+[Olej@modules queue]$ sudo insmod queuel.ko 
+[sudo] password for Olej: 
+
+[Olej@modules queue]$ cp queuel.ko /dev/queue 
+
+[Olej@modules queue]$ cp /dev/queue queuel.2.ko 
+
+[Olej@modules queue]$ ls -l queuel*.ko
+-rw-rw-r--. 1 Olej Olej  65536 фев  4 03:33 queuel.2.ko
+-rw-rw-r--. 1 Olej Olej 188126 фев  4 03:32 queuel.ko
+
+[Olej@modules queue]$ sudo rmmod queuel.ko 
+
+!!!!??
+
+=======================================================================================
+
+04.02.2015
+==========
+
+[Olej@modules queue]$ sudo insmod queuel.ko
+[sudo] password for Olej: 
+
+[Olej@modules queue]$ lsmod | head -n3
+Module                  Size  Used by
+queuel                 12899  0 
+fuse                   91410  3 
+
+[Olej@modules queue]$ ls -l /dev/queue 
+crw-rw-rw-. 1 root root 10, 57 фев  4 13:08 /dev/queue
+
+[Olej@modules queue]$ cp testM.dat /dev/queue 
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ cp /dev/queue testM.res
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ ls -l testM.*
+-rw-rw-r--. 1 Olej Olej 56576 фев  4 12:48 testM.dat
+-rw-rw-r--. 1 Olej Olej 56576 фев  4 13:10 testM.res
+
+[Olej@modules queue]$ diff testM.dat testM.res 
+
+[Olej@modules queue]$ echo $?
+0
+
+
+[Olej@modules queue]$ cp testX.dat /dev/queue 
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ cp /dev/queue testX.res
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ ls -l testX.*
+-rw-rw-r--. 1 Olej Olej 66079 фев  4 13:06 testX.dat
+-rw-rw-r--. 1 Olej Olej 65536 фев  4 13:11 testX.res
+
+[Olej@modules queue]$ diff testX.dat testX.res 
+6227,6279c6227
+< 1234567890
+< 2345678901
+< 3456789012
+< 4567890123
+< 5678901234
+< 6789012345
+< 7890123456
+< 8901234567
+< 9012345678
+< 0123456789
+< 
+< 1234567890
+< 2345678901
+< 3456789012
+< 4567890123
+< 5678901234
+< 6789012345
+< 7890123456
+< 8901234567
+< 9012345678
+< 0123456789
+< 1234567890
+< 2345678901
+< 3456789012
+< 4567890123
+< 5678901234
+< 6789012345
+< 7890123456
+< 8901234567
+< 9012345678
+< 0123456789
+< 
+< 1234567890
+< 2345678901
+< 3456789012
+< 4567890123
+< 5678901234
+< 6789012345
+< 7890123456
+< 8901234567
+< 9012345678
+< 0123456789
+< 1234567890
+< 2345678901
+< 3456789012
+< 4567890123
+< 5678901234
+< 6789012345
+< 7890123456
+< 8901234567
+< 9012345678
+< 0123456789
+< 
+---
+> 1234567890
+\ В конце файла нет новой строки
+
+[Olej@modules queue]$ sudo rmmod queuel.ko
+[sudo] password for Olej: 
+
+[Olej@modules queue]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   91410  3 
+ip6t_rpfilter          12546  1 
+
+
+=======================================================================================
+
+[Olej@modules queue]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queuel.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/queue/queues.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+[Olej@modules queue]$ sudo insmod queuel.ko debug=1
+
+[Olej@modules queue]$ dmesg | tail -n2
+[ 6192.478207] === register device 10:57
+[ 6192.478210] === block size = 20480
+
+[Olej@modules queue]$ cp testX.dat /dev/queue 
+
+[Olej@modules queue]$ dmesg | tail -n13
+[ 6009.925034] === erase head block ffffc900237e5000
+[ 6009.925042] === deregister device 10:57
+[ 6192.478207] === register device 10:57
+[ 6192.478210] === block size = 20480
+[ 6218.438715] === allocate new block ffffc90023807000
+[ 6218.438719] === write 65536 -> 20480
+[ 6218.438726] === allocate new block ffffc9002380e000
+[ 6218.438728] === write 45056 -> 20480
+[ 6218.438730] === allocate new block ffffc90023815000
+[ 6218.438733] === write 24576 -> 20480
+[ 6218.438736] === allocate new block ffffc9002381c000
+[ 6218.438737] === write 4096 -> 4096
+[ 6218.438740] === write 543 -> 543
+
+[Olej@modules queue]$ cp /dev/queue testX.res
+
+[Olej@modules queue]$ dmesg | tail -n23
+[ 5827.809963] === read 65536 -> 0
+[ 6009.925034] === erase head block ffffc900237e5000
+[ 6009.925042] === deregister device 10:57
+[ 6192.478207] === register device 10:57
+[ 6192.478210] === block size = 20480
+[ 6218.438715] === allocate new block ffffc90023807000
+[ 6218.438719] === write 65536 -> 20480
+[ 6218.438726] === allocate new block ffffc9002380e000
+[ 6218.438728] === write 45056 -> 20480
+[ 6218.438730] === allocate new block ffffc90023815000
+[ 6218.438733] === write 24576 -> 20480
+[ 6218.438736] === allocate new block ffffc9002381c000
+[ 6218.438737] === write 4096 -> 4096
+[ 6218.438740] === write 543 -> 543
+[ 6261.434402] === read 65536 -> 20480
+[ 6261.434406] === erase head block ffffc90023807000
+[ 6261.434418] === read 45056 -> 20480
+[ 6261.434419] === erase head block ffffc9002380e000
+[ 6261.434429] === read 24576 -> 20480
+[ 6261.434429] === erase head block ffffc90023815000
+[ 6261.434433] === read 4096 -> 4096
+[ 6261.434479] === read 65536 -> 543
+[ 6261.434483] === read 65536 -> 0
+
+[Olej@modules queue]$ ls -l testX.*
+-rw-rw-r--. 1 Olej Olej 66079 фев  4 13:06 testX.dat
+-rw-rw-r--. 1 Olej Olej 66079 фев  4 13:38 testX.res
+
+[Olej@modules queue]$ diff testX.dat testX.res 
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ cp queuel.ko /dev/queue 
+
+[Olej@modules queue]$ cp /dev/queue queuel2.ko
+
+[Olej@modules queue]$ ls -l queuel*.ko
+-rw-rw-r--. 1 Olej Olej 189166 фев  4 13:40 queuel2.ko
+-rw-rw-r--. 1 Olej Olej 189166 фев  4 13:37 queuel.ko
+
+[Olej@modules queue]$ diff queuel.ko queuel2.ko
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ sudo rmmod queuel.ko
+
+---------------------------------------------------------------------------------------
+
+[Olej@modules queue]$ sudo insmod queuel.ko debug=1
+[sudo] password for Olej: 
+
+[Olej@modules queue]$ dmesg | tail -n2
+[ 7455.007045] === register device 10:57
+[ 7455.007048] === block size = 7
+
+[Olej@modules queue]$ cp queuel.ko /dev/queue 
+
+[Olej@modules queue]$ cp /dev/queue queuel2.ko
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ ls -l queuel*.ko
+-rw-rw-r--. 1 Olej Olej 189118 фев  4 13:59 queuel2.ko
+-rw-rw-r--. 1 Olej Olej 189118 фев  4 13:58 queuel.ko
+
+[Olej@modules queue]$ diff queuel.ko queuel2.ko
+
+[Olej@modules queue]$ echo $?
+0
+
+[Olej@modules queue]$ sudo rmmod queuel.ko
+
+=======================================================================================

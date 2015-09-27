@@ -1,0 +1,561 @@
+===================================================================================
+
+29.01.2012
+==========
+
+[olej@notebook net]$ sudo insmod network.ko 
+
+[olej@notebook net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN qlen 1000
+    link/ether 00:15:60:c4:ee:02 brd ff:ff:ff:ff:ff:ff
+3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:13:02:69:70:9b brd ff:ff:ff:ff:ff:ff
+4: vboxnet0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 0a:00:27:00:00:00 brd ff:ff:ff:ff:ff:ff
+5: cipsec0: <NOARP> mtu 1356 qdisc noop state DOWN qlen 1000
+    link/ether 00:0b:fc:f8:01:8f brd ff:ff:ff:ff:ff:ff
+10: mynet0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+[olej@notebook net]$ ifconfig mynet0
+mynet0    Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[olej@notebook net]$ sudo ifconfig mynet0 up 192.168.1.4
+
+[olej@notebook net]$ ifconfig mynet0
+mynet0    Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.4  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[olej@notebook net]$ ping 192.168.1.4
+PING 192.168.1.4 (192.168.1.4) 56(84) bytes of data.
+64 bytes from 192.168.1.4: icmp_seq=1 ttl=64 time=0.076 ms
+64 bytes from 192.168.1.4: icmp_seq=2 ttl=64 time=0.069 ms
+64 bytes from 192.168.1.4: icmp_seq=3 ttl=64 time=0.069 ms
+^C
+--- 192.168.1.4 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2682ms
+rtt min/avg/max/mdev = 0.069/0.071/0.076/0.007 ms
+
+
+
+
+[olej@notebook net]$ sudo rmmod network
+
+
+[olej@notebook net]$ dmesg | tail -n250 | grep -v ^audit
+Loading stub network module:....
+my_setup()
+Succeeded in loading mynet0!
+
+Hit: my_open(mynet0)
+mynet0: no IPv6 routers present
+Unloading stub network module
+
+Hit: my_close(mynet0)
+
+
+-----------------------------------------------------------------------------------
+
+===================================================================================
+
+[olej@notebook net]$ sudo insmod network.ko 
+
+[olej@notebook net]$ sudo insmod devices.ko 
+insmod: error inserting 'devices.ko': -1 Operation not permitted
+
+[olej@notebook net]$ dmesg | tail -n30 | grep -v ^audit
+Hello: module loaded at 0xf99c3000
+Hello: dev_base address=0xf714fc00
+name =     lo irq=   0 trans_start=           0 last_rx=           0
+name =   eth0 irq=  16 trans_start=           0 last_rx=           0
+name =  wlan0 irq=   0 trans_start=    48159421 last_rx=           0
+name = vboxnet0 irq=   0 trans_start=           0 last_rx=           0
+name = cipsec0 irq=   0 trans_start=           0 last_rx=           0
+
+
+===================================================================================
+
+09.04.2012
+==========
+
+[olej@fedora16vm net]$ sudo insmod ./network.ko
+
+[olej@fedora16vm net]$ dmesg | tail -n4
+[ 7355.005588] Loading stub network module:....
+[ 7355.005597] my_setup()
+[ 7355.006703] Succeeded in loading fict0!
+[ 7355.006704] 
+
+[olej@fedora16vm net]$ ip link show dev fict0
+5: fict0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+[olej@fedora16vm net]$ sudo ifconfig fict0 192.168.56.50
+
+[olej@fedora16vm net]$ dmesg | tail -n6
+[ 7355.005588] Loading stub network module:....
+[ 7355.005597] my_setup()
+[ 7355.006703] Succeeded in loading fict0!
+[ 7355.006704] 
+[ 7562.604588] Hit: my_open(fict0)
+[ 7573.442094] fict0: no IPv6 routers present
+
+
+[olej@fedora16vm net]$ ping 192.168.56.50
+PING 192.168.56.50 (192.168.56.50) 56(84) bytes of data.
+64 bytes from 192.168.56.50: icmp_req=1 ttl=64 time=0.253 ms
+64 bytes from 192.168.56.50: icmp_req=2 ttl=64 time=0.056 ms
+64 bytes from 192.168.56.50: icmp_req=3 ttl=64 time=0.057 ms
+64 bytes from 192.168.56.50: icmp_req=4 ttl=64 time=0.056 ms
+^C
+--- 192.168.56.50 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3000ms
+rtt min/avg/max/mdev = 0.056/0.105/0.253/0.085 ms
+
+[olej@fedora16vm net]$ ifconfig fict0
+fict0     Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.56.50  Bcast:192.168.56.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+===================================================================================
+
+19.01.2014
+==========
+
+[Olej@modules net]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules net]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/devices.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/network.o
+/home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/network.c: В функции «my_init»:
+/home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/network.c:54:46: ошибка: для макроса «alloc_netdev» требуется 4 аргументов, но указано только 3
+    dev = alloc_netdev( 0, "fict%d", my_setup );
+...                                              ^
+
+
+-----------------------------------------------------------------------------------
+
+http://lxr.missinglinkelectronics.com/linux/include/linux/netdevice.h#L2992 
+- ядро 3.16:
+
+2992        #define alloc_netdev(sizeof_priv, name, setup) \
+2993        alloc_netdev_mqs(sizeof_priv, name, setup, 1, 1)
+
+- ядро 3.17:
+
+3116         #define alloc_netdev(sizeof_priv, name, name_assign_type, setup) \
+3117         alloc_netdev_mqs(sizeof_priv, name, name_assign_type, setup, 1, 1)
+
+Было 3 параметра - стало 4 :shock: 
+
+http://lxr.free-electrons.com/source/include/uapi/linux/netdevice.h?v=3.17#L41:
+
+ 40 /* interface name assignment types (sysfs name_assign_type attribute) */
+ 41 #define NET_NAME_UNKNOWN        0       /* unknown origin (not exposed to userspace) */
+ 42 #define NET_NAME_ENUM           1       /* enumerated by kernel */
+ 43 #define NET_NAME_PREDICTABLE    2       /* predictably named by the kernel */
+ 44 #define NET_NAME_USER           3       /* provided by user-space */
+ 45 #define NET_NAME_RENAMED        4       /* renamed by user-space */
+
+===================================================================================
+
+[Olej@modules net]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/receive.o
+  Building modules, stage 2.
+  MODPOST 5 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/devices.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/devices.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/network.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/network.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/receive.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/receive.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/transmit.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/transmit.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/transmit_simple.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/network/net/transmit_simple.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+-----------------------------------------------------------------------------------
+
+[Olej@modules net]$ sudo insmod network.ko
+[sudo] password for Olej: 
+
+[Olej@modules net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: em1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether a0:1d:48:f4:93:5c brd ff:ff:ff:ff:ff:ff
+3: fict0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+[Olej@modules ~]$ dmesg | tail -n6
+[  166.297908] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 5196.957192] network: module verification failed: signature and/or  required key missing - tainting kernel
+[ 5196.958760] Loading stub network module:....
+[ 5196.958765] my_setup()
+[ 5196.959478] Succeeded in loading fict0!
+[ 5196.972306] Hit: my_open(fict0)
+
+[Olej@modules ~]$ sudo ifconfig fict0 up 192.168.1.44
+[sudo] password for Olej: 
+
+[Olej@modules ~]$ sudo ifconfig fict0 
+fict0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.44  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::201:2ff:fe03:405  prefixlen 64  scopeid 0x20<link>
+        ether 00:01:02:03:04:05  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[Olej@modules net]$ sudo rmmod network
+[sudo] password for Olej: 
+
+[Olej@modules net]$ dmesg | tail -n10
+[  165.051325] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[  165.292893] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[  166.297908] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 5196.957192] network: module verification failed: signature and/or  required key missing - tainting kernel
+[ 5196.958760] Loading stub network module:....
+[ 5196.958765] my_setup()
+[ 5196.959478] Succeeded in loading fict0!
+[ 5196.972306] Hit: my_open(fict0)
+[ 6001.865294] Unloading stub network module
+[ 6001.865312] Hit: my_close(fict0)
+
+
+===================================================================================
+
+[Olej@modules net]$ sudo insmod mulnet.ko 
+[sudo] password for Olej: 
+
+[Olej@modules net]$ lsmod | head -n4
+Module                  Size  Used by
+mulnet                 12937  0 
+wl                   6363567  0 
+fuse                   91410  3 
+
+[Olej@modules net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: em1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether a0:1d:48:f4:93:5c brd ff:ff:ff:ff:ff:ff
+4: wlo1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DORMANT group default qlen 1000
+    link/ether 34:23:87:d6:85:0d brd ff:ff:ff:ff:ff:ff
+5: fict0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+
+[Olej@modules net]$ dmesg | grep '! '
+[    0.000000] ACPI: ASF! 0x00000000B9FF8000 0000A5 (v32 HPQOEM 179C     00000001 HP   00000001)
+[12828.935766] ! loading network module ....
+[12828.935771] !!! fict%d
+[12828.936246] ! succeeded in loading 1 devices!
+
+
+===================================================================================
+
+[olej@fedora ~]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora ~]$ ifconfig
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 16436
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 0  (Local Loopback)
+        RX packets 68  bytes 4852 (4.7 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 68  bytes 4852 (4.7 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.22  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 7941  bytes 911570 (890.2 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 5480  bytes 1756012 (1.6 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p7p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.56.3  netmask 255.255.255.255  broadcast 192.168.56.3
+        inet6 fe80::a00:27ff:fe08:9abd  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:08:9a:bd  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 27  bytes 4427 (4.3 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora net]$ sudo insmod mulnet.ko num=3
+
+[olej@fedora net]$ lsmod | head -n4
+Module                  Size  Used by
+mulnet                 12787  0 
+vfat                   17209  1 
+fat                    54645  1 vfat
+
+[olej@fedora net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN mode DEFAULT 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:87:ea:29 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:08:9a:bd brd ff:ff:ff:ff:ff:ff
+5: fict0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether a4:a5:a6:a7:a8:a9 brd ff:ff:ff:ff:ff:ff
+6: fict1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether ce:cf:d0:d1:d2:d3 brd ff:ff:ff:ff:ff:ff
+7: fict2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether d6:d7:d8:d9:da:db brd ff:ff:ff:ff:ff:ff
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora net]$ sudo insmod mulnet.ko num=3 title=zzz mode=2
+Error: could not insert module mulnet.ko: Unknown symbol in module
+
+[olej@fedora net]$ sudo insmod mulnet.ko num=3 title=zzz
+
+[olej@fedora net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN mode DEFAULT 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:87:ea:29 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:08:9a:bd brd ff:ff:ff:ff:ff:ff
+8: zzz0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether 7c:7d:7e:7f:80:81 brd ff:ff:ff:ff:ff:ff
+9: zzz1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether 68:69:6a:6b:6c:6d brd ff:ff:ff:ff:ff:ff
+10: zzz2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether d0:d1:d2:d3:d4:d5 brd ff:ff:ff:ff:ff:ff
+
+[olej@fedora net]$ sudo ifconfig zzz0 192.168.10.100
+
+[olej@fedora net]$ sudo ifconfig zzz1 192.168.20.100 up
+
+[olej@fedora net]$ sudo ifconfig zzz2 192.168.30.100 up
+
+[olej@fedora net]$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         192.168.1.1     0.0.0.0         UG    0      0        0 p2p1
+192.168.1.0     *               255.255.255.0   U     0      0        0 p2p1
+192.168.10.0    *               255.255.255.0   U     0      0        0 zzz0
+192.168.20.0    *               255.255.255.0   U     0      0        0 zzz1
+192.168.30.0    *               255.255.255.0   U     0      0        0 zzz2
+192.168.56.1    *               255.255.255.255 UH    0      0        0 p7p1
+
+[olej@fedora net]$ ping 192.168.30.100
+PING 192.168.30.100 (192.168.30.100) 56(84) bytes of data.
+64 bytes from 192.168.30.100: icmp_req=1 ttl=64 time=0.274 ms
+64 bytes from 192.168.30.100: icmp_req=2 ttl=64 time=0.085 ms
+64 bytes from 192.168.30.100: icmp_req=3 ttl=64 time=0.055 ms
+^C
+--- 192.168.30.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2014ms
+rtt min/avg/max/mdev = 0.055/0.138/0.274/0.096 ms
+
+[olej@fedora net]$ dmesg | tail -n8
+
+[35702.545591] mulnet: Unknown parameter `mode'
+[35714.354236] ! loading network module for 3 links
+[35714.354239] !!! zzz%d<6>[35714.354247] ! my_setup()
+[35714.355654] ! my_setup()
+[35714.355982] ! my_setup()
+[35849.313980] Hit: my_open(zzz0)
+[35857.894789] Hit: my_open(zzz1)
+[35876.818320] Hit: my_open(zzz2)
+
+[olej@fedora net]$ sudo rmmod mulnet
+
+===================================================================================
+
+20.01.2015
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ sudo insmod mulnet.ko num=3 digit=0
+[sudo] password for Olej: 
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+mulnet                 12785  0 
+vfat                   17166  1 
+
+bash-4.2$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp2s14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:15:60:c4:ee:02 brd ff:ff:ff:ff:ff:ff
+3: wlp8s0: <BROADCAST,MULTICAST> mtu 1500 qdisc mq state DOWN mode DORMANT group default qlen 1000
+    link/ether 00:13:02:69:70:9b brd ff:ff:ff:ff:ff:ff
+4: ficta: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+5: fictb: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 01:02:03:04:05:06 brd ff:ff:ff:ff:ff:ff
+6: fictc: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 02:03:04:05:06:07 brd ff:ff:ff:ff:ff:ff
+
+bash-4.2$ sudo rmmod mulnet.ko 
+[sudo] password for Olej: 
+
+-----------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod mulnet.ko num=3 mode=0
+
+bash-4.2$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp2s14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:15:60:c4:ee:02 brd ff:ff:ff:ff:ff:ff
+3: wlp8s0: <BROADCAST,MULTICAST> mtu 1500 qdisc mq state DOWN mode DORMANT group default qlen 1000
+    link/ether 00:13:02:69:70:9b brd ff:ff:ff:ff:ff:ff
+7: fict0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+8: fict1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 01:02:03:04:05:06 brd ff:ff:ff:ff:ff:ff
+9: fict2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 02:03:04:05:06:07 brd ff:ff:ff:ff:ff:ff
+bash-4.2$ sudo rmmod mulnet.ko 
+
+-----------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod mulnet.ko num=3 title=zz mode=7
+bash-4.2$ dmesg | tail -n8
+[ 8621.452090] ! my_close(zz1)
+[ 8621.462101] ! my_close(zz2)
+[ 8864.030680] mulnet: unknown parameter 'mode' ignored
+[ 8864.031793] ! loading network module for 3 links
+[ 8864.038820] ! succeeded in loading 3 devices!
+[ 8864.044079] ! my_open(zz0)
+[ 8864.073617] ! my_open(zz1)
+[ 8864.082821] ! my_open(zz2)
+
+===================================================================================
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz mode=2
+
+[Olej@modules net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: em1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether a0:1d:48:f4:93:5c brd ff:ff:ff:ff:ff:ff
+3: wlo1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DORMANT group default qlen 1000
+    link/ether 34:23:87:d6:85:0d brd ff:ff:ff:ff:ff:ff
+7: zz0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+8: zz1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 01:02:03:04:05:06 brd ff:ff:ff:ff:ff:ff
+9: zz2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 02:03:04:05:06:07 brd ff:ff:ff:ff:ff:ff
+
+[Olej@modules net]$ sudo rmmod mulnet
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz mode=3
+
+[Olej@modules net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: em1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether a0:1d:48:f4:93:5c brd ff:ff:ff:ff:ff:ff
+3: wlo1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DORMANT group default qlen 1000
+    link/ether 34:23:87:d6:85:0d brd ff:ff:ff:ff:ff:ff
+10: zz0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+11: zz1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 01:02:03:04:05:06 brd ff:ff:ff:ff:ff:ff
+12: zz2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 02:03:04:05:06:07 brd ff:ff:ff:ff:ff:ff
+
+[Olej@modules net]$ sudo rmmod mulnet
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz mode=4
+
+[Olej@modules net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: em1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether a0:1d:48:f4:93:5c brd ff:ff:ff:ff:ff:ff
+3: wlo1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DORMANT group default qlen 1000
+    link/ether 34:23:87:d6:85:0d brd ff:ff:ff:ff:ff:ff
+13: zz0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+14: zz1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 01:02:03:04:05:06 brd ff:ff:ff:ff:ff:ff
+15: zz2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 02:03:04:05:06:07 brd ff:ff:ff:ff:ff:ff
+
+[Olej@modules net]$ sudo rmmod mulnet
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz mode=5
+insmod: ERROR: could not insert module mulnet.ko: Invalid parameters
+
+-----------------------------------------------------------------------------------
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz
+
+[Olej@modules net]$ sudo ifconfig zz2 192.168.200.200 up
+
+[Olej@modules net]$ ping 192.168.200.200
+PING 192.168.200.200 (192.168.200.200) 56(84) bytes of data.
+64 bytes from 192.168.200.200: icmp_seq=1 ttl=64 time=0.072 ms
+64 bytes from 192.168.200.200: icmp_seq=2 ttl=64 time=0.066 ms
+64 bytes from 192.168.200.200: icmp_seq=3 ttl=64 time=0.076 ms
+^C
+--- 192.168.200.200 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.066/0.071/0.076/0.008 ms
+
+
+[Olej@modules net]$ sudo insmod mulnet.ko num=3 title=zz
+[Olej@modules net]$ sudo ifconfig zz2 192.168.200.200 up
+[Olej@modules net]$ ping 192.168.200.200
+PING 192.168.200.200 (192.168.200.200) 56(84) bytes of data.
+64 bytes from 192.168.200.200: icmp_seq=1 ttl=64 time=0.075 ms
+64 bytes from 192.168.200.200: icmp_seq=2 ttl=64 time=0.066 ms
+64 bytes from 192.168.200.200: icmp_seq=3 ttl=64 time=0.071 ms
+^C
+--- 192.168.200.200 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.066/0.070/0.075/0.010 ms
+[Olej@modules net]$ ifconfig zz2 
+zz2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.200.200  netmask 255.255.255.0  broadcast 192.168.200.255
+        inet6 fe80::3:4ff:fe05:607  prefixlen 64  scopeid 0x20<link>
+        ether 02:03:04:05:06:07  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+-----------------------------------------------------------------------------------
+===================================================================================
+

@@ -1,0 +1,416 @@
+28.07.2012
+==========
+
+[olej@notebook proc]$ cat /proc/interrupts
+            CPU0       CPU1
+...
+  16:     663990          0   IO-APIC-fasteoi   i915, eth0
+...
+
+
+[olej@notebook IRQ]$ sudo insmod lab1_interrupt.ko irq=16
+
+
+[olej@notebook proc]$ cat /proc/interrupts
+            CPU0       CPU1
+...
+  16:     659227          0   IO-APIC-fasteoi   i915, eth0, my_interrupt
+...
+
+
+[olej@notebook IRQ]$ sudo rmmod lab1_interrupt
+
+[olej@notebook IRQ]$ dmesg | tail -n5
+In the ISR: counter = 1646
+In the ISR: counter = 1647
+In the ISR: counter = 1648
+In the ISR: counter = 1649
+Successfully unloading,  irq_counter = 1649
+
+
+[olej@notebook IRQ]$ dmesg | tail -n1651 | head -n5
+In the ISR: counter = 1
+Successfully loading ISR handler on IRQ 16
+In the ISR: counter = 2
+In the ISR: counter = 3
+In the ISR: counter = 4
+
+
+========================================================================================
+
+[olej@home Linux-kernel]$ pwd
+/home/olej/2011-work/Linux-kernel
+
+[olej@home IRQ]$ cat /proc/interrupts
+           CPU0
+  0:   20235240          XT-PIC  timer
+  1:        303          XT-PIC  i8042
+  2:          0          XT-PIC  cascade
+  5:         17          XT-PIC  uhci_hcd:usb1, CS46XX
+  6:          3          XT-PIC  floppy
+  7:          0          XT-PIC  parport0
+  8:          1          XT-PIC  rtc
+  9:          0          XT-PIC  acpi
+ 11:    1279308          XT-PIC  ide2, eth0, mga@pci:0000:01:00.0
+ 12:     220874          XT-PIC  i8042
+ 14:         38          XT-PIC  ide0
+NMI:          0
+LOC:          0
+ERR:          0
+MIS:          0
+[olej@home IRQ]$
+[olej@home IRQ]$
+[olej@home IRQ]$ sudo /sbin/insmod lab1_interrupt.ko irq=12
+[olej@home IRQ]$ dmesg | tail -n3
+agpgart: Putting AGP V2 device at 0000:01:00.0 into 1x mode
+[drm] Initialized card for AGP DMA.
+Successfully loading ISR handler on IRQ 12
+[olej@home IRQ]$ cat /proc/interrupts
+           CPU0
+  0:   20329441          XT-PIC  timer
+  1:        423          XT-PIC  i8042
+  2:          0          XT-PIC  cascade
+  5:         17          XT-PIC  uhci_hcd:usb1, CS46XX
+  6:          3          XT-PIC  floppy
+  7:          0          XT-PIC  parport0
+  8:          1          XT-PIC  rtc
+  9:          0          XT-PIC  acpi
+ 11:    1285528          XT-PIC  ide2, eth0, mga@pci:0000:01:00.0
+ 12:     221054          XT-PIC  i8042, my_interrupt
+ 14:         38          XT-PIC  ide0
+NMI:          0
+LOC:          0
+ERR:          0
+MIS:          0
+[olej@home IRQ]$ sudo /sbin/rmmod lab1_interrupt
+[olej@home IRQ]$ dmesg | tail -n5
+In the ISR: counter = 69
+In the ISR: counter = 70
+In the ISR: counter = 71
+In the ISR: counter = 72
+Successfully unloading,  irq_counter = 72
+[olej@home IRQ]$
+[olej@home IRQ]$
+[olej@home IRQ]$
+[olej@home IRQ]$ sudo /sbin/insmod lab1_interrupt.ko irq=1
+[olej@home IRQ]$ cat /proc/interrupts
+           CPU0
+  0:   20527017          XT-PIC  timer
+  1:        572          XT-PIC  i8042, my_interrupt
+  2:          0          XT-PIC  cascade
+  5:         17          XT-PIC  uhci_hcd:usb1, CS46XX
+  6:          3          XT-PIC  floppy
+  7:          0          XT-PIC  parport0
+  8:          1          XT-PIC  rtc
+  9:          0          XT-PIC  acpi
+ 11:    1298485          XT-PIC  ide2, eth0, mga@pci:0000:01:00.0
+ 12:     232326          XT-PIC  i8042
+ 14:         38          XT-PIC  ide0
+NMI:          0
+LOC:          0
+ERR:          0
+MIS:          0
+[olej@home IRQ]$ sudo /sbin/rmmod lab1_interrupt
+[olej@home IRQ]$ dmesg | tail -n5
+In the ISR: counter = 33
+In the ISR: counter = 34
+In the ISR: counter = 35
+In the ISR: counter = 36
+Successfully unloading,  irq_counter = 36
+[olej@home IRQ]$ cat /proc/interrupts
+           CPU0
+  0:   20568216          XT-PIC  timer
+  1:        622          XT-PIC  i8042
+  2:          0          XT-PIC  cascade
+  5:         17          XT-PIC  uhci_hcd:usb1, CS46XX
+  6:          3          XT-PIC  floppy
+  7:          0          XT-PIC  parport0
+  8:          1          XT-PIC  rtc
+  9:          0          XT-PIC  acpi
+ 11:    1301063          XT-PIC  ide2, eth0, mga@pci:0000:01:00.0
+ 12:     232326          XT-PIC  i8042
+ 14:         38          XT-PIC  ide0
+NMI:          0
+LOC:          0
+ERR:          0
+MIS:          0
+
+========================================================================================
+
+[olej@notebook IRQ]$ sudo insmod mod_tasklet.ko
+
+[olej@notebook IRQ]$ dmesg | tail -n100 | grep " : "
+51300758164810 [30536898] : tasklet_scheduled
+51300758185080 [30536898] : tasklet_function was called
+
+[olej@notebook IRQ]$ sudo rmmod mod_tasklet
+
+[olej@notebook time]$ sudo nice -n19 ./clock 
+00002EE46EFE8248
+00002EE46F54F4E8
+00002EE46F552148
+1663753694
+
+[olej@notebook time]$ uname -a
+Linux notebook.localdomain 2.6.32.9-70.fc12.i686.PAE #1 SMP Wed Mar 3 04:57:21 UTC 2010 i686 i686 i386 GNU/Linux
+
+----------------------------------------------------------------------------------------
+
+[olej@notebook IRQ]$ sudo insmod mod_workqueue.ko
+
+[olej@notebook IRQ]$ lsmod | head -n3
+Module                  Size  Used by
+mod_workqueue           1079  0 
+vfat                    6740  1 
+
+[olej@notebook IRQ]$ dmesg | tail -n100 | grep "=>"
+#1 : 54741885665810 [32606771] => 54741890115000 [32606774]
+#2 : 54741885675880 [32606771] => 54741890128690 [32606774]
+
+[olej@notebook IRQ]$ ps -ef | grep my_
+root     17058     2  0 22:43 ?        00:00:00 [my_queue/0]
+root     17059     2  0 22:43 ?        00:00:00 [my_queue/1]
+olej     17061 11385  0 22:43 pts/10   00:00:00 grep my_
+
+[olej@notebook IRQ]$ sudo rmmod mod_workqueue
+
+========================================================================================
+
+21.04.2014
+==========
+
+[Olej@modules IRQ]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules IRQ]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c: В функции «handler»:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c:16:71: предупреждение: приведение указателя к целому другого размера [-Wpointer-to-int-cast]
+    printk( KERN_INFO "%010lld : irq=%d - handler #%d\n", cycles, irq, (int)id );
+                                                                       ^
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c: В функции «init_module»:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c:27:61: предупреждение: приведение к типу указателя от целого другого размера [-Wint-to-pointer-cast]
+       if( request_irq( irq, handler, IRQF_SHARED, dev[ i ], (void*)( i + 1 ) ) ) return -1;
+                                                             ^
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c: В функции «cleanup_module»:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.c:36:22: предупреждение: приведение к типу указателя от целого другого размера [-Wint-to-pointer-cast]
+       free_irq( irq, (void*)( i + 1 ) );
+                      ^
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+----------------------------------------------------------------------------------------
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+========================================================================================
+
+[Olej@modules IRQ]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules IRQ]$ make 
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+========================================================================================
+
+25.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+========================================================================================
+
+23.06.2014
+==========
+
+[Olej@modules IRQ]$ uname -a
+Linux modules.localdomain 3.14.8-200.fc20.x86_64 #1 SMP Mon Jun 16 21:57:53 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[Olej@modules IRQ]$ make
+make -C /lib/modules/3.14.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+
+========================================================================================
+
+27.06.2014
+==========
+
+[Olej@modules ~]$ uname -a
+Linux modules.localdomain 3.14.8-200.fc20.x86_64 #1 SMP Mon Jun 16 21:57:53 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules IRQ]$ make
+make -C /lib/modules/3.14.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/lab1_interrupt.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_ser.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_tasklet.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+
+----------------------------------------------------------------------------------------
+
+[Olej@modules IRQ]$ sudo insmod mod_tasklet.ko
+
+[Olej@modules IRQ]$ lsmod | head -n3
+Module                  Size  Used by
+mod_tasklet            12689  0 
+fuse                   86935  2 
+
+[Olej@modules IRQ]$ dmesg | tail -n2 | grep " : "
+[ 2303.199450] 5995036764088 [2001684] : tasklet was scheduled in contxt 0
+[ 2303.199461] 5995036802118 [2001684] : tasklet function was called in contxt 1
+
+[Olej@modules IRQ]$ sudo rmmod mod_tasklet
+
+----------------------------------------------------------------------------------------
+
+[Olej@modules IRQ]$ sudo insmod mod_workqueue.ko
+[sudo] password for Olej: 
+
+[Olej@modules IRQ]$ lsmod | head -n3
+Module                  Size  Used by
+mod_workqueue          12495  0 
+fuse                   86935  2 
+
+[Olej@modules IRQ]$ dmesg | tail -n3 | grep "=>"
+[ 2808.397006] #1 : 7304713115498 [2506562] => 7304713473094 [2506562] : context 0
+[ 2808.397012] #2 : 7304713119618 [2506562] => 7304713493114 [2506562] : context 0
+
+[Olej@modules IRQ]$ ps -ef | grep root | grep my_
+root      4372     2  0 09:03 ?        00:00:00 [my_queue]
+
+[Olej@modules IRQ]$ sudo rmmod mod_workqueue
+
+----------------------------------------------------------------------------------------
+
+[Olej@modules IRQ]$ ../time/clock
+0000079AB4EAA738
+0000079AB4EC1212
+0000079AB4EC28F0
+2594035590
+
+[Olej@modules ~]$ cat /proc/cpuinfo | grep 'model name'
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+
+========================================================================================
+
+[Olej@modules IRQ]$ sudo insmod mod_workqueue.ko works=5
+[sudo] password for Olej: 
+
+[Olej@modules IRQ]$ ps -ef | grep root | grep my_ 
+root     10163     2  0 22:46 ?        00:00:00 [my_queue]
+
+[Olej@modules IRQ]$ dmesg | tail -n5
+[11901.358300] #0 : 30877353486032 [11593784] => 30877353494880 [11593784] = 00008848 : context 0
+[11901.358309] #1 : 30877353516980 [11593784] => 30877353521696 [11593784] = 00004716 : context 0
+[11901.358315] #2 : 30877353534284 [11593784] => 30877353538372 [11593784] = 00004088 : context 0
+[11901.358320] #3 : 30877353549788 [11593784] => 30877353553488 [11593784] = 00003700 : context 0
+[11901.358326] #4 : 30877353563112 [11593784] => 30877353567272 [11593784] = 00004160 : context 0
+
+[Olej@modules IRQ]$ sudo rmmod mod_workqueue 
+
+
+========================================================================================

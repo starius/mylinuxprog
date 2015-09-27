@@ -1,0 +1,51 @@
+28.07.2012
+==========
+
+[olej@notebook list]$ sudo insmod ./mod_list.ko size=7
+insmod: error inserting './mod_list.ko': -1 Operation not permitted
+
+
+[olej@notebook list]$ dmesg | tail -n7
+[LIST] 6
+[LIST] 5
+[LIST] 4
+[LIST] 3
+[LIST] 2
+[LIST] 1
+[LIST] 0
+
+================================================================================================
+
+03.06.2014
+==========
+
+bash-4.2$ uname -r
+3.13.6-200.fc20.i686
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+------------------------------------------------------------------------------------------------
+
+[Olej@modules list]$ uname -r
+3.14.4-200.fc20.x86_64
+
+[Olej@modules list]$ make
+make -C /lib/modules/3.14.4-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/list/mod_list.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+
+================================================================================================
+

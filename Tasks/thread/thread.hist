@@ -1,0 +1,70 @@
+25.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+=============== making all in mlock =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c:18:8: ошибка: type defaults to «int» in declaration of «DECLARE_MUTEX» [-Werror=implicit-int]
+ static DECLARE_MUTEX( sema );
+        ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c:18:1: предупреждение: в декларации функции указаны имена параметров без типов [по умолчанию включена]
+ static DECLARE_MUTEX( sema );
+ ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c: В функции «loop_func»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c:23:31: ошибка: «sema» undeclared (first use in this function)
+    if( lvl == sync ) { down( &sema ); locked++; }
+                               ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c:23:31: замечание: each undeclared identifier is reported only once for each function it appears in
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c: На верхнем уровне:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.c:18:8: предупреждение: «DECLARE_MUTEX» объявлена «static», но нигде не определена [-Wunused-function]
+ static DECLARE_MUTEX( sema );
+        ^
+cc1: some warnings being treated as errors
+make[3]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock/mlock.o] Ошибка 1
+make[2]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock] Ошибка 2
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: *** [all] Ошибка 2
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/mlock'
+=============== making all in tfor =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor/mod_for.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor/mod_for.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor/mod_for.ko
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tfor'
+=============== making all in tcreat =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr1.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr2.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr3.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+WARNING: "kernel_thread" [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr2.ko] undefined!
+WARNING: "kernel_thread" [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr1.ko] undefined!
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr1.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr1.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr2.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr2.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr3.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat/mod_thr3.ko
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/thread/tcreat'
+
+===========================================================================================================================
+

@@ -1,0 +1,177 @@
+========================================================================================
+
+23.11.2012
+==========
+
+bash-4.2$ cat /proc/ioports 
+0000-0cf7 : PCI Bus 0000:00
+  0000-001f : dma1
+  0020-0021 : pic1
+  0040-0043 : timer0
+  0050-0053 : timer1
+  0060-0060 : keyboard
+  0062-0062 : EC data
+  0064-0064 : keyboard
+  0066-0066 : EC cmd
+  0070-0071 : rtc0
+  0080-008f : dma page reg
+  00a0-00a1 : pic2
+  00c0-00df : dma2
+  00f0-00ff : fpu
+  0170-0177 : 0000:00:1f.1
+    0170-0177 : ata_piix
+  01f0-01f7 : 0000:00:1f.1
+    01f0-01f7 : ata_piix
+  0376-0376 : 0000:00:1f.1
+    0376-0376 : ata_piix
+  0378-037a : parport0
+  03c0-03df : vesafb
+  03f6-03f6 : 0000:00:1f.1
+    03f6-03f6 : ata_piix
+  03f8-03ff : serial
+  04d0-04d1 : pnp 00:0c
+  0500-057f : pnp 00:0b
+  0800-080f : pnp 00:0b
+...
+
+
+bash-4.2$ ls -l /dev/port 
+crw-r----- 1 root kmem 1, 4 нояб. 23 14:31 /dev/port
+
+
+========================================================================================
+
+24.11.2012
+==========
+
+bash-4.2$ ./ioports 
+/dev/port :
+reading /dev/port method failed: Permission denied
+ioperm :
+ioperm failed: Operation not permitted
+iopl :
+iopl failed: Operation not permitted
+
+bash-4.2$ echo $?
+1
+
+
+<asm-generic/errno-base.h>
+#define EPERM            1      /* Operation not permitted */
+
+----------------------------------------------------------------------------------------
+
+bash-4.2$ ./ioperm 
+writing: 0x00 to 0x378
+Ошибка сегментирования (core dumped)
+bash-4.2$ echo $?
+139
+
+bash-4.2$ dmesg | tail -n1
+[12310.795229] ioperm[4485] general protection ip:80484e5 sp:bf8351b0 error:0 in ioperm[8048000+1000]
+
+
+
+bash-4.2$ sudo ./ioperm 
+writing: 0x00 to 0x378
+bash-4.2$ echo $?
+139
+
+========================================================================================
+
+bash-4.2$ sudo ./ioports
+/dev/port :
+	writing: 0x00 to 0x378
+	reading: 0x78 from 0x379
+ioperm :
+	writing: 0x00 to 0x378
+	reading: 0x78 from 0x379
+iopl :
+	writing: 0x00 to 0x378
+	reading: 0x78 from 0x379
+
+
+----------------------------------------------------------------------------------------
+
+
+bash-4.2$ sudo ./ioports 200
+/dev/port :
+	writing: 0x00 to 0x200
+	reading: 0xff from 0x201
+ioperm :
+	writing: 0x00 to 0x200
+	reading: 0xff from 0x201
+iopl :
+	writing: 0x00 to 0x200
+	reading: 0xff from 0x201
+
+
+bash-4.2$ sudo ./ioports 201
+/dev/port :
+	writing: 0x00 to 0x201
+	reading: 0xff from 0x202
+ioperm :
+	writing: 0x00 to 0x201
+	reading: 0xff from 0x202
+iopl :
+	writing: 0x00 to 0x201
+	reading: 0xff from 0x202
+
+
+bash-4.2$ sudo ./ioports 202
+/dev/port :
+	writing: 0x00 to 0x202
+	reading: 0xff from 0x203
+ioperm :
+	writing: 0x00 to 0x202
+	reading: 0xff from 0x203
+iopl :
+	writing: 0x00 to 0x202
+	reading: 0xff from 0x203
+
+----------------------------------------------------------------------------------------
+
+bash-4.2$ sudo ./ioports 378 4
+/dev/port :
+	writing: 0x00 to 0x378
+	reading: 0x78 from 0x379
+ioperm :
+	writing: 0x00 to 0x378
+	reading: 0x78 from 0x379
+iopl :
+iopl failed: Invalid argument
+
+bash-4.2$ echo $?
+22
+
+========================================================================================
+
+26.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+bash-4.2$ make
+gcc -Wall     ioports.c   -o ioports
+gcc -Wall     ioperm.c   -o ioperm
+
+
+========================================================================================
+
+07.07.2014
+==========
+
+
+[Olej@modules user_io]$ uname -a
+Linux modules.localdomain 3.14.8-200.fc20.x86_64 #1 SMP Mon Jun 16 21:57:53 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[Olej@modules user_io]$ make
+gcc -Wall     ioports.c   -o ioports
+gcc -Wall     ioperm.c   -o ioperm
+
+========================================================================================

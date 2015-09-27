@@ -1,0 +1,86 @@
+26.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+VARIANT=0 SYSCALL=0
+bash-4.2$ 
+bash-4.2$ make
+=============== making all in export =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/export'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/export modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  Building modules, stage 2.
+  MODPOST 2 modules
+WARNING: "sys_open" [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/export/md_0o.ko] undefined!
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/export'
+=============== making all in new_sys =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrc.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrchg.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrc.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrc.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrchg.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys/mod_wrchg.ko
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/new_sys'
+=============== making all in hidden =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.ko
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+VARIANT=0 SYSCALL=0
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden'
+=============== making all in call_table =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/call_table'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/call_table modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  Building modules, stage 2.
+  MODPOST 3 modules
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/call_table'
+=============== making all in add_sys =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/ni-test.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/add-sys.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/add-sys.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/add-sys.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/ni-test.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys/ni-test.ko
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/add_sys'
+
+=================================================================================================================================================
+

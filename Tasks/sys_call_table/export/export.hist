@@ -1,0 +1,151 @@
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_call_table
+c07ab3d8 R sys_call_table
+
+
+[olej@notebook etc]$ cat /usr/include/asm/unistd_32.h | head -n20
+#ifndef _ASM_X86_UNISTD_32_H
+#define _ASM_X86_UNISTD_32_H
+
+/*
+ * This file contains the system call numbers.
+ */
+
+#define __NR_restart_syscall      0
+#define __NR_exit                 1
+#define __NR_fork                 2
+#define __NR_read                 3
+#define __NR_write                4
+#define __NR_open                 5
+#define __NR_close                6
+#define __NR_waitpid              7
+#define __NR_creat                8
+#define __NR_link                 9
+#define __NR_unlink              10
+#define __NR_execve              11
+#define __NR_chdir               12
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_exit
+c040fec1 t ftrace_raw_output_sys_exit
+c040ffaf t ftrace_format_sys_exit
+c041003e t ftrace_profile_disable_sys_exit
+c0410057 t ftrace_raw_unreg_event_sys_exit
+c0410070 t ftrace_profile_sys_exit
+c0410388 t ftrace_profile_enable_sys_exit
+c04103f6 t ftrace_define_fields_sys_exit
+c0410486 t ftrace_raw_init_event_sys_exit
+c04104c1 t ftrace_raw_event_sys_exit
+c0410575 t ftrace_raw_reg_event_sys_exit
+c0444f47 T sys_exit_group
+c0444f63 T sys_exit
+c093833c r __tpstrtab_sys_exit
+c099b280 d ftrace_event_type_sys_exit
+c09db9e0 D __tracepoint_sys_exit
+c09e12a8 d event_sys_exit
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_fork
+c040ee13 T sys_fork
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_read
+c04ac1f1 T sys_readahead
+c04e149d T sys_read
+c04e1ad9 T sys_readv
+c04e4c79 T sys_readlinkat
+c04e4cfd T sys_readlink
+c0524808 t proc_sys_read
+c0524995 t proc_sys_readdir
+c05f9aa6 T fb_sys_read
+c0947774 r __ksymtab_fb_sys_read
+c0954f74 r __kstrtab_fb_sys_read
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_write
+c04e12fc T sys_write
+c04e196b T sys_writev
+c05247f4 t proc_sys_write
+c05f99fc T fb_sys_write
+c094776c r __ksymtab_fb_sys_write
+c0954f67 r __kstrtab_fb_sys_write
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_open
+c04deb28 T do_sys_open
+c04dec0c T sys_openat
+c04dec35 T sys_open
+c09c8e7c d sys_open_test
+
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_close
+c04dea99 T sys_close
+c0940c4c r __ksymtab_sys_close
+c094e35b r __kstrtab_sys_close
+
+=================================================================================================
+
+[olej@notebook sys_call_table]$ sudo insmod md_0.ko 
+insmod: error inserting 'md_0.ko': -1 Operation not permitted
+
+
+[olej@notebook sys_call_table]$ dmesg | tail -n20
+audit(:0): major=340 name_count=0: freeing multiple contexts (16)
+audit: freed 16 contexts
+sys_close address: c04dea99
+audit(:0): major=252 name_count=0: freeing multiple contexts (1)
+audit(:0): major=340 name_count=0: freeing multiple contexts (2)
+audit(:0): major=340 name_count=0: freeing multiple contexts (3)
+audit(:0): major=340 name_count=0: freeing multiple contexts (4)
+audit(:0): major=340 name_count=0: freeing multiple contexts (5)
+audit(:0): major=340 name_count=0: freeing multiple contexts (6)
+audit(:0): major=340 name_count=0: freeing multiple contexts (7)
+audit(:0): major=340 name_count=0: freeing multiple contexts (8)
+audit(:0): major=340 name_count=0: freeing multiple contexts (9)
+audit(:0): major=340 name_count=0: freeing multiple contexts (10)
+audit(:0): major=340 name_count=0: freeing multiple contexts (11)
+audit(:0): major=340 name_count=0: freeing multiple contexts (12)
+audit(:0): major=340 name_count=0: freeing multiple contexts (13)
+audit(:0): major=340 name_count=0: freeing multiple contexts (14)
+audit(:0): major=340 name_count=0: freeing multiple contexts (15)
+audit(:0): major=340 name_count=0: freeing multiple contexts (16)
+audit: freed 16 contexts
+
+
+[olej@notebook sys_call_table]$ sudo insmod md_0.o 
+insmod: error inserting 'md_0.o': -1 Invalid module format
+
+
+-------------------------------------------------------------------------------------------------
+
+http://rus-linux.net/MyLDP/BOOKS/ldd2/ldd2_ch2/ldd2_ch2.html
+get_kernel_sysms() возвращает символьную таблицу ядра, 
+
+
+[olej@notebook ~]$ cat /proc/kallsyms | grep get_kernel_sysms
+[olej@notebook ~]$ 
+
+
+
+=================================================================================================
+
+[olej@notebook sys_call_table]$ sudo insmod md_0c.ko 
+insmod: error inserting 'md_0c.ko': -1 Operation not permitted
+
+[olej@notebook sys_call_table]$ dmesg 
+sys_close address: c04dea99
+
+
+
+
+
+
+...
+  MODPOST 2 modules
+WARNING: "sys_open" [/home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/md_0o.ko] undefined!
+  CC      /home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/md_0o.mod.o
+  LD [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/md_0o.ko
+...
+
+[olej@notebook sys_call_table]$ sudo insmod md_0o.ko 
+insmod: error inserting 'md_0o.ko': -1 Unknown symbol in module
+[olej@notebook sys_call_table]$ dmesg
+md_0o: Unknown symbol sys_open
+
+-------------------------------------------------------------------------------------------------
+

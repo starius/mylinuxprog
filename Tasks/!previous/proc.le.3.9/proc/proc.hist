@@ -1,0 +1,615 @@
+============================================================================
+
+02.07.2011
+==========
+
+$ sudo insmod ./mod_procr.ko
+$ dmesg | tail -n1
+module : success!
+$ ls -l /proc/mod_*
+-r--r--r-- 1 root root 0 Мар 26 18:14 /proc/mod_node
+$ cat  /proc/mod_node
+Hello from module!
+$ dmesg | tail -n7
+module : success!
+read: 3072
+return bytes: 19
+EOF
+read: 3072
+return bytes: 19
+EOF
+
+$ cat  /proc/mod_node
+Hello from module!
+$ cat  /proc/mod_node
+Hello from module!
+$ cat  /proc/mod_node
+Hello from module!
+$ sudo rmmod mod_procr
+$ ls -l /proc/mod_*
+ls: невозможно получить доступ к /proc/mod_*: Нет такого файла или каталога
+
+============================================================================
+
+$ sudo insmod ./mod_procr2.ko
+$ echo $?
+0
+$ cat  /proc/mod_node
+Hello from module!
+$ cat  /proc/mod_node
+Hello from module!
+$ sudo rmmod mod_procr2
+$ cat  /proc/mod_node
+cat: /proc/mod_node: Нет такого файла или каталога
+
+============================================================================
+
+[olej@notebook proc]$ sudo insmod ./mod_proc.ko
+
+[olej@notebook proc]$ dmesg | tail -n20 | grep -v ^audit
+module : success!
+
+[olej@notebook proc]$ ls -l /proc/mod_*
+-rw-rw-rw- 1 root root 0 Июл  2 20:47 /proc/mod_node
+
+[olej@notebook proc]$ cat  /proc/mod_node
+Hello from module!
+
+[olej@notebook proc]$ echo новая строка >  /proc/mod_node
+
+[olej@notebook proc]$ cat  /proc/mod_node
+новая строка
+
+[olej@notebook proc]$ cat  /proc/mod_node
+новая строка
+
+[olej@notebook proc]$ dmesg | tail -n20 | grep -v ^audit
+write: 24
+put bytes = 24
+read: 32768
+return bytes :  24
+read: 32768
+EOF
+read: 32768
+return bytes :  24
+read: 32768
+EOF
+
+[olej@notebook proc]$ sudo rmmod mod_proc
+
+[olej@notebook proc]$ cat  /proc/mod_node
+cat: /proc/mod_node: Нет такого файла или каталога
+
+============================================================================
+
+[olej@notebook proc]$ sudo insmod ./mod_proct.ko 
+
+[olej@notebook proc]$ ls /proc/mo*
+/proc/modules  /proc/mounts
+/proc/mod_dir:
+mod_node
+
+
+[olej@notebook proc]$ ls -l /proc/mod*
+-r--r--r-- 1 root root 0 Июл  2 23:24 /proc/modules
+
+/proc/mod_dir:
+итого 0
+-rw-rw-rw- 1 root root 0 Июл  2 23:24 mod_node
+
+
+
+[olej@notebook proc]$ tree /proc/mod_dir
+/proc/mod_dir
+└── mod_node
+0 directories, 1 file
+
+[olej@notebook proc]$ cat /proc/mod_dir/mod_node 
+Hello from module!
+
+[olej@notebook proc]$ echo 'new string' > /proc/mod_dir/mod_node 
+
+[olej@notebook proc]$ cat /proc/mod_dir/mod_node 
+new string
+
+[olej@notebook proc]$ cat /proc/modules | grep mod_
+mod_proct 1454 0 - Live 0xf8722000
+
+[olej@notebook proc]$ sudo rmmod mod_proct
+
+============================================================================
+
+27.01.2012
+==========
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+
+[olej@notebook proc]$ sudo insmod ./mod_procr.ko
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+module : success!
+
+[olej@notebook proc]$ lsmod | head -n2
+Module                  Size  Used by
+mod_procr               1152  0 
+
+[olej@notebook proc]$ ls -l /proc/mod_*
+-rw-rw-rw- 1 root root 0 Янв 27 16:37 /proc/mod_node
+
+[olej@notebook proc]$ cat /proc/mod_node
+Hello from module!
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+module : success!
+read: 3072
+return bytes: 19
+EOF
+read: 3072
+return bytes: 19
+EOF
+
+----------------------------------------------------------------------------
+
+[olej@notebook proc]$ sudo insmod ./mod_2.ko
+
+[olej@notebook proc]$ cat /proc/mod_node
+функция из таблицы файловых операций
+
+[olej@notebook proc]$ sudo rmmod mod_2
+
+
+[olej@notebook proc]$ sudo insmod ./mod_2.ko mode=2
+
+[olej@notebook proc]$ cat /proc/mod_node
+функция из struct proc_dir_entry
+
+[olej@notebook proc]$ sudo rmmod mod_2
+
+============================================================================
+
+06.03.2012
+==========
+
+[olej@notebook proc]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr2.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proc.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proct.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_2.o
+/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proc.h:19: предупреждение: ‘buf_msg’ определена, но нигде не используется
+  Building modules, stage 2.
+  MODPOST 5 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_2.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_2.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proc.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proc.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr2.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_procr2.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proct.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/mod_proct.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+----------------------------------------------------------------------------
+
+
+[olej@notebook proc]$ sudo insmod mod_procr.ko
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+
+[olej@notebook proc]$ cat /proc/mod_node 
+.........1.........2.........3.........4.........5.........6
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 3072 (buffer=f15d1000, off=0)
+! return bytes: 61  ... EOF
+! read: 3072 (buffer=f15d1000, off=61)
+! return bytes: 0  ... EOF
+
+[olej@notebook proc]$ sudo rmmod mod_procr
+
+[olej@notebook proc]$ cat /proc/mod_node 
+cat: /proc/mod_node: Нет такого файла или каталога
+
+
+----------------------------------------------------------------------------
+
+
+[olej@notebook proc]$ sudo insmod mod_proct.ko
+
+[olej@notebook mod_dir]$ ls /proc/mod_dir
+mod_node
+
+[olej@notebook mod_dir]$ ls -l /proc/mod_dir/mod_node
+-rw-rw-rw- 1 root root 0 Мар  7 00:56 /proc/mod_dir/mod_node
+
+
+[olej@notebook mod_dir]$ cat /proc/mod_dir/mod_node
+.........1.........2.........3.........4.........5
+
+[olej@notebook mod_dir]$ echo new string > /proc/mod_dir/mod_node
+
+[olej@notebook mod_dir]$ cat /proc/mod_dir/mod_node
+new string
+
+[olej@notebook mod_dir]$ dmesg | tail -n30 | grep -v ^audit
+! read: 8192 bytes
+! return 51 bytes
+! read: 8141 bytes
+! EOF
+! read: 32768 bytes
+! return 51 bytes
+! read: 32768 bytes
+! EOF
+! write: 11 bytes
+! put 11 bytes
+! read: 32768 bytes
+! return 11 bytes
+! read: 32768 bytes
+! EOF
+
+
+----------------------------------------------------------------------------
+
+
+[olej@notebook proc]$ sudo insmod mod_2.ko mode=1
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+
+[olej@notebook proc]$ cat /proc/mod_node
+.........1.........2.........3.........4.........5
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 32768 bytes
+! return 51 bytes
+! read: 32768 bytes
+! EOF
+
+[olej@notebook proc]$ sudo rmmod mod_2
+
+
+
+
+[olej@notebook proc]$ sudo insmod mod_2.ko mode=2
+
+[olej@notebook proc]$ cat /proc/mod_node
+.........1.........2.........3.........4.........5.........6
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 3072 (buffer=f1629000, off=0)
+! return bytes: 61  ... EOF
+! read: 3072 (buffer=f1629000, off=61)
+! return bytes: 0  ... EOF
+
+[olej@notebook proc]$ sudo rmmod mod_2
+
+
+
+[olej@notebook proc]$ sudo insmod mod_2.ko mode=3
+
+[olej@notebook proc]$ cat /proc/mod_node
+.........1.........2.........3.........4.........5
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 32768 bytes
+! return 51 bytes
+! read: 32768 bytes
+! EOF
+
+
+
+============================================================================
+
+07.03.2012
+==========
+
+
+[olej@notebook proc]$ sudo insmod mod_procr.ko
+
+
+[olej@notebook proc]$ ./mcat 10
+read + 10 bytes, input buffer: .........1
+read + 10 bytes, input buffer: .........1.........2
+read + 10 bytes, input buffer: .........1.........2.........3
+read + 10 bytes, input buffer: .........1.........2.........3.........4
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook proc]$ dmesg | tail -n50 | grep -v ^audit
+! /proc/mod_node installed
+! read: 10 (buffer=f32b1000, off=0)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=10)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=20)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=30)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=40)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=50)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=60)
+! return bytes: 61
+! read: 9 (buffer=f32b1000, off=61)
+! return bytes: 61
+! read: 10 (buffer=f32b1000, off=61)
+! return bytes: 61
+
+
+
+
+[olej@notebook proc]$ ./mcat 70
+read + 61 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook proc]$ dmesg | tail -n6 | grep -v ^audit
+! read: 70 (buffer=f1dfd000, off=0)
+! return bytes: 61
+! read: 9 (buffer=f1dfd000, off=61)
+! return bytes: 61
+! read: 70 (buffer=f1dfd000, off=61)
+! return bytes: 61
+
+
+
+
+[olej@notebook proc]$ ./mcat 3
+read + 03 bytes, input buffer: ...
+read + 03 bytes, input buffer: ......
+read + 03 bytes, input buffer: .........
+read + 03 bytes, input buffer: .........1..
+read + 03 bytes, input buffer: .........1.....
+read + 03 bytes, input buffer: .........1........
+read + 03 bytes, input buffer: .........1.........2.
+read + 03 bytes, input buffer: .........1.........2....
+read + 03 bytes, input buffer: .........1.........2.......
+read + 03 bytes, input buffer: .........1.........2.........3
+read + 03 bytes, input buffer: .........1.........2.........3...
+read + 03 bytes, input buffer: .........1.........2.........3......
+read + 03 bytes, input buffer: .........1.........2.........3.........
+read + 03 bytes, input buffer: .........1.........2.........3.........4..
+read + 03 bytes, input buffer: .........1.........2.........3.........4.....
+read + 03 bytes, input buffer: .........1.........2.........3.........4........
+read + 03 bytes, input buffer: .........1.........2.........3.........4.........5.
+read + 03 bytes, input buffer: .........1.........2.........3.........4.........5....
+read + 03 bytes, input buffer: .........1.........2.........3.........4.........5.......
+read + 03 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+
+
+[olej@notebook proc]$ cat /proc/mod_node 
+.........1.........2.........3.........4.........5.........6
+[olej@notebook proc]$ cat /proc/mod_node 
+.........1.........2.........3.........4.........5.........6
+[olej@notebook proc]$ cat /proc/mod_node 
+.........1.........2.........3.........4.........5.........6
+
+
+[olej@notebook proc]$ sudo insmod mod_procr2.ko
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+
+[olej@notebook proc]$ cat /proc/mod_node 
+.........1.........2.........3.........4.........5.........6
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 3072 (buffer=f1f7e000, off=0)
+! return bytes: 61
+! read: 3072 (buffer=f1f7e000, off=61)
+! return bytes: 61
+! read: 3072 (buffer=f1f7e000, off=61)
+! return bytes: 61
+
+[olej@notebook proc]$ sudo rmmod mod_procr2
+
+
+----------------------------------------------------------------------------
+
+
+
+[olej@notebook proc]$ sudo insmod mod_proct.ko
+
+[olej@notebook proc]$ ./mcat 20
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 11 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 20 bytes (ppos=0)
+! return 20 bytes
+! read: 20 bytes (ppos=20)
+! return 20 bytes
+! read: 20 bytes (ppos=40)
+! return 11 bytes
+! read: 20 bytes (ppos=51)
+! EOF
+
+
+
+[olej@notebook proc]$ ./mcat 80
+read + 51 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5
+
+[olej@notebook proc]$ dmesg | tail -n5 | grep -v ^audit
+! EOF
+! read: 80 bytes (ppos=0)
+! return 51 bytes
+! read: 80 bytes (ppos=51)
+! EOF
+
+[olej@notebook proc]$ ./mcat 5
+read + 05 bytes, input buffer: .....
+read + 05 bytes, input buffer: .........1
+read + 05 bytes, input buffer: .........1.....
+read + 05 bytes, input buffer: .........1.........2
+read + 05 bytes, input buffer: .........1.........2.....
+read + 05 bytes, input buffer: .........1.........2.........3
+read + 05 bytes, input buffer: .........1.........2.........3.....
+read + 05 bytes, input buffer: .........1.........2.........3.........4
+read + 05 bytes, input buffer: .........1.........2.........3.........4.....
+read + 05 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5
+
+
+
+
+[olej@notebook proc]$ cat /proc/mod_dir/mod_node 
+.........1.........2.........3.........4.........5
+
+[olej@notebook proc]$ echo new string > /proc/mod_dir/mod_node 
+
+[olej@notebook proc]$ cat /proc/mod_dir/mod_node 
+new string
+
+[olej@notebook proc]$ ./mcat 3
+read + 03 bytes, input buffer: new
+read + 03 bytes, input buffer: new st
+read + 03 bytes, input buffer: new strin
+read + 02 bytes, input buffer: new string
+read + 00 bytes, input buffer: new string
+
+
+
+
+
+
+
+[olej@notebook proc]$ sudo insmod mod_proct.ko
+
+[olej@notebook proc]$ cat /proc/mod_dir/mod_node 
+.........1.........2.........3.........4.........5
+
+[olej@notebook proc]$ dmesg | tail -n30 | grep -v ^audit
+! /proc/mod_node installed
+! read: 32768 bytes (ppos=0)
+! return 51 bytes
+! read: 32768 bytes (ppos=51)
+! EOF
+
+[olej@notebook proc]$ sudo rmmod mod_proct
+
+
+============================================================================
+
+02.07.2011
+==========
+
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+=============== making all in proc =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c: В функции «proc_init»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c:7:4: ошибка: неявная декларация функции «create_proc_entry» [-Werror=implicit-function-declaration]
+    own_proc_node = create_proc_entry( NAME_NODE, S_IFREG | S_IRUGO | S_IWUGO, NULL );
+    ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c:7:18: предупреждение: в присваивании целое преобразуется в указатель без приведения типа [по умолчанию включена]
+    own_proc_node = create_proc_entry( NAME_NODE, S_IFREG | S_IRUGO | S_IWUGO, NULL );
+                  ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c:13:17: ошибка: доступ по указателю на неполный тип
+    own_proc_node->uid = own_proc_node->gid = 0;
+                 ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c:13:38: ошибка: доступ по указателю на неполный тип
+    own_proc_node->uid = own_proc_node->gid = 0;
+                                      ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.c:14:17: ошибка: доступ по указателю на неполный тип
+    own_proc_node->read_proc = proc_node_read;
+                 ^
+cc1: some warnings being treated as errors
+make[3]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc/mod_procr.o] Ошибка 1
+make[2]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc] Ошибка 2
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: *** [default] Ошибка 2
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/proc'
+=============== making all in variants =================
+make[1]: Вход в каталог `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants'
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants modules
+make[2]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c: В функции «proc_init»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:20:11: ошибка: неявная декларация функции «create_proc_entry» [-Werror=implicit-function-declaration]
+           create_proc_entry( node_var(), S_IFREG | S_IRUGO | S_IWUGO, NULL );
+           ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:20:11: предупреждение: при инициализации целое преобразуется в указатель без приведения типа [по умолчанию включена]
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:26:17: ошибка: доступ по указателю на неполный тип
+    own_proc_node->uid = own_proc_node->gid = 0;
+                 ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:26:38: ошибка: доступ по указателю на неполный тип
+    own_proc_node->uid = own_proc_node->gid = 0;
+                                      ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:27:17: ошибка: доступ по указателю на неполный тип
+    own_proc_node->read_proc = proc_node_read;
+                 ^
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.c:28:17: ошибка: доступ по указателю на неполный тип
+    own_proc_node->write_proc = proc_node_write;
+                 ^
+cc1: some warnings being treated as errors
+make[3]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants/mod_proc.o] Ошибка 1
+make[2]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants] Ошибка 2
+make[2]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make[1]: *** [module] Ошибка 2
+make[1]: Выход из каталога `/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/examples.tmp/proc/variants'
+make: *** [all] Ошибка 2
+
+
+
+============================================================================
+
+05.02.2015
+==========
+
+[olej@nvidia proc]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia proc]$ make
+make -C /lib/modules/2.6.42.12-1.fc15.i686.PAE/build M=/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr.o
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr2.o
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proc.o
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proct.o
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_2.o
+/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/fops_rw.c:27:16: предупреждение: «node_write» определена, но нигде не используется [-Wunused-function]
+  Building modules, stage 2.
+  MODPOST 5 modules
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_2.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_2.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proc.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proc.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr2.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_procr2.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proct.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/proc.le.3.9/proc/mod_proct.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+cc     mcat.c   -o mcat
+
+============================================================================

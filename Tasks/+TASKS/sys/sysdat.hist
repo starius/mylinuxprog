@@ -1,0 +1,352 @@
+10.02.2015
+==========
+
+[Olej@modules sys]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+=============================================================================================
+
+[Olej@modules sys]$ sudo insmod sysdat.ko path=test
+[sudo] password for Olej: 
+
+[Olej@modules sys]$ dmesg | tail -n2
+[10344.859456] ! module removed
+[11023.614186] ! register node /sys/class/test/node
+
+[Olej@modules sys]$ tree /sys/class/test/
+/sys/class/test/
+└── node
+
+0 directories, 1 file
+
+[Olej@modules sys]$ ls -l /sys/class/test/
+итого 0
+-rw-r--r--. 1 root root 4096 фев 10 13:44 node
+
+[Olej@modules sys]$ cat /sys/class/test/node 
+0
+
+[Olej@modules sys]$ echo 12345 > /sys/class/test/node 
+bash: /sys/class/test/node: Отказано в доступе
+
+[Olej@modules sys]$ echo 12345 | sudo tee 1>/dev/null /sys/class/test/node 
+
+[Olej@modules sys]$ cat /sys/class/test/node 
+12345
+
+[Olej@modules sys]$ dmesg | tail -n6
+[10344.859456] ! module removed
+[11023.614186] ! register node /sys/class/test/node
+[11106.764781] ! read 2: 0
+[11160.990802] ! write 6: 12345
+[11160.990807] ! write: update 12345
+[11163.833296] ! read 6: 12345
+
+[Olej@modules sys]$ echo 12z45 | sudo tee 1>/dev/null /sys/class/test/node 
+tee: /sys/class/test/node: Недопустимый аргумент
+
+[Olej@modules sys]$ dmesg | tail -n6
+[11106.764781] ! read 2: 0
+[11160.990802] ! write 6: 12345
+[11160.990807] ! write: update 12345
+[11163.833296] ! read 6: 12345
+[11224.343583] ! write 6: 12z45
+[11224.343588] ! write 1: 
+
+[Olej@modules sys]$ sudo rmmod sysdat.ko 
+
+[Olej@modules sys]$ cat /sys/class/test/node 
+cat: /sys/class/test/node: Нет такого файла или каталога
+
+[Olej@modules sys]$ cat /sys/class/test
+cat: /sys/class/test: Нет такого файла или каталога
+
+=============================================================================================
+
+bash-4.2$ make
+make -C /lib/modules/3.14.8-200.fc20.i686/build M=/home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.i686'
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.o
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.ko
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.i686'
+
+=============================================================================================
+
+olej@ubuntu:~/WORK_2015/sys$ uname -a
+Linux ubuntu 3.2.0-25-generic-pae #40-Ubuntu SMP Wed May 23 22:11:24 UTC 2012 i686 i686 i386 GNU/Linux
+
+olej@ubuntu:~/WORK_2015/sys$ sudo insmod syskdat.ko
+[sudo] password for olej: 
+
+olej@ubuntu:~/WORK_2015/sys$ dmesg | tail -n2
+[   37.686202] eth0: no IPv6 routers present
+[   37.698202] eth1: no IPv6 routers present
+
+olej@ubuntu:~/WORK_2015/sys$ ls /sys/kernel/
+debug   kexec_crash_loaded  kexec_loaded     mm     profiling  slab           uevent_seqnum
+fscaps  kexec_crash_size    kobject_example  notes  security   uevent_helper  vmcoreinfo
+
+olej@ubuntu:~/WORK_2015/sys$ ls /sys/kernel/kobject_example/
+bar  baz  foo
+
+olej@ubuntu:~/WORK_2015/sys$ tree /sys/kernel/kobject_example/
+Программа 'tree' на данный момент не установлена.  Вы можете установить её, выполнив:
+sudo apt-get install tree
+
+olej@ubuntu:~/WORK_2015/sys$ sudo apt-get install tree
+Чтение списков пакетов… Готово
+Построение дерева зависимостей       
+Чтение информации о состоянии… Готово
+НОВЫЕ пакеты, которые будут установлены:
+  tree
+обновлено 0, установлено 1 новых пакетов, для удаления отмечено 0 пакетов, и 699 пакетов не обновлено.
+Необходимо скачать 27,6 kБ архивов.
+После данной операции, объём занятого дискового пространства возрастёт на 98,3 kB.
+Получено:1 http://ua.archive.ubuntu.com/ubuntu/ precise/universe tree i386 1.5.3-2 [27,6 kB]
+Получено 27,6 kБ за 0с (99,2 kБ/c)
+Выбор ранее не выбранного пакета tree.
+(Чтение базы данных ... на данный момент установлено 207360 файлов и каталогов.)
+Распаковывается пакет tree (из файла .../archives/tree_1.5.3-2_i386.deb)...
+Обрабатываются триггеры для man-db ...
+Настраивается пакет tree (1.5.3-2) ...
+
+---------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/sys$ tree /sys/kernel/kobject_example/
+/sys/kernel/kobject_example/
+├── bar
+├── baz
+└── foo
+
+0 directories, 3 files
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/bar
+0
+
+olej@ubuntu:~/WORK_2015/sys$ echo 123 > /sys/kernel/kobject_example/bar
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/bar
+123
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/baz
+0
+
+olej@ubuntu:~/WORK_2015/sys$ echo 456 > /sys/kernel/kobject_example/baz
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/baz
+456
+
+olej@ubuntu:~/WORK_2015/sys$ echo 789 > /sys/kernel/kobject_example/foo 
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/foo 
+789
+
+olej@ubuntu:~/WORK_2015/sys$ echo i686 > /sys/kernel/kobject_example/foo 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/kobject_example/foo 
+789
+
+olej@ubuntu:~/WORK_2015/sys$ sudo rmmod syskdat.ko
+
+---------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/sys$ sudo insmod syskdat.ko
+
+olej@ubuntu:~/WORK_2015/sys$ ls /sys/kernel
+data   fscaps              kexec_crash_size  mm     profiling  slab           uevent_seqnum
+debug  kexec_crash_loaded  kexec_loaded      notes  security   uevent_helper  vmcoreinfo
+
+olej@ubuntu:~/WORK_2015/sys$ ls /sys/kernel/data/
+node1  node2  node3
+
+olej@ubuntu:~/WORK_2015/sys$ tree /sys/kernel/data/
+/sys/kernel/data/
+├── node1
+├── node2
+└── node3
+
+0 directories, 3 files
+
+olej@ubuntu:~/WORK_2015/sys$ ls -l /sys/kernel/data/
+итого 0
+-rw-rw-rw- 1 root root 4096 Фев 10 23:20 node1
+-rw-rw-rw- 1 root root 4096 Фев 10 23:20 node2
+-rw-rw-rw- 1 root root 4096 Фев 10 23:20 node3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/data/*
+0
+0
+0
+
+olej@ubuntu:~/WORK_2015/sys$ echo 12 > /sys/kernel/data/node1
+
+olej@ubuntu:~/WORK_2015/sys$ echo 23 > /sys/kernel/data/node2
+
+olej@ubuntu:~/WORK_2015/sys$ echo 34 > /sys/kernel/data/node3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/data/*
+12
+34
+34
+
+olej@ubuntu:~/WORK_2015/sys$ sudo rmmod syskdat.ko
+
+olej@ubuntu:~/WORK_2015/sys$ dmesg | tail -n3
+[   32.272106] [drm] Initialized vboxvideo 1.0.0 20090303 for 0000:00:02.0 on minor 0
+[   37.686202] eth0: no IPv6 routers present
+[   37.698202] eth1: no IPv6 routers present
+
+---------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/sys$ sudo insmod syskdat.ko path=next
+[sudo] password for olej: 
+
+olej@ubuntu:~/WORK_2015/sys$ dmesg | tail -n3
+[11415.038882] gltext[4603]: segfault at b6ffa0b0 ip b6ffa0b0 sp bfe4d38c error 15
+[12015.118589] glmatrix[5327]: segfault at b6d1a0b0 ip b6d1a0b0 sp bfa1b4cc error 15
+[12549.907368] ! register nodes /sys/kernel/next/*
+
+olej@ubuntu:~/WORK_2015/sys$ ls -l /sys/kernel/next/
+итого 0
+-rw-rw-rw- 1 root root 4096 Фев 11 00:07 node1
+-rw-rw-rw- 1 root root 4096 Фев 11 00:07 node2
+-rw-rw-rw- 1 root root 4096 Фев 11 00:07 node3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/*
+0
+0
+0
+
+olej@ubuntu:~/WORK_2015/sys$ echo 1 > /sys/kernel/next/node1
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/node1
+1
+
+olej@ubuntu:~/WORK_2015/sys$ echo 2 > /sys/kernel/next/node2
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/node2
+2
+
+olej@ubuntu:~/WORK_2015/sys$ echo 3 > /sys/kernel/next/node3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/node3
+3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/*
+1
+2
+3
+
+olej@ubuntu:~/WORK_2015/sys$ sudo rmmod syskdat.ko 
+
+olej@ubuntu:~/WORK_2015/sys$ dmesg | tail -n2
+[12549.907368] ! register nodes /sys/kernel/next/*
+[12694.910810] ! module removed
+
+---------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/sys$ sudo insmod syskdat.ko path=next
+[sudo] password for olej: 
+
+olej@ubuntu:~/WORK_2015/sys$ ls -l /sys/kernel/next/
+итого 0
+-rw-rw-rw- 1 root root 4096 Фев 11 00:26 node1
+-rw-rw-rw- 1 root root 4096 Фев 11 00:26 node2
+-rw-rw-rw- 1 root root 4096 Фев 11 00:26 node3
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/*
+0
+0
+0
+
+olej@ubuntu:~/WORK_2015/sys$ echo 3 > /sys/kernel/next/node3
+
+olej@ubuntu:~/WORK_2015/sys$ echo 2 > /sys/kernel/next/node2
+
+olej@ubuntu:~/WORK_2015/sys$ echo 1 > /sys/kernel/next/node1
+
+olej@ubuntu:~/WORK_2015/sys$ cat /sys/kernel/next/*
+1
+2
+3
+
+olej@ubuntu:~/WORK_2015/sys$ sudo rmmod syskdat.ko 
+
+olej@ubuntu:~/WORK_2015/sys$ dmesg | tail -n2
+[13665.964248] ! register nodes /sys/kernel/next/*
+[13727.000645] ! module removed
+
+=============================================================================================
+
+[Olej@modules sys]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/sysdat.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/sys/syskdat.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+[Olej@modules sys]$ sudo insmod syskdat.ko 
+[sudo] password for Olej: 
+
+[Olej@modules sys]$ ls /sys/kernel/data/
+node1  node2  node3
+
+[Olej@modules sys]$ tree /sys/kernel/data/
+/sys/kernel/data/
+├── node1
+├── node2
+└── node3
+
+0 directories, 3 files
+
+[Olej@modules sys]$ ls -l /sys/kernel/data/
+итого 0
+-rw-rw-rw-. 1 root root 4096 фев 11 00:39 node1
+-rw-rw-rw-. 1 root root 4096 фев 11 00:39 node2
+-rw-rw-rw-. 1 root root 4096 фев 11 00:39 node3
+
+[Olej@modules sys]$ cat /sys/kernel/data/*
+0
+0
+0
+
+[Olej@modules sys]$ echo 11 > /sys/kernel/data/node1
+
+[Olej@modules sys]$ echo 22 > /sys/kernel/data/node2
+
+[Olej@modules sys]$ echo 33 > /sys/kernel/data/node3
+
+[Olej@modules sys]$ cat /sys/kernel/data/*
+11
+22
+33
+
+[Olej@modules sys]$ sudo rmmod syskdat.ko 
+
+[Olej@modules sys]$ ls -l /sys/kernel/data/
+ls: невозможно получить доступ к /sys/kernel/data/: Нет такого файла или каталога
+
+=============================================================================================

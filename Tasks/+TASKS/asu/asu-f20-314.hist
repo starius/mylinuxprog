@@ -1,0 +1,319 @@
+10.02.2015
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+============================================================================================================
+
+bash-4.2$ sudo insmod modsasu.ko
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n2
+[27612.784357] modsasu: module verification failed: signature and/or  required key missing - tainting kernel
+[27612.786450] ! register 3 nodes in /sys/class/asu
+
+
+bash-4.2$ tree /sys/class/asu
+/sys/class/asu
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+
+bash-4.2$ ls -l /sys/class/asu
+итого 0
+--w------- 1 root root 4096 фев 10 03:19 increment
+-rw-r--r-- 1 root root 4096 фев 10 03:19 multiply
+-rw-r--r-- 1 root root 4096 фев 10 03:19 value
+
+bash-4.2$ cat /sys/class/asu/multiply 
+0
+
+bash-4.2$ cat /sys/class/asu/value 
+0
+
+bash-4.2$ cat /sys/class/asu/increment 
+cat: /sys/class/asu/increment: Отказано в доступе
+
+bash-4.2$ sudo cat /sys/class/asu/increment 
+cat: /sys/class/asu/increment: Отказано в доступе
+
+
+bash-4.2$ dmesg | tail -n5
+[27612.786450] ! register 3 nodes in /sys/class/asu
+[27767.440401] ! show_value: 0
+[2]
+[27775.016736] ! show_value: 0
+[2]
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+ip6table_filter        12711  0 
+ip6_tables             17634  1 ip6table_filter
+
+============================================================================================================
+
+
+bash-4.2$ sudo insmod modsasu.ko
+
+bash-4.2$ dmesg | tail -n3
+[28116.359819]  [<c09f910d>] sysenter_do_call+0x12/0x28
+[28116.359822] ---[ end trace 9b7a7049af33c8da ]---
+[28116.359825] ! can't create directory /sys/class/asu
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+modsasu                12873  0 
+ip6table_filter        12711  0 
+
+============================================================================================================
+
+11.02.2015
+==========
+
+bash-4.2$ sudo insmod modsasu.ko 
+[sudo] password for Olej: 
+
+bash-4.2$ ls /sys/kernel/
+asu	     debug	   kexec_crash_loaded  mm	  rcu_expedited  uevent_helper
+boot_params  fscaps	   kexec_crash_size    notes	  security	 uevent_seqnum
+config	     iommu_groups  kexec_loaded        profiling  slab		 vmcoreinfo
+
+bash-4.2$ tree /sys/kernel/asu/
+/sys/kernel/asu/
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+bash-4.2$ ls -l /sys/kernel/asu/
+итого 0
+--w--w--w- 1 root root 4096 фев 11 11:17 increment
+-rw-rw-rw- 1 root root 4096 фев 11 11:17 multiply
+-rw-rw-rw- 1 root root 4096 фев 11 11:17 value
+
+bash-4.2$ cat /sys/kernel/asu/value 
+0
+
+bash-4.2$ cat /sys/kernel/asu/multiply 
+0
+
+bash-4.2$ echo 100 > /sys/kernel/asu/value 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+100
+
+bash-4.2$ echo 95 > /sys/kernel/asu/multiply 
+
+bash-4.2$ cat /sys/kernel/asu/multiply 
+95
+
+bash-4.2$ cat /sys/kernel/asu/increment 
+cat: /sys/kernel/asu/increment: Отказано в доступе
+
+bash-4.2$ echo -95 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+190
+
+bash-4.2$ echo 190 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+551
+
+bash-4.2$ sudo rmmod modsasu.ko 
+
+------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod modsasu.ko 
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n2
+[21006.942580] ! module removed
+[21381.569841] ! register nodes /sys/kernel/asu/*
+
+bash-4.2$ tree /sys/kernel/asu/
+/sys/kernel/asu/
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+
+bash-4.2$ ls -l /sys/kernel/asu/
+итого 0
+--w--w--w- 1 root root 4096 фев 11 16:25 increment
+-rw-rw-rw- 1 root root 4096 фев 11 16:25 multiply
+-rw-rw-rw- 1 root root 4096 фев 11 16:25 value
+
+bash-4.2$ cat /sys/kernel/asu/value 
+0
+
+bash-4.2$ cat /sys/kernel/asu/multiply 
+100
+
+bash-4.2$ cat /sys/kernel/asu/increment 
+cat: /sys/kernel/asu/increment: Отказано в доступе
+
+bash-4.2$ echo 123 > /sys/kernel/asu/value 
+
+bash-4.2$ echo 130 > /sys/kernel/asu/multiply 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+123
+
+bash-4.2$ echo 123 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+282
+
+bash-4.2$ echo -282 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+-84
+
+bash-4.2$ echo 84 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+25
+
+bash-4.2$ echo 25 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+57
+
+bash-4.2$ echo -57 > /sys/kernel/asu/increment 
+
+bash-4.2$ cat /sys/kernel/asu/value 
+-17
+
+bash-4.2$ sudo rmmod modsasu.ko 
+
+bash-4.2$ dmesg | tail -n10
+[21511.329873] ! read value: 282
+[21527.608883] ! write increment: -282
+[21529.514311] ! read value: -84
+[21538.489159] ! write increment: 84
+[21540.426606] ! read value: 25
+[21546.785197] ! write increment: 25
+[21550.762801] ! read value: 57
+[21558.793426] ! write increment: -57
+[21560.635032] ! read value: -17
+[21576.099560] ! module removed
+
+============================================================================================================
+
+15.02.2015
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.14.8-200.fc20.i686/build M=/home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.i686'
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.o
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.ko
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.i686'
+gcc -Wall -Wno-unused-variable -lm cli.c locl.c -o cli_locl
+gcc -Wall -Wno-unused-variable -DPROC -lm cli.c kern.c -o cli_krnp
+gcc -Wall -Wno-unused-variable -DSYS -lm cli.c kern.c -o cli_krns
+
+bash-4.2$ sudo insmod modpasu.ko
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n2
+[ 1616.253190] modpasu: module verification failed: signature and/or  required key missing - tainting kernel
+[ 1616.253564] ! register nodes /proc/asu/*
+
+bash-4.2$ tree /proc/asu/
+/proc/asu/
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+
+bash-4.2$ ls -l /proc/asu/
+итого 0
+-rw-rw-rw- 1 root root 0 фев 15 15:22 increment
+-rw-rw-rw- 1 root root 0 фев 15 15:22 multiply
+-rw-rw-rw- 1 root root 0 фев 15 15:22 value
+
+bash-4.2$ cat /proc/asu/*
+cat: /proc/asu/increment: Ошибка ввода/вывода
+100
+0
+
+bash-4.2$ echo 80 > /proc/asu/multiply 
+
+bash-4.2$ cat /proc/asu/multiply 
+80
+
+bash-4.2$ echo 100 > /proc/asu/value 
+
+bash-4.2$ cat /proc/asu/value 
+100
+
+bash-4.2$ echo -100 > /proc/asu/increment
+
+bash-4.2$ cat /proc/asu/value 
+20
+
+bash-4.2$ echo -20 > /proc/asu/increment 
+
+bash-4.2$ cat /proc/asu/value 
+4
+
+bash-4.2$ sudo rmmod modpasu.ko
+[sudo] password for Olej: 
+
+bash-4.2$ tree /proc/asu/
+/proc/asu/ [error opening dir]
+
+0 directories, 0 files
+
+------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod modpasu.ko
+[sudo] password for Olej: 
+
+bash-4.2$ tree /proc/asu/
+/proc/asu/
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+
+bash-4.2$ ./cli_krnp 
+команда (h-подсказка): =
+новое значение = 0
+команда (h-подсказка): *
+усиление = 100%
+команда (h-подсказка): *150
+усиление = 150%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -50
+-50 +50 => 25
+25 -25 => -12
+-12 +12 => 6
+6 -6 => -3
+-3 +3 => 1
+
+============================================================================================================
+

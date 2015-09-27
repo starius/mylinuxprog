@@ -1,0 +1,146 @@
+24.07.2011
+==========
+
+[olej@notebook thread]$ time sudo insmod ./mod_thr1.ko
+insmod: error inserting './mod_thr1.ko': -1 Operation not permitted
+
+real	0m5.025s
+user	0m0.004s
+sys	0m0.012s
+
+
+[olej@notebook thread]$ sudo cat /var/log/messages | tail -n30 | grep thread:
+Jul 24 18:43:57 notebook kernel: thread: main process [12526] is running
+Jul 24 18:43:57 notebook kernel: thread: child process [12527] is running
+Jul 24 18:44:00 notebook kernel: thread: child process [12527] is completed
+Jul 24 18:44:02 notebook kernel: thread: main process [12526] is completed
+
+
+-----------------------------------------------------------------------------
+
+[olej@notebook thread]$ sudo insmod ./mod_thr1.ko param=7
+insmod: error inserting './mod_thr1.ko': -1 Operation not permitted
+[olej@notebook thread]$ 
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:Oops: 0002 [#1] SMP 
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:last sysfs file: /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0A:00/power_supply/C1BC/charge_full
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:Process insmod (pid: 12659, ti=f2b0c000 task=cc5d0cc0 task.ti=f2b0c000)
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:Stack:
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:Call Trace:
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:EIP: [<f8bf7082>] 0xf8bf7082 SS:ESP 0068:f2b0dfd4
+
+Message from syslogd@notebook at Jul 24 18:51:00 ...
+ kernel:CR2: 0000000000000000
+
+[olej@notebook thread]$ sudo cat /var/log/messages | tail -n70 | grep thread:
+Jul 24 18:50:53 notebook kernel: thread: main process [12658] is running
+Jul 24 18:50:53 notebook kernel: thread: child process [12659] is running
+Jul 24 18:50:58 notebook kernel: thread: main process [12658] is completed
+
+-----------------------------------------------------------------------------
+
+$ sudo insmod ./mod_thr2.ko
+insmod: error inserting './mod_thr2.ko': -1 Operation not permitted
+
+$ sudo cat /var/log/messages | tail -n4
+Apr 17 21:20:23 notebook kernel: main process [12406] is running
+Apr 17 21:20:23 notebook kernel: child process [12407] is running
+Apr 17 21:20:33 notebook kernel: child process [12407] is completed
+Apr 17 21:20:33 notebook kernel: main process [12406] is completed
+
+$ ps -A | grep 12406
+$ ps -A | grep 12407
+$
+
+=============================================================================
+
+24.07.2011
+==========
+
+[olej@notebook thread]$ time sudo insmod mod_thr3.ko N=3
+insmod: error inserting 'mod_thr3.ko': -1 Operation not permitted
+
+real	0m10.140s
+user	0m0.006s
+sys	0m0.010s
+
+
+[olej@notebook ~]$ ps -ef | grep '\[' | grep 'my_'
+root     14603     2  0 19:00 ?        00:00:00 [my_thread_3]
+root     14604     2  0 19:00 ?        00:00:00 [my_thread_2]
+root     14605     2  0 19:00 ?        00:00:00 [my_thread_1]
+
+[olej@notebook ~]$ dmesg | tail -n40 | grep -v audit
+34167405 :main process [14602] is running
+34167410 :kthread [14603:2] is parent [00002]
+34167410 :kthread [14604:1] is parent [00002]
+34167410 :kthread [14605:0] is parent [00002]
+34177414 :kthread [14603:2] find signal!
+34177511 :kthread [14604:1] find signal!
+34177516 :kthread [14605:0] find signal!
+34177516 :kthread [14605:0] is completed
+34177516 :kthread [14604:1] is completed
+34177516 :kthread [14603:2] is completed
+34177516 :main process [14602] is completed
+
+=============================================================================
+
+16.03.2015
+==========
+
+[olej@fedora tcreat]$ uname -r
+3.6.11-5.fc17.i686
+
+[olej@fedora tcreat]$ sudo insmod mod_thr3.ko 
+Error: could not insert module mod_thr3.ko: Operation not permitted
+
+[olej@fedora tcreat]$ dmesg | tail -n10
+[ 2426.970216] ! 3080: finish time 20747A
+[ 2426.970309] ! 3079: evaluation time was 1001 millisec.
+[ 4043.438090] 03743438 : main process [6670] is running
+[ 4043.438153] 03743438 : kthread [06671:1] is parent [00002]
+[ 4043.438202] 03743438 : kthread [06672:0] is parent [00002]
+[ 4053.540159] 03753540 : kthread [06671:1] find signal!
+[ 4053.639300] 03753639 : kthread [06672:0] find signal!
+[ 4053.639305] 03753639 : kthread [06672:0] is completed
+[ 4053.639485] 03753639 : kthread [06671:1] is completed
+[ 4053.639794] 03753639 : main process [6670] is completed
+
+-----------------------------------------------------------------------------    
+
+ 23  * kthread_run - create and wake a thread.
+ 24  * @threadfn: the function to run until signal_pending(current).
+ 25  * @data: data ptr for @threadfn.
+ 26  * @namefmt: printf-style name for the thread.
+ 27  *
+ 28  * Description: Convenient wrapper for kthread_create() followed by
+ 29  * wake_up_process().  Returns the kthread or ERR_PTR(-ENOMEM).
+ 30  */
+ 31 #define kthread_run(threadfn, data, namefmt, ...)                          \
+ 32 ({                                                                         \
+ 33         struct task_struct *__k                                            \
+ 34                 = kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \
+ 35         if (!IS_ERR(__k))                                                  \
+ 36                 wake_up_process(__k);                                      \
+ 37         __k;                                                               \
+ 38 })
+
+[olej@fedora smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_run
+
+[olej@fedora smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_create
+0x00000000	kthread_create_on_node	vmlinux	EXPORT_SYMBOL
+
+=============================================================================

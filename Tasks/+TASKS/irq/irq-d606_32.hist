@@ -1,0 +1,119 @@
+07.02.2015
+==========
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ uname -a
+Linux debian 3.2.0-2-686-pae #1 SMP Fri Jun 1 18:56:14 UTC 2012 i686 GNU/Linux
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ make
+make -C /lib/modules/3.2.0-2-686-pae/build M=/home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+  CC [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.o
+  CC [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.mod.o
+  LD [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.ko
+  CC      /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.mod.o
+  LD [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/interrupts 
+           CPU0       CPU1       
+  0:         41          0   IO-APIC-edge      timer
+  1:         85          0   IO-APIC-edge      i8042
+  8:          0          0   IO-APIC-edge      rtc0
+  9:          0          0   IO-APIC-fasteoi   acpi
+ 12:        206          0   IO-APIC-edge      i8042
+ 14:          0          0   IO-APIC-edge      ata_piix
+ 15:       4855          0   IO-APIC-edge      ata_piix
+ 16:        488          0   IO-APIC-fasteoi   eth1
+ 19:       2738          0   IO-APIC-fasteoi   ehci_hcd:usb1, eth0
+ 20:       1951          0   IO-APIC-fasteoi   vboxguest
+ 21:      14624          0   IO-APIC-fasteoi   ahci, snd_intel8x0
+ 22:         26          0   IO-APIC-fasteoi   ohci_hcd:usb2
+NMI:          0          0   Non-maskable interrupts
+LOC:      24195      21396   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:          0          0   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RES:      15012      20782   Rescheduling interrupts
+CAL:        313        390   Function call interrupts
+TLB:       1232       1691   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          3          3   Machine check polls
+ERR:          0
+MIS:          0
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ watch 'cat /proc/interrupts' 
+...
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/interrupts | grep 16:
+ 16:        539          0   IO-APIC-fasteoi   eth1
+
+======================================================================================================
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ sudo insmod irqcntp.ko irq=16
+[sudo] password for olej: 
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ lsmod | head -n3
+Module                  Size  Used by
+irqcntp                12414  0 
+mperf                  12421  0 
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ ls -l /proc/irq_counter/
+итого 0
+-rw-rw-rw- 1 root root 0 Фев  7 21:22 counter
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+48
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+50
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+51
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+52
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+53
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+55
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+56
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+67
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ sudo rmmod irqcntp.ko 
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ dmesg | tail -n5
+[   54.356334] lp: driver loaded but no devices found
+[   54.500867] ppdev: user-space parallel port driver
+[   71.977005] colord[1945]: segfault at 8 ip 08052674 sp bfd368b0 error 4 in colord[8048000+20000]
+[ 1044.501321] === register node /proc/irq_counter/counter
+[ 1192.010171] === module removed: registered 75 events
+
+------------------------------------------------------------------------------------------------------
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ sudo insmod irqcntp.ko irq=16
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+3
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+4
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ cat /proc/irq_counter/counter 
+5
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq$ sudo rmmod irqcntp.ko 
+
+======================================================================================================

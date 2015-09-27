@@ -1,0 +1,114 @@
+10.02.2015
+==========
+
+[Olej@modules ~]$ ssh -X olej@192.168.1.9
+olej@192.168.1.9's password: 
+Last login: Sun Feb  8 22:06:05 2015 from modules
+
+[olej@nvidia ~]$ VirtualBox &
+[1] 1616
+
+[olej@nvidia ~]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+=======================================================================================
+
+[olej@nvidia asu]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia asu]$ make
+make -C /lib/modules/2.6.42.12-1.fc15.i686.PAE/build M=/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.o
+/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.c: В функции «multiply_read»:
+/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.c:63:4: предупреждение: format «%d» expects argument of type «int», but argument 3 has type «long int» [-Wformat]
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+gcc -Wall -Wno-unused-variable -lm cli.c locl.c -o cli_locl
+gcc -Wall -Wno-unused-variable -DPROC -lm cli.c kern.c -o cli_krnp
+gcc -Wall -Wno-unused-variable -DSYS -lm cli.c kern.c -o cli_krns
+
+---------------------------------------------------------------------------------------
+
+[olej@nvidia asu]$ sudo insmod modpasu.ko
+
+[olej@nvidia asu]$ sudo insmod modsasu.ko
+
+[olej@nvidia asu]$ lsmod | head -n4
+Module                  Size  Used by
+modsasu                12755  0 
+modpasu                12821  0 
+ppdev                  17363  0 
+
+[olej@nvidia asu]$ ls cli_*
+cli_krnp  cli_krns  cli_locl
+
+[olej@nvidia asu]$ ./cli_locl 
+команда (h-подсказка): 
+нераспознанная команда!
+реализованные команды: ? =N *[N] h q
+команда (h-подсказка): =
+новое значение = 0
+команда (h-подсказка): *160
+усиление = 160%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -60
+-60 +60 => 36
+36 -36 => -21
+-21 +21 => 12
+12 -12 => -7
+-7 +7 => 4
+4 -4 => -2
+-2 +2 => 1
+команда (h-подсказка): q
+
+[olej@nvidia asu]$ ./cli_krnp
+команда (h-подсказка): 
+нераспознанная команда!
+реализованные команды: ? =N *[N] h q
+команда (h-подсказка): *160
+усиление = 160%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -60
+-60 +60 => 36
+36 -36 => -21
+-21 +21 => 12
+12 -12 => -7
+-7 +7 => 4
+4 -4 => -2
+-2 +2 => 1
+команда (h-подсказка): q
+
+[olej@nvidia asu]$ ./cli_krns
+команда (h-подсказка): *160
+усиление = 160%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -60
+-60 +60 => 36
+36 -36 => -21
+-21 +21 => 12
+12 -12 => -7
+-7 +7 => 4
+4 -4 => -2
+-2 +2 => 1
+команда (h-подсказка): q
+
+[olej@nvidia asu]$ sudo rmmod modpasu.ko
+
+[olej@nvidia asu]$ sudo rmmod modsasu.ko
+
+[olej@nvidia asu]$ dmesg | tail -n2
+[  857.452044] ! module removed
+[  861.903159] ! module removed
+
+=======================================================================================
+

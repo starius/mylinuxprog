@@ -1,0 +1,626 @@
+===================================================================================
+
+16.07.2012
+==========
+
+[olej@nvidia ~]$ sudo ifconfig vboxnet0:1 192.168.50.1
+
+[olej@nvidia 16]$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether f4:6d:04:60:78:6f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.9/24 brd 192.168.1.255 scope global eth0
+    inet6 fe80::f66d:4ff:fe60:786f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: vboxnet0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
+    link/ether 0a:00:27:00:00:00 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.1/24 brd 192.168.56.255 scope global vboxnet0
+    inet 192.168.50.1/24 brd 192.168.50.255 scope global vboxnet0:0
+    inet6 fe80::800:27ff:fe00:0/64 scope link 
+       valid_lft forever preferred_lft forever
+
+[olej@nvidia ~]$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         192.168.1.1     0.0.0.0         UG    0      0        0 eth0
+192.168.1.0     *               255.255.255.0   U     1      0        0 eth0
+192.168.50.0    *               255.255.255.0   U     0      0        0 vboxnet0
+192.168.56.0    *               255.255.255.0   U     0      0        0 vboxnet0
+
+[olej@nvidia 16]$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.1.5              ether   00:15:60:c4:ee:02   C                     eth0
+192.168.1.21             ether   08:00:27:52:b9:e0   C                     eth0
+192.168.1.1              ether   c8:64:c7:8a:50:16   C                     eth0
+192.168.1.20             ether   08:00:27:14:ca:91   C                     eth0
+
+
+
+
+[olej@nvidia 16]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 bytes from 192.168.56.101: icmp_req=1 ttl=64 time=0.572 ms
+64 bytes from 192.168.56.101: icmp_req=2 ttl=64 time=0.208 ms
+^C
+--- 192.168.56.101 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.208/0.390/0.572/0.182 ms
+
+[olej@nvidia 16]$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.56.101           ether   08:00:27:9e:02:02   C                     vboxnet0
+192.168.1.5              ether   00:15:60:c4:ee:02   C                     eth0
+192.168.1.21             ether   08:00:27:52:b9:e0   C                     eth0
+192.168.1.1              ether   c8:64:c7:8a:50:16   C                     eth0
+192.168.1.20             ether   08:00:27:14:ca:91   C                     eth0
+
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora16vm ~]$ cat /etc/fedora-release 
+Fedora release 16 (Verne)
+
+
+[olej@fedora16vm virt-proto]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:14:ca:91 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+
+
+[olej@fedora16vm virt-proto]$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:14:ca:91 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.20/24 brd 192.168.1.255 scope global p2p1
+    inet6 fe80::a00:27ff:fe14:ca91/64 scope link 
+       valid_lft forever preferred_lft forever
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global p7p1
+    inet6 fe80::a00:27ff:fe9e:202/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora16vm virt-proto]$ pwd
+/home/olej/WORK/network/virt-proto
+
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n3
+[22231.917001] ! p2p1: ARP for 192.168.1.20
+[22243.352048] ! module virt unloaded
+[22243.352051] ! =============================================
+
+
+[olej@fedora16vm virt-proto]$ sudo insmod ./virtl.ko link=p7p1 debug=1
+
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n3
+[22243.352051] ! =============================================
+[22260.198569] ! module virtl loaded
+[22260.198569] ! virtl: create link virt0
+
+[olej@fedora16vm virt-proto]$ lsmod | grep virt
+virtl                  12969  0 
+
+
+[olej@fedora16vm virt-proto]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:14:ca:91 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+7: virt0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+
+
+
+
+[olej@nvidia 16]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+^C
+--- 192.168.56.101 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+
+
+
+[olej@fedora16vm virt-proto]$ sudo ifconfig virt0 192.168.50.7
+
+
+
+[olej@nvidia 16]$ ping 192.168.50.7
+PING 192.168.50.7 (192.168.50.7) 56(84) bytes of data.
+64 bytes from 192.168.50.7: icmp_req=1 ttl=64 time=0.587 ms
+64 bytes from 192.168.50.7: icmp_req=2 ttl=64 time=0.221 ms
+^C
+--- 192.168.50.7 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.221/0.404/0.587/0.183 ms
+
+
+
+[olej@nvidia 16]$ cat /etc/fedora-release
+Fedora release 15 (Lovelock)
+
+
+[olej@nvidia 16]$ ssh olej@192.168.50.7
+The authenticity of host '192.168.50.7 (192.168.50.7)' can't be established.
+RSA key fingerprint is 52:99:0b:da:15:03:d4:49:1b:4e:20:56:96:a4:9c:be.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.50.7' (RSA) to the list of known hosts.
+Nasty PTR record "192.168.50.7" is set up for 192.168.50.7, ignoring
+olej@192.168.50.7's password: 
+Last login: Mon Jul 16 12:22:43 2012 from 192.168.1.9
+
+[olej@fedora16vm ~]$ cat /etc/fedora-release 
+Fedora release 16 (Verne)
+
+
+[olej@fedora16vm virt-proto]$ sudo rmmod virtl
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n5
+[22768.649711] ! tx: injecting frame from virt0 to p7p1
+[22768.649722] ! rx: packet received with length: 52
+[22830.687212] ! virt0: device closed
+[22830.745405] ! module virtl unloaded
+[22830.745408] ! =============================================
+
+
+
+[olej@nvidia 16]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 bytes from 192.168.56.101: icmp_req=1 ttl=64 time=0.534 ms
+64 bytes from 192.168.56.101: icmp_req=2 ttl=64 time=0.205 ms
+64 bytes from 192.168.56.101: icmp_req=3 ttl=64 time=0.214 ms
+^C
+--- 192.168.56.101 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.205/0.317/0.534/0.154 ms
+
+
+===================================================================================
+
+
+[olej@fedora16vm ~]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:14:ca:91 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+
+[olej@fedora16vm ~]$ sudo tcpdump -i virt0
+tcpdump: virt0: No such device exists
+(SIOCGIFHWADDR: No such device)
+
+
+[olej@fedora16vm virt-proto]$ sudo insmod ./virtl.ko link=p7p1 debug=1
+
+[olej@fedora16vm virt-proto]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:14:ca:91 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+8: virt0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 08:00:27:9e:02:02 brd ff:ff:ff:ff:ff:ff
+
+
+[olej@fedora16vm ~]$ sudo tcpdump -i virt0
+tcpdump: virt0: That device is not up
+
+
+
+
+[olej@fedora16vm virt-proto]$ sudo ifconfig virt0 192.168.50.11
+
+[olej@nvidia 16]$  ping 192.168.50.11
+PING 192.168.50.11 (192.168.50.11) 56(84) bytes of data.
+64 bytes from 192.168.50.11: icmp_req=1 ttl=64 time=0.388 ms
+64 bytes from 192.168.50.11: icmp_req=2 ttl=64 time=0.238 ms
+64 bytes from 192.168.50.11: icmp_req=3 ttl=64 time=0.217 ms
+^C
+--- 192.168.50.11 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 0.217/0.281/0.388/0.076 ms
+
+
+[olej@nvidia 16]$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.1.20             ether   08:00:27:14:ca:91   C                     eth0
+192.168.50.11            ether   08:00:27:9e:02:02   C                     vboxnet0
+192.168.1.21             ether   08:00:27:52:b9:e0   C                     eth0
+192.168.1.1              ether   c8:64:c7:8a:50:16   C                     eth0
+192.168.1.5              ether   00:15:60:c4:ee:02   C                     eth0
+
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n10
+[24686.531746] ! tx: injecting frame from virt0 to p7p1 with length: 98
+[24687.533457] ! tx: injecting frame from p7p1 to virt0 with length: 84
+[24687.533508] ! tx: injecting frame from p7p1 to virt0 with length: 98
+[24687.533540] ! tx: injecting frame from virt0 to p7p1 with length: 98
+[24688.535094] ! tx: injecting frame from p7p1 to virt0 with length: 84
+[24688.535136] ! tx: injecting frame from p7p1 to virt0 with length: 98
+[24688.535167] ! tx: injecting frame from virt0 to p7p1 with length: 98
+[24691.536111] ! tx: injecting frame from p7p1 to virt0 with length: 42
+[24691.536215] ! tx: injecting frame from virt0 to p7p1 with length: 42
+[24691.536236] ! tx: injecting frame from p7p1 to virt0 with length: 46
+
+
+[olej@fedora16vm ~]$ sudo tcpdump -i virt0
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on virt0, link-type EN10MB (Ethernet), capture size 65535 bytes
+16:16:53.915246 IP 192.168.50.11.mdns > 224.0.0.251.mdns: 0*- [0q] 2/0/0 (Cache flush) PTR fedora16vm.local., (Cache flush) AAAA fe80::a00:27ff:fe9e:202 (142)
+16:16:54.637735 IP 192.168.50.11 > igmp.mcast.net: igmp v3 report, 1 group record(s)
+16:16:55.757699 IP6 fedora16vm.localdomain > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+16:16:57.549720 IP6 fedora16vm.localdomain > ff02::2: ICMP6, router solicitation, length 16
+16:17:15.889169 ARP, Reply 192.168.50.11 is-at 08:00:27:9e:02:02 (oui Unknown), length 28
+16:17:15.889325 IP 192.168.50.11 > 192.168.50.1: ICMP echo reply, id 7849, seq 1, length 64
+16:17:16.891100 IP 192.168.50.11 > 192.168.50.1: ICMP echo reply, id 7849, seq 2, length 64
+16:17:17.892735 IP 192.168.50.11 > 192.168.50.1: ICMP echo reply, id 7849, seq 3, length 64
+16:17:20.893697 ARP, Request who-has 192.168.50.1 tell 192.168.50.11, length 28
+
+
+
+[olej@fedora16vm virt-proto]$ sudo rmmod virtl
+
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n5
+[24691.536236] ! tx: injecting frame from p7p1 to virt0 with length: 46
+[24875.575528] ! virt0: device closed
+[24875.579959] device virt0 left promiscuous mode
+[24875.615271] ! module virtl unloaded
+[24875.615274] ! =============================================
+
+
+
+[olej@nvidia 16]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 bytes from 192.168.56.101: icmp_req=1 ttl=64 time=0.323 ms
+64 bytes from 192.168.56.101: icmp_req=2 ttl=64 time=0.216 ms
+64 bytes from 192.168.56.101: icmp_req=3 ttl=64 time=0.214 ms
+^C
+--- 192.168.56.101 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.214/0.251/0.323/0.050 ms
+
+
+===================================================================================
+
+
+[olej@fedora16vm virt-proto]$ sudo insmod ./virt.ko link=p7p1 debug=1
+
+[olej@fedora16vm virt-proto]$ dmesg | tail -n5
+[28476.556284] device virt0 left promiscuous mode
+[28476.582796] ! module virt unloaded
+[28476.582799] ! =============================================
+[28763.561393] ! module virt loaded
+[28763.561397] ! virt: create link virt0
+
+[olej@nvidia 16]$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.1.20             ether   08:00:27:14:ca:91   C                     eth0
+192.168.50.13                    (incomplete)                              vboxnet0
+192.168.1.21             ether   08:00:27:52:b9:e0   C                     eth0
+192.168.56.101           ether   08:00:27:9e:02:02   C                     vboxnet0
+192.168.1.1              ether   c8:64:c7:8a:50:16   C                     eth0
+192.168.1.5              ether   00:15:60:c4:ee:02   C                     eth0
+
+
+[olej@nvidia 16]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 bytes from 192.168.56.101: icmp_req=1 ttl=64 time=0.791 ms
+64 bytes from 192.168.56.101: icmp_req=2 ttl=64 time=0.208 ms
+64 bytes from 192.168.56.101: icmp_req=3 ttl=64 time=0.249 ms
+^C
+--- 192.168.56.101 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.208/0.416/0.791/0.265 ms
+
+
+
+
+[olej@fedora16vm virt-proto]$ sudo ifconfig virt0 192.168.50.17
+
+
+[olej@fedora16vm virt-proto]$ sudo ifconfig virt0
+virt0     Link encap:Ethernet  HWaddr 08:00:27:9E:02:02  
+          inet addr:192.168.50.17  Bcast:192.168.50.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe9e:202/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:22 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:4794 (4.6 KiB)
+
+
+[olej@nvidia 16]$  ping 192.168.50.17
+PING 192.168.50.17 (192.168.50.17) 56(84) bytes of data.
+64 bytes from 192.168.50.17: icmp_req=1 ttl=64 time=7.13 ms
+64 bytes from 192.168.50.17: icmp_req=2 ttl=64 time=0.246 ms
+64 bytes from 192.168.50.17: icmp_req=3 ttl=64 time=0.252 ms
+64 bytes from 192.168.50.17: icmp_req=4 ttl=64 time=0.242 ms
+^C
+--- 192.168.50.17 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3000ms
+rtt min/avg/max/mdev = 0.242/1.968/7.133/2.982 ms
+
+
+
+[olej@fedora16vm virt-proto]$ sudo ifconfig virt0
+virt0     Link encap:Ethernet  HWaddr 08:00:27:9E:02:02  
+          inet addr:192.168.50.17  Bcast:192.168.50.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe9e:202/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:6 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:28 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:428 (428.0 b)  TX bytes:5270 (5.1 KiB)
+
+
+[olej@fedora16vm virt-proto]$ sudo tcpdump -i virt0
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on virt0, link-type EN10MB (Ethernet), capture size 65535 bytes
+17:27:54.914885 ARP, Reply 192.168.50.17 is-at 08:00:27:9e:02:02 (oui Unknown), length 28
+17:27:54.918023 IP 192.168.50.17 > 192.168.50.1: ICMP echo reply, id 8067, seq 1, length 64
+17:27:55.912516 IP 192.168.50.17 > 192.168.50.1: ICMP echo reply, id 8067, seq 2, length 64
+17:27:56.912419 IP 192.168.50.17 > 192.168.50.1: ICMP echo reply, id 8067, seq 3, length 64
+17:27:57.912541 IP 192.168.50.17 > 192.168.50.1: ICMP echo reply, id 8067, seq 4, length 64
+17:27:59.933696 ARP, Request who-has 192.168.50.1 tell 192.168.50.17, length 28
+
+
+[olej@nvidia 16]$ arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.1.20             ether   08:00:27:14:ca:91   C                     eth0
+192.168.50.17            ether   08:00:27:9e:02:02   C                     vboxnet0
+192.168.50.13                    (incomplete)                              vboxnet0
+192.168.1.21             ether   08:00:27:52:b9:e0   C                     eth0
+192.168.56.101           ether   08:00:27:9e:02:02   C                     vboxnet0
+192.168.1.1              ether   c8:64:c7:8a:50:16   C                     eth0
+192.168.1.5              ether   00:15:60:c4:ee:02   C                     eth0
+
+-----------------------------------------------------------------------------------
+
+[olej@nvidia 16]$ ssh olej@192.168.50.17
+The authenticity of host '192.168.50.17 (192.168.50.17)' can't be established.
+RSA key fingerprint is 52:99:0b:da:15:03:d4:49:1b:4e:20:56:96:a4:9c:be.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.50.17' (RSA) to the list of known hosts.
+Nasty PTR record "192.168.50.17" is set up for 192.168.50.17, ignoring
+olej@192.168.50.17's password: 
+Last login: Mon Jul 16 15:52:16 2012 from 192.168.1.9
+
+[olej@fedora16vm ~]$ who
+olej     tty1         2012-07-16 09:29 (:0)
+olej     pts/0        2012-07-16 09:33 (:0.0)
+olej     pts/1        2012-07-16 12:22 (192.168.1.9)
+olej     pts/3        2012-07-16 15:44 (192.168.50.1)
+olej     pts/4        2012-07-16 15:52 (192.168.1.9)
+olej     pts/6        2012-07-16 17:29 (192.168.50.1)
+
+[olej@fedora16vm ~]$ cat /etc/fedora-release 
+Fedora release 16 (Verne)
+
+...
+
+[olej@nvidia 16]$ ssh olej@192.168.56.101
+The authenticity of host '192.168.56.101 (192.168.56.101)' can't be established.
+RSA key fingerprint is 52:99:0b:da:15:03:d4:49:1b:4e:20:56:96:a4:9c:be.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.56.101' (RSA) to the list of known hosts.
+Nasty PTR record "192.168.56.101" is set up for 192.168.56.101, ignoring
+olej@192.168.56.101's password: 
+Last login: Mon Jul 16 17:29:57 2012 from 192.168.50.1
+
+[olej@fedora16vm ~]$ who
+olej     tty1         2012-07-16 09:29 (:0)
+olej     pts/0        2012-07-16 09:33 (:0.0)
+olej     pts/1        2012-07-16 12:22 (192.168.1.9)
+olej     pts/3        2012-07-16 15:44 (192.168.50.1)
+olej     pts/4        2012-07-16 15:52 (192.168.1.9)
+olej     pts/6        2012-07-16 17:29 (192.168.50.1)
+olej     pts/7        2012-07-16 17:31 (192.168.56.1)
+
+
+===================================================================================
+
+
+Debian:
+=======
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ uname -a
+Linux debian 3.2.0-2-686-pae #1 SMP Fri Jun 1 18:56:14 UTC 2012 i686 GNU/Linux
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ cat /etc/debian_version 
+wheezy/sid
+
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:52:b9:e0 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.21/24 brd 192.168.1.255 scope global eth0
+    inet6 fe80::a00:27ff:fe52:b9e0/64 scope link 
+       valid_lft forever preferred_lft forever
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:0f:13:6d brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.102/24 brd 192.168.56.255 scope global eth1
+    inet6 fe80::a00:27ff:fe0f:136d/64 scope link 
+       valid_lft forever preferred_lft forever
+
+
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ sudo insmod ./virt.ko link=eth1 debug=1
+[sudo] password for olej: 
+
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ dmesg | tail -n3
+[   84.917768] colord[2494]: segfault at 8 ip 08052674 sp bfe72be0 error 4 in colord[8048000+20000]
+[23437.738492] ! module virt loaded
+[23437.738495] ! virt: create link virt0
+
+
+
+
+
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ sudo ifconfig virt0 192.168.50.19
+
+
+olej@debian:~/WORK/examples.DRAFT/network/virt-proto$ sudo ifconfig virt0
+virt0     Link encap:Ethernet  HWaddr 08:00:27:0f:13:6d  
+          inet addr:192.168.50.19  Bcast:192.168.50.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe0f:136d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:46 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:8373 (8.1 KiB)
+
+
+[olej@nvidia 16]$ ping 192.168.56.102
+PING 192.168.56.102 (192.168.56.102) 56(84) bytes of data.
+64 bytes from 192.168.56.102: icmp_req=1 ttl=64 time=0.743 ms
+64 bytes from 192.168.56.102: icmp_req=2 ttl=64 time=0.305 ms
+64 bytes from 192.168.56.102: icmp_req=3 ttl=64 time=0.297 ms
+^C
+--- 192.168.56.102 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.297/0.448/0.743/0.209 ms
+
+
+[olej@nvidia 16]$  ping 192.168.50.19
+PING 192.168.50.19 (192.168.50.19) 56(84) bytes of data.
+64 bytes from 192.168.50.19: icmp_req=1 ttl=64 time=0.627 ms
+64 bytes from 192.168.50.19: icmp_req=2 ttl=64 time=0.305 ms
+64 bytes from 192.168.50.19: icmp_req=3 ttl=64 time=0.326 ms
+^C
+--- 192.168.50.19 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.305/0.419/0.627/0.148 ms
+
+
+[olej@nvidia 16]$ sudo tcpdump -i vboxnet0
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on vboxnet0, link-type EN10MB (Ethernet), capture size 65535 bytes
+...
+18:40:54.454102 ARP, Request who-has 192.168.56.1 tell 192.168.56.102, length 28
+18:40:54.454105 ARP, Request who-has 192.168.56.1 tell 192.168.56.102, length 28
+18:40:54.454112 ARP, Reply 192.168.56.1 is-at 0a:00:27:00:00:00 (oui Unknown), length 28
+18:40:54.454464 IP 192.168.56.102 > 192.168.56.1: ICMP echo reply, id 8401, seq 1, length 64
+18:40:55.454162 IP 192.168.56.1 > 192.168.56.102: ICMP echo request, id 8401, seq 2, length 64
+18:40:55.454450 IP 192.168.56.102 > 192.168.56.1: ICMP echo reply, id 8401, seq 2, length 64
+18:40:56.454166 IP 192.168.56.1 > 192.168.56.102: ICMP echo request, id 8401, seq 3, length 64
+18:40:56.454444 IP 192.168.56.102 > 192.168.56.1: ICMP echo reply, id 8401, seq 3, length 64
+18:41:01.740607 ARP, Request who-has 192.168.50.19 tell 192.168.50.1, length 28
+18:41:01.741104 ARP, Reply 192.168.50.19 is-at 08:00:27:0f:13:6d (oui Unknown), length 28
+18:41:01.741116 IP 192.168.50.1 > 192.168.50.19: ICMP echo request, id 8402, seq 1, length 64
+18:41:01.741211 IP 192.168.50.19 > 192.168.50.1: ICMP echo reply, id 8402, seq 1, length 64
+18:41:02.741164 IP 192.168.50.1 > 192.168.50.19: ICMP echo request, id 8402, seq 2, length 64
+18:41:02.741451 IP 192.168.50.19 > 192.168.50.1: ICMP echo reply, id 8402, seq 2, length 64
+18:41:03.741163 IP 192.168.50.1 > 192.168.50.19: ICMP echo request, id 8402, seq 3, length 64
+18:41:03.741471 IP 192.168.50.19 > 192.168.50.1: ICMP echo reply, id 8402, seq 3, length 64
+18:41:06.747701 ARP, Request who-has 192.168.50.1 tell 192.168.50.19, length 28
+18:41:06.747715 ARP, Reply 192.168.50.1 is-at 0a:00:27:00:00:00 (oui Unknown), length 28
+
+
+===================================================================================
+
+Fedora 14
+=========
+
+[olej@fedora14vm virt-proto]$ uname -a
+Linux fedora14vm 2.6.35.13-92.fc14.i686 #1 SMP Sat May 21 17:39:42 UTC 2011 i686 i686 i386 GNU/Linux
+
+[olej@fedora14vm virt-proto]$ cat /etc/fedora-release 
+Fedora release 14 (Laughlin)
+
+[olej@fedora14vm virt-proto]$ pwd
+/home/olej/WORK/examples.DRAFT/network/virt-proto
+
+[olej@fedora14vm virt-proto]$ make
+make -C /lib/modules/2.6.35.13-92.fc14.i686/build M=/home/olej/WORK/examples.DRAFT/network/virt-proto modules 
+make[1]: Вход в каталог `/usr/src/kernels/2.6.35.13-92.fc14.i686'
+  CC [M]  /home/olej/WORK/examples.DRAFT/network/virt-proto/virt.o
+  CC [M]  /home/olej/WORK/examples.DRAFT/network/virt-proto/virtl.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/WORK/examples.DRAFT/network/virt-proto/virt.mod.o
+  LD [M]  /home/olej/WORK/examples.DRAFT/network/virt-proto/virt.ko
+  CC      /home/olej/WORK/examples.DRAFT/network/virt-proto/virtl.mod.o
+  LD [M]  /home/olej/WORK/examples.DRAFT/network/virt-proto/virtl.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.35.13-92.fc14.i686'
+
+
+
+[olej@fedora14vm virt-proto]$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+2: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:c2:a2:30 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.22/24 brd 192.168.1.255 scope global eth1
+3: eth3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether 08:00:27:41:d0:39 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.103/24 brd 192.168.56.255 scope global eth3
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora14vm virt-proto]$ su -
+Пароль: 
+
+[root@fedora14vm virt-proto]# insmod ./virt.ko link=eth3 debug=1
+
+[root@fedora14vm virt-proto]# ifconfig virt0 192.168.50.23
+
+[root@fedora14vm virt-proto]# ifconfig virt0 
+virt0     Link encap:Ethernet  HWaddr 08:00:27:41:D0:39  
+          inet addr:192.168.50.23  Bcast:192.168.50.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:11 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:3102 (3.0 KiB)
+
+
+
+[olej@nvidia 16]$ ping 192.168.56.103
+PING 192.168.56.103 (192.168.56.103) 56(84) bytes of data.
+64 bytes from 192.168.56.103: icmp_req=1 ttl=64 time=0.767 ms
+64 bytes from 192.168.56.103: icmp_req=2 ttl=64 time=0.919 ms
+^C
+--- 192.168.56.103 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.767/0.843/0.919/0.076 ms
+
+
+[olej@nvidia 16]$  ping 192.168.50.23
+PING 192.168.50.23 (192.168.50.23) 56(84) bytes of data.
+64 bytes from 192.168.50.23: icmp_req=1 ttl=64 time=0.617 ms
+64 bytes from 192.168.50.23: icmp_req=2 ttl=64 time=0.262 ms
+64 bytes from 192.168.50.23: icmp_req=3 ttl=64 time=0.268 ms
+64 bytes from 192.168.50.23: icmp_req=4 ttl=64 time=0.281 ms
+^C
+--- 192.168.50.23 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3000ms
+rtt min/avg/max/mdev = 0.262/0.357/0.617/0.150 ms
+
+===================================================================================

@@ -1,0 +1,165 @@
+31.01.2015
+==========
+
+Задача: Создайте модель системы авторегулирования в /proc:
+1. Есть некоторое регулируемое значение (это одна переменная, /proc/.../val);
+2. Есть корректирующая переменная (это одна переменная, /proc/.../cor) — при записи
+в эту переменную регулируемое значение корректируется (суммируется) с записанным значением,
+умноженным на коэффициент петлевого усиления (константу).
+Последовательно считывая (cat) val — выбираем значение коррекции и записываем (echo) в cor,
+с целью привести val к условному значению 0.
+Значение /proc/.../val должно допускать запись для начальной инициализации,  коэффициент
+петлевого усиления задаём как параметр при старте модуля.
+
+Задача: Для предыдущей задачи сделать приложение, которое будет циклически, с фиксированным
+интервалом времени, формировать разницу и записывать корректирующее значение до тех пор,
+пока val не установится в 0. 
+
+Подсказка: Для упрощения обеих предыдущих задач сделайте сначала в одногм приложении модель
+циклического авторегулирования:
+3. Значение управляемой переменной считывается, и в зависимости от разбалансировки вырабатывается
+управляющее воздействие (разница значений); 
+4. Из управляющего воздействия формируется шаг корректировки (умножением разбалансировки
+на коэффициент петлевого усиления), поэтому можно имитировать недорегулирование, перерегулирование...
+5. Шаг корректировки записывается во вторую переменную;
+6. Устройство корректирует регулируемое значение на полученный шаг корректировки;
+7. Если в результате записи п.5 разбалансировка всё ещё не нулевая — возвращаемся на п.3.
+
+Задача: Проанализируйте, как такие именнованные «точки данных» могут использоваться в качестве базы для SCADA системы.
+
+---------------------------------------------------------------------------------------------------------------------
+
+Задача: Проделайте в /sys аналогичные действия как для /proc.
+
+=====================================================================================================================
+
+06.02.2015
+==========
+
+[olej@fedora asu]$ sudo insmod modasu.ko 
+
+[olej@fedora asu]$ lsmod | head -n2
+Module                  Size  Used by
+modasu                 12698  0 
+[olej@fedora asu]$ 
+[olej@fedora asu]$ tree /proc/asu/
+/proc/asu/
+├── increment
+└── value
+
+0 directories, 2 files
+[olej@fedora asu]$ cat /proc/asu/value 
+0
+[olej@fedora asu]$ cat /proc/asu/increment 
+cat: /proc/asu/increment: Ошибка ввода/вывода
+[olej@fedora asu]$ echo 123 > /proc/asu/increment 
+[olej@fedora asu]$ cat /proc/asu/value 
+123
+[olej@fedora asu]$ echo -120 > /proc/asu/increment 
+[olej@fedora asu]$ cat /proc/asu/value 
+3
+[olej@fedora asu]$ sudo rmmod modasu.ko 
+
+=====================================================================================================================
+
+[olej@fedora asu]$ sudo insmod modpasu.ko 
+
+[olej@fedora asu]$ dmesg | tail -n4
+[22058.873962] ! read: return -55
+[22106.524562] ! module removed
+[21979.722153] ! module installed
+[22452.536191] ! module installed
+
+[olej@fedora asu]$ cat /proc/asu/value 
+0
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+30
+
+[olej@fedora asu]$ echo -60 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+-30
+
+[olej@fedora asu]$ echo +90 > /proc/asu/increment 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@fedora asu]$ echo 90 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+60
+
+[olej@fedora asu]$ cat /proc/asu/multiply 
+100
+
+[olej@fedora asu]$ echo 150 > /proc/asu/multiply 
+
+[olej@fedora asu]$ cat /proc/asu/multiply 
+150
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+105
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+150
+
+[olej@fedora asu]$ sudo rmmod modpasu.ko 
+
+=====================================================================================================================
+
+06.02.2015
+==========
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu$ make
+make -C /lib/modules/3.2.0-2-686-pae/build M=/home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+  CC [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.mod.o
+  LD [M]  /home/olej/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+gcc  -lm cli.c locl.c -o cli_locl
+gcc  -lm cli.c kern.c -o cli_kern
+
+---------------------------------------------------------------------------------------------------------------------
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu$ ./cli_locl 
+команда (h-подсказка): *140
+усиление = 140%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -40
+-40 +40 => 16
+16 -16 => -6
+-6 +6 => 2
+2 -2 => 0
+команда (h-подсказка): q
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu$ sudo insmod modpasu.ko
+[sudo] password for olej: 
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu$ ./cli_kern 
+команда (h-подсказка): *140
+усиление = 140%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -40
+-40 +40 => 16
+16 -16 => -6
+-6 +6 => 2
+2 -2 => 0
+команда (h-подсказка): q
+
+olej@debian:~/WORK_2015/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu$ sudo rmmod modpasu.ko
+
+=====================================================================================================================

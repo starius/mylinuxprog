@@ -1,0 +1,500 @@
+16.03.2015
+==========
+
+bash-4.2$ make
+make -C /lib/modules/3.14.8-200.fc20.i686/build M=/home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/synch modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.i686'
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/synch/pamix.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/synch/pamix.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/synch/pamix.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.i686'
+
+
+bash-4.2$ time sudo insmod pamix.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+real	0m4.629s
+user	0m0.082s
+sys	0m0.012s
+
+bash-4.2$ dmesg | tail -n8
+[30707.252747] option1 ttyUSB2: usb_wwan_indat_callback: resubmit read urb failed. (-19)
+[30707.252753] option1 ttyUSB2: usb_wwan_indat_callback: resubmit read urb failed. (-19)
+[30707.252757] option1 ttyUSB2: usb_wwan_indat_callback: resubmit read urb failed. (-19)
+[30707.252841] option1 ttyUSB2: GSM modem (1-port) converter now disconnected from ttyUSB2
+[30707.252859] option 1-5.4:1.2: device disconnected
+[40172.942564] pamix: module verification failed: signature and/or  required key missing - tainting kernel
+[40173.945071] ! 1880 : [26069B0...2606D99 => 1001]
+[40173.956047] ! 1881 : [26069B0...2606DA4 => 1012]
+
+=========================================================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time sudo insmod pamix.ko sec=2 thr=3
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+real	0m2.050s
+user	0m0.004s
+sys	0m0.013s
+
+bash-4.2$ dmesg | tail -n4
+[52078.812040] ! PID=3071 : [3160D2A...31614FC => 2002]
+[52078.823067] ! PID=3072 : [3160D2A...3161507 => 2013]
+[52078.834037] ! PID=3073 : [3160D2A...3161512 => 2024]
+[52078.834080] ! rezults: 182, 183, 184
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time sudo insmod pamixab.ko sec=2 thr=3
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+real	0m2.035s
+user	0m0.014s
+sys	0m0.006s
+bash-4.2$ dmesg | tail -n4
+[53068.369042] ! PID=4091 : [325269F...3252E71 => 2002]
+[53068.369047] ! PID=4093 : [325269F...3252E71 => 2002]
+[53068.369066] ! PID=4092 : [325269F...3252E71 => 2002]
+[53068.375039] ! rezults: 182, 182, 182
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time sudo insmod pamixad.ko sec=2 thr=3
+insmod: ERROR: could not insert module pamixad.ko: Operation not permitted
+
+real	0m2.027s
+user	0m0.010s
+sys	0m0.007s
+bash-4.2$ dmesg | tail -n4
+[53097.943038] ! PID=4101 : [3259A25...325A1F7 => 2002]
+[53097.943090] ! PID=4102 : [3259A25...325A1F7 => 2002]
+[53097.944653] ! PID=4100 : [3259A25...325A1F8 => 2003]
+[53097.944654] ! rezults: 182, 182, 182
+
+=========================================================================================================
+
+[Olej@modules synch]$ uname -a
+Linux modules.localdomain 3.18.9-100.fc20.x86_64 #1 SMP Mon Mar 9 16:27:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ time sudo insmod pamix.ko thr=5
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+real	0m3.496s
+user	0m0.035s
+sys	0m0.026s
+
+
+[Olej@modules synch]$ dmesg | tail -n 6
+[56532.505977] ! PID=31822 : [103597B0B...103597EFF => 1012]
+[56532.506935] ! PID=31823 : [103597B0B...103597F00 => 1013]
+[56532.516969] ! PID=31824 : [103597B0B...103597F0A => 1023]
+[56532.527974] ! PID=31825 : [103597B0B...103597F15 => 1034]
+[56532.538976] ! PID=31826 : [103597B0B...103597F20 => 1045]
+[56532.539011] ! rezults: 92, 92, 93, 94, 95
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ time sudo insmod pamixab.ko thr=5
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+real	0m1.036s
+user	0m0.008s
+sys	0m0.015s
+
+
+[Olej@modules build]$ dmesg | tail -n40
+[56532.538976] ! PID=31826 : [103597B0B...103597F20 => 1045]
+[56532.539011] ! rezults: 92, 92, 93, 94, 95
+[56584.227406] ! PID=31846 : [1035A44FF...1035A48E8 => 1001]
+[56584.233404] ! rezults: 92, 92, 92, 92, 91
+[56584.236445] ! PID=31844 : [1035A44FD...1035A48F1 => 1012]
+[56584.236448] ! PID=31843 : [1035A44FD...1035A48F1 => 1012]
+[56584.237686] ! PID=31842 : [1035A44FD...1035A48F1 => 1012]
+[56584.237686] BUG: unable to handle kernel paging request at ffffffffa0784036
+[56584.237772] IP: [<ffffffffa0784036>] 0xffffffffa0784036
+[56584.237810] PGD 1c17067 PUD 1c18063 PMD 22a61d067 PTE 0
+[56584.237851] Oops: 0010 [#1] SMP 
+[56584.237877] Modules linked in: fuse ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 bnep xt_conntrack cfg80211 ebtable_nat ebtable_broute bridge stp llc ebtable_filter ebtables ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw ip6table_filter ip6_tables iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack iptable_mangle iptable_security iptable_raw binfmt_misc iTCO_wdt iTCO_vendor_support hp_wmi sparse_keymap ppdev intel_rapl x86_pkg_temp_thermal coretemp kvm_intel kvm tpm_infineon crct10dif_pclmul crc32_pclmul crc32c_intel snd_hda_codec_hdmi snd_hda_codec_idt snd_hda_codec_generic ghash_clmulni_intel uvcvideo videobuf2_vmalloc microcode videobuf2_core videobuf2_memops joydev v4l2_common serio_raw btusb snd_hda_intel bluetooth
+[56584.238411]  snd_hda_controller snd_hda_codec snd_hwdep snd_seq wacom snd_seq_device rfkill snd_pcm videodev sdhci_pci media sdhci lpc_ich mmc_core mfd_core snd_timer snd shpchp soundcore mei_me mei wmi parport_pc parport tpm_tis tpm hp_accel lis3lv02d input_polldev hp_wireless nfsd auth_rpcgss nfs_acl lockd grace sunrpc i915 firewire_ohci firewire_core crc_itu_t e1000e i2c_algo_bit drm_kms_helper ptp drm pps_core video
+[56584.238730] CPU: 3 PID: 31845 Comm: pa_3 Tainted: G        W  OE  3.18.9-100.fc20.x86_64 #1
+[56584.238778] Hardware name: Hewlett-Packard HP ProBook 6470b/179C, BIOS 68ICE Ver. F.46 01/17/2014
+[56584.238829] task: ffff88021385e220 ti: ffff8800180bc000 task.ti: ffff8800180bc000
+[56584.238873] RIP: 0010:[<ffffffffa0784036>]  [<ffffffffa0784036>] 0xffffffffa0784036
+[56584.238930] RSP: 0018:ffff8800180bfea8  EFLAGS: 00010296
+[56584.238971] RAX: 0000000000000000 RBX: ffffc90010fad018 RCX: 0000000000000000
+[56584.239013] RDX: 0000000000000000 RSI: 0000000000000286 RDI: 0000000000000286
+[56584.239055] RBP: ffff8800180bfeb8 R08: ffff8800180bc000 R09: ffff8802275975c0
+[56584.239097] R10: 0000000000000498 R11: 0000000000000000 R12: 00000001035a44fe
+[56584.239139] R13: ffffffffa0784000 R14: 0000000000000000 R15: 0000000000000000
+[56584.239180] FS:  0000000000000000(0000) GS:ffff88023fac0000(0000) knlGS:0000000000000000
+[56584.239235] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[56584.239282] CR2: ffffffffa0784036 CR3: 000000022765b000 CR4: 00000000001407e0
+[56584.239348] Stack:
+[56584.239368]  ffff88000a00ec80 ffffc90010fad018 ffff8800180bff48 ffffffff810b3238
+[56584.239451]  0000000000000000 ffff880234132128 ffffc90010fad018 0000000000000000
+[56584.239538]  0000000000000000 ffff8800180bfef0 ffff8800180bfef0 0000000100000000
+[56584.239608] Call Trace:
+[56584.239631]  [<ffffffff810b3238>] kthread+0xd8/0xf0
+[56584.239663]  [<ffffffff810b3160>] ? kthread_create_on_node+0x1b0/0x1b0
+[56584.239704]  [<ffffffff8174d2bc>] ret_from_fork+0x7c/0xb0
+[56584.239737]  [<ffffffff810b3160>] ? kthread_create_on_node+0x1b0/0x1b0
+[56584.239775] Code:  Bad RIP value.
+[56584.239803] RIP  [<ffffffffa0784036>] 0xffffffffa0784036
+[56584.239846]  RSP <ffff8800180bfea8>
+[56584.239868] CR2: ffffffffa0784036
+[56584.251452] ---[ end trace f4e8df4e67af36c8 ]---
+
+
+[Olej@modules synch]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   91410  3 
+ip6t_rpfilter          12546  1 
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ time sudo insmod pamixad.ko thr=5
+insmod: ERROR: could not insert module pamixad.ko: Operation not permitted
+
+real	0m1.036s
+user	0m0.004s
+sys	0m0.020s
+
+
+[Olej@modules synch]$ dmesg | tail -n 6
+[56960.073619] ! PID=31949 : [103600039...103600422 => 1001]
+[56960.074584] ! PID=31948 : [103600039...103600423 => 1002]
+[56960.074615] ! PID=31946 : [103600039...103600423 => 1002]
+[56960.075594] ! PID=31947 : [103600039...103600424 => 1003]
+[56960.082606] ! PID=31945 : [103600037...10360042B => 1012]
+[56960.082606] ! rezults: 92, 91, 91, 91, 91
+
+=========================================================================================================
+
+[Olej@modules synch]$ time sudo insmod pamixab.ko thr=5
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+real	0m1.048s
+user	0m0.008s
+sys	0m0.014s
+
+[Olej@modules synch]$ dmesg | tail -n 6
+[57244.031128] ! PID=32655 : [1036454BC...1036458A5 => 1001]
+[57244.031131] ! PID=32657 : [1036454BC...1036458A5 => 1001]
+[57244.031140] ! PID=32659 : [1036454BC...1036458A5 => 1001]
+[57244.041117] ! PID=32658 : [1036454BC...1036458A5 => 1001]
+[57244.047127] ! PID=32654 : [1036454BB...1036458AF => 1012]
+[57244.047128] ! rezults: 92, 91, 91, 91, 91
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ time sudo insmod pamixab.ko thr=7
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+real	0m1.050s
+user	0m0.006s
+sys	0m0.015s
+
+
+[Olej@modules synch]$ dmesg | tail -n 8
+[57299.841228] ! PID=32677 : [103652E9B...103653284 => 1001]
+[57299.841232] ! PID=32678 : [103652E9B...103653284 => 1001]
+[57299.841235] ! PID=32676 : [103652E9B...103653284 => 1001]
+[57299.841303] ! PID=32681 : [103652E9B...103653284 => 1001]
+[57299.841305] ! PID=32679 : [103652E9B...103653284 => 1001]
+[57299.852218] ! PID=32674 : [103652E9B...103653284 => 1001]
+[57299.863203] ! PID=32680 : [103652E9B...10365328F => 1012]
+[57299.863204] ! rezults: 91, 91, 91, 91, 91, 92, 91
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ time sudo insmod pamixab.ko thr=17
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+real	0m1.081s
+user	0m0.011s
+sys	0m0.009s
+
+
+[Olej@modules synch]$ dmesg | tail -n 18
+[57329.554887] ! PID=32704 : [10365A29A...10365A683 => 1001]
+[57329.564886] ! PID=32690 : [10365A299...10365A68D => 1012]
+[57329.564889] ! PID=32695 : [10365A299...10365A68D => 1012]
+[57329.564892] ! PID=32692 : [10365A299...10365A68D => 1012]
+[57329.564895] ! PID=32701 : [10365A299...10365A68D => 1012]
+[57329.564958] ! PID=32689 : [10365A299...10365A68D => 1012]
+[57329.564963] ! PID=32698 : [10365A299...10365A68D => 1012]
+[57329.564967] ! PID=32703 : [10365A299...10365A68D => 1012]
+[57329.565002] ! PID=32694 : [10365A299...10365A68D => 1012]
+[57329.565004] ! PID=32693 : [10365A299...10365A68D => 1012]
+[57329.565011] ! PID=32699 : [10365A299...10365A68D => 1012]
+[57329.565049] ! PID=32696 : [10365A299...10365A68D => 1012]
+[57329.565052] ! PID=32700 : [10365A299...10365A68D => 1012]
+[57329.565054] ! PID=32691 : [10365A299...10365A68D => 1012]
+[57329.565066] ! PID=32697 : [10365A299...10365A68D => 1012]
+[57329.565890] ! PID=32702 : [10365A299...10365A68D => 1012]
+[57329.606938] ! PID=32706 : [10365A29A...10365A68E => 1012]
+[57329.606938] ! rezults: 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 92, 91, 92
+
+=========================================================================================================
+
+[Olej@modules synch]$ sudo insmod pamix.ko thr=3 act=0
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n 4
+[57768.768979] ! PID=1096 : [1036C5533...1036C591D => 1002]
+[57768.779007] ! PID=1097 : [1036C5533...1036C5927 => 1012]
+[57768.779999] ! PID=1098 : [1036C5533...1036C5928 => 1013]
+[57768.780036] ! rezults: 91, 92, 92
+
+[Olej@modules synch]$ sudo insmod pamix.ko thr=3 act=1
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n 4
+[57783.605257] ! PID=1114 : [1036C8F1F...1036C9308 => 1001]
+[57783.616259] ! PID=1115 : [1036C8F1F...1036C9313 => 1012]
+[57783.627324] ! PID=1116 : [1036C8F1F...1036C931E => 1023]
+[57783.627361] ! rezults: 31, 31, 31
+
+=========================================================================================================
+
+17.03.2015
+==========
+
+[Olej@modules synch]$ sudo insmod pamix.ko thr=7 sec=2
+insmod: ERROR: could not insert module pamix.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n8
+[ 1166.199881] ! PID=4573 : [1000D2C5B...1000D3433 => 2008]
+[ 1166.207856] ! PID=4574 : [1000D2C5B...1000D343B => 2016]
+[ 1166.215857] ! PID=4575 : [1000D2C5B...1000D3443 => 2024]
+[ 1166.223868] ! PID=4576 : [1000D2C5B...1000D344B => 2032]
+[ 1166.224872] ! PID=4577 : [1000D2C5B...1000D344C => 2033]
+[ 1166.231888] ! PID=4578 : [1000D2C5B...1000D3453 => 2040]
+[ 1166.232881] ! PID=4579 : [1000D2C5B...1000D3454 => 2041]
+[ 1166.232935] ! rezults: 251, 252, 253, 254, 254, 255, 255
+
+[Olej@modules synch]$ sudo insmod pamixab.ko thr=7 sec=2
+insmod: ERROR: could not insert module pamixab.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n8
+[ 1191.791981] ! PID=4595 : [1000D9043...1000D981B => 2008]
+[ 1191.791983] ! PID=4593 : [1000D9043...1000D981B => 2008]
+[ 1191.792956] ! PID=4594 : [1000D9043...1000D981B => 2008]
+[ 1191.792959] ! PID=4599 : [1000D9044...1000D981C => 2008]
+[ 1191.793034] ! PID=4596 : [1000D9043...1000D981C => 2009]
+[ 1191.793332] ! PID=4597 : [1000D9043...1000D981C => 2009]
+[ 1191.807971] ! PID=4598 : [1000D9044...1000D981C => 2008]
+[ 1191.807971] ! rezults: 251, 251, 251, 251, 251, 251, 251
+
+[Olej@modules synch]$ sudo insmod pamixad.ko thr=7 sec=2
+insmod: ERROR: could not insert module pamixad.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n8
+[ 1206.995511] ! PID=4608 : [1000DCBA4...1000DD375 => 2001]
+[ 1207.001479] ! PID=4605 : [1000DCBA3...1000DD37B => 2008]
+[ 1207.001497] ! PID=4606 : [1000DCBA3...1000DD37B => 2008]
+[ 1207.001520] ! PID=4607 : [1000DCBA3...1000DD37B => 2008]
+[ 1207.002495] ! PID=4611 : [1000DCBA4...1000DD37C => 2008]
+[ 1207.002500] ! PID=4610 : [1000DCBA4...1000DD37C => 2008]
+[ 1207.002535] ! PID=4609 : [1000DCBA4...1000DD37C => 2008]
+[ 1207.002538] ! rezults: 251, 251, 251, 250, 251, 251, 251
+
+=========================================================================================================
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ cat /proc/cpuinfo | grep 'model name'
+model name	: Intel(R) Atom(TM) CPU  330   @ 1.60GHz
+model name	: Intel(R) Atom(TM) CPU  330   @ 1.60GHz
+model name	: Intel(R) Atom(TM) CPU  330   @ 1.60GHz
+model name	: Intel(R) Atom(TM) CPU  330   @ 1.60GHz
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ make
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch/pamixx.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch/pamixx.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch/pamixx.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+
+---------------------------------------------------------------------------------------------------------
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ sudo insmod pamixx.ko thr=3 act=0
+insmod: error inserting 'pamixx.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ dmesg | tail -n4
+[ 2429.209532] ! PID=14380 : [81E52...81F4E => 1008]
+[ 2429.220026] ! PID=14381 : [81E52...81F51 => 1020]
+[ 2429.220071] ! PID=14382 : [81E52...81F51 => 1020]
+[ 2429.220101] ! rezults: 84, 85, 85 => 254
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ sudo insmod pamixx.ko thr=3 act=1
+insmod: error inserting 'pamixx.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ dmesg | tail -n4
+[ 2445.300029] ! PID=14390 : [82E06...82F05 => 1020]
+[ 2445.312036] ! PID=14391 : [82E06...82F08 => 1032]
+[ 2445.324031] ! PID=14392 : [82E06...82F0B => 1044]
+[ 2445.324059] ! rezults: 29, 29, 29 => 87
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ sudo insmod pamixx.ko thr=4 act=0
+insmod: error inserting 'pamixx.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ dmesg | tail -n5
+[ 2510.112045] ! PID=15301 : [86D54...86E50 => 1008]
+[ 2510.112081] ! PID=15302 : [86D54...86E50 => 1008]
+[ 2510.128537] ! PID=15303 : [86D54...86E53 => 1020]
+[ 2510.137524] ! PID=15304 : [86D54...86E56 => 1032]
+[ 2510.137553] ! rezults: 84, 84, 85, 86 => 339
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ sudo insmod pamixx.ko thr=4 act=1
+insmod: error inserting 'pamixx.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ dmesg | tail -n5
+[ 2520.620029] ! PID=15312 : [87790...87892 => 1032]
+[ 2520.628032] ! PID=15313 : [87790...87895 => 1044]
+[ 2520.640032] ! PID=15314 : [87790...87898 => 1056]
+[ 2520.652030] ! PID=15315 : [87790...8789B => 1068]
+[ 2520.652053] ! rezults: 16, 16, 16, 16 => 64
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/synch$ sudo insmod pamixx.ko thr=5 act=1
+...
+DEADLOCK !!!
+
+=========================================================================================================
+
+[Olej@modules synch]$ uname -a
+Linux modules.localdomain 3.18.9-100.fc20.x86_64 #1 SMP Mon Mar 9 16:27:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=1 act=0
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n2
+[25544.748643] ! PID=11451 : [10180F11A...10180F50A => 1008]
+[25544.748694] ! rezults: 126 => 126
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=1 act=1
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n2
+[25564.657155] ! PID=11460 : [101813ED2...1018142C2 => 1008]
+[25564.657207] ! rezults: 126 => 126
+
+---------------------------------------------------------------------------------------------------------
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=4 act=0
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n5
+[25634.759227] ! PID=11473 : [10182507B...10182546C => 1009]
+[25634.767233] ! PID=11474 : [10182507C...101825474 => 1016]
+[25634.775216] ! PID=11475 : [10182507C...10182547C => 1024]
+[25634.783208] ! PID=11476 : [10182507C...101825484 => 1032]
+[25634.783272] ! rezults: 126, 127, 128, 129 => 510
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=4 act=1
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n5
+[25649.078189] ! PID=11484 : [101828858...101828C52 => 1018]
+[25649.086211] ! PID=11485 : [101828858...101828C5A => 1026]
+[25649.094209] ! PID=11486 : [101828859...101828C62 => 1033]
+[25649.102237] ! PID=11488 : [10182885A...101828C6A => 1040]
+[25649.102255] ! rezults: 32, 32, 32, 32 => 128
+
+=========================================================================================================
+
+17.03.2015
+==========
+
+[Olej@modules synch]$ cat /boot/config-3.18.9-100.fc20.x86_64 | grep RT_MUTEX 
+CONFIG_RT_MUTEXES=y
+# CONFIG_DEBUG_RT_MUTEXES is not set
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=2
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n3
+[ 2344.459614] ! PID=5157 : [1001F27C2...1001F2BB2 => 1008]
+[ 2344.460605] ! PID=5159 : [1001F27C3...1001F2BB3 => 1008]
+[ 2344.460682] ! rezults: 126, 126 => 252
+
+[Olej@modules synch]$ sudo insmod pamixx.ko thr=2 act=1
+insmod: ERROR: could not insert module pamixx.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n3
+[ 2362.649977] ! PID=5165 : [1001F6EBD...1001F72B5 => 1016]
+[ 2362.658056] ! PID=5166 : [1001F6EBD...1001F72BD => 1024]
+[ 2362.658101] ! rezults: 64, 64 => 128
+
+[Olej@modules synch]$ sudo insmod pamixm.ko thr=2 act=1
+insmod: ERROR: could not insert module pamixm.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n3
+[ 2377.684462] ! PID=5172 : [1001FA96E...1001FAD66 => 1016]
+[ 2377.692457] ! PID=5173 : [1001FA96E...1001FAD6E => 1024]
+[ 2377.692483] ! rezults: 64, 64 => 128
+
+[Olej@modules synch]$ dmesg | tail -n4
+[ 2362.658101] ! rezults: 64, 64 => 128
+[ 2377.684462] ! PID=5172 : [1001FA96E...1001FAD66 => 1016]
+[ 2377.692457] ! PID=5173 : [1001FA96E...1001FAD6E => 1024]
+[ 2377.692483] ! rezults: 64, 64 => 128
+
+[Olej@modules synch]$ sudo insmod pamixm.ko thr=3 act=1
+insmod: ERROR: could not insert module pamixm.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n4
+[ 2415.884550] ! PID=5191 : [100203E8E...100204286 => 1016]
+[ 2415.892545] ! PID=5192 : [100203E8E...10020428E => 1024]
+[ 2415.900548] ! PID=5193 : [100203E8E...100204296 => 1032]
+[ 2415.900585] ! rezults: 43, 43, 43 => 129
+
+[Olej@modules synch]$ sudo insmod pamixm.ko thr=5 act=1
+insmod: ERROR: could not insert module pamixm.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n6
+[ 2430.288598] ! PID=5206 : [1002076D1...100207AC1 => 1008]
+[ 2430.296612] ! PID=5207 : [1002076D1...100207AC9 => 1016]
+[ 2430.304631] ! PID=5208 : [1002076D1...100207AD1 => 1024]
+[ 2430.312630] ! PID=5209 : [1002076D1...100207AD9 => 1032]
+[ 2430.320639] ! PID=5210 : [1002076D1...100207AE1 => 1040]
+[ 2430.320683] ! rezults: 26, 26, 26, 26, 26 => 130
+
+[Olej@modules synch]$ sudo insmod pamixm.ko thr=15 act=1
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module pamixm.ko: Operation not permitted
+
+[Olej@modules synch]$ dmesg | tail -n16
+[ 2993.373034] ! PID=5295 : [100290CAB...1002910EB => 1088]
+[ 2993.381033] ! PID=5296 : [100290CAB...1002910F3 => 1096]
+[ 2993.397065] ! PID=5297 : [100290CAB...100291103 => 1112]
+[ 2993.493102] ! PID=5298 : [100290CAB...100291163 => 1208]
+[ 2993.509128] ! PID=5299 : [100290CAB...100291173 => 1224]
+[ 2993.589188] ! PID=5300 : [100290CAB...1002911C3 => 1304]
+[ 2993.605195] ! PID=5301 : [100290CAB...1002911D3 => 1320]
+[ 2993.669207] ! PID=5302 : [100290CAB...100291213 => 1384]
+[ 2993.677238] ! PID=5303 : [100290CAB...10029121B => 1392]
+[ 2993.685232] ! PID=5304 : [100290CAB...100291223 => 1400]
+[ 2993.693230] ! PID=5305 : [100290CAB...10029122B => 1408]
+[ 2993.701242] ! PID=5306 : [100290CAB...100291233 => 1416]
+[ 2993.709239] ! PID=5307 : [100290CAB...10029123B => 1424]
+[ 2993.717251] ! PID=5308 : [100290CAB...100291243 => 1432]
+[ 2993.725245] ! PID=5309 : [100290CAB...10029124B => 1440]
+[ 2993.725302] ! rezults: 10, 10, 10, 11, 11, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13 => 180
+
+=========================================================================================================

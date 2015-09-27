@@ -1,0 +1,195 @@
+----------------------------------------------------------------------------------------------
+
+10.02.2012
+==========
+
+$ man syscall
+
+ИМЯ
+     syscall - непрямой системный вызов
+
+ОБЗОР
+     #include <sys/syscall.h>
+     #include <unistd.h>
+     int syscall(int number, ...)
+
+ОПИСАНИЕ
+     Syscall() выполняет системный вызов, номер которого задаётся значением number и с
+     заданными аргументами.  Символьные константы для системных вызовов можно найти в
+     заголовочном файле 〈sys/syscall.h〉.
+
+ВОЗВРАЩАЕМЫЕ ЗНАЧЕНИЯ
+     Возврщаемое значение определяется системным вызовом. Обычно, 0 возврщается в случае
+     успеха, а -1 в случае ошибки, при этом код ошибки сохраняется в errno.
+...
+
+----------------------------------------------------------------------------------------------
+
+</usr/include/asm/unistd_32.h> :
+
+#define __NR_delete_module      129
+#define __NR_init_module        128
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster]$ ./inst1 
+ошибка загрузки: Operation not permitted
+
+[olej@notebook umaster]$ sudo ./inst1 
+ошибка загрузки: Exec format error
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster]$ sudo ./inst1 
+размер файла модуля ./slave.ko = 94800 байт
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+slave                   1009  0 
+fuse                   48375  2 
+
+[olej@notebook umaster]$ sudo rmmod slave
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster]$ sudo ./inst1 
+размер файла модуля ./slave.ko = 94800 байт
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+slave                   1009  0 
+fuse                   48375  2 
+
+[olej@notebook umaster]$ sudo ./rem1
+выгружается модуль slave
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster]$ make disclean
+
+[olej@notebook umaster]$ ls
+common.h  inst1.c  Makefile  rem1.c  slave.c  umaster.hist
+
+
+[olej@notebook umaster]$ make
+cc     inst1.c   -o inst1
+cc     rem1.c   -o rem1
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/umaster modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/umaster/slave.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/umaster/slave.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/umaster/slave.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+
+
+
+[olej@notebook umaster]$ sudo ./inst1 
+загрузка модуля: ./slave.ko 
+размер файла модуля ./slave.ko = 94800 байт
+модуль ./slave.ko успешно загружен!
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+slave                   1009  0 
+fuse                   48375  2 
+
+[olej@notebook umaster]$ dmesg | tail -n30 | grep +
++ модуль slave.ko загружен: parm1=, parm2=
+
+[olej@notebook umaster]$ sudo ./rem1
+выгружается модуль slave
+
+[olej@notebook umaster]$ dmesg | tail -n30 | grep +
++ модуль slave.ko выгружен
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+
+
+[olej@notebook umaster]$ sudo ./inst1 xxx
+загрузка модуля: xxx 
+ошибка open: No such file or directory
+
+[olej@notebook umaster]$ mkdir yyy
+
+[olej@notebook umaster]$ sudo ./inst1 yyy
+загрузка модуля: yyy 
+ошибка: yyy не файл
+
+[olej@notebook umaster]$ rmdir yyy
+
+
+
+[olej@notebook umaster]$ sudo ./inst1 slave.ko parm1='строка1' parm2='строка2'
+загрузка модуля: slave.ko parm1=строка1 parm2=строка2 
+размер файла модуля slave.ko = 94800 байт
+модуль slave.ko успешно загружен!
+
+[olej@notebook umaster]$ dmesg | tail -n30 | grep +
++ модуль slave.ko загружен: parm1=строка1, parm2=строка2
+
+[olej@notebook umaster]$ lsmod | head -n3
+Module                  Size  Used by
+slave                   1009  0 
+fuse                   48375  2 
+
+[olej@notebook umaster]$ lsmod | grep slave
+slave                   1009  0 
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster.1]$ sudo ./inst2
+загрузка модуля: ./slave.ko 
+размер файла модуля ./slave.ko = 94816 байт
+ошибка загрузки: File exists
+
+
+[olej@notebook umaster.1]$ sudo ./inst2
+загрузка модуля: ./slave.ko 
+размер файла модуля ./slave.ko = 94816 байт
+модуль ./slave.ko успешно загружен!
+
+[olej@notebook umaster.1]$ lsmod | grep slave
+slave                   1009  0 
+
+[olej@notebook umaster.1]$ sudo ./rem1
+выгружается модуль slave
+
+[olej@notebook umaster.1]$ lsmod | grep slave
+
+----------------------------------------------------------------------------------------------
+
+[olej@notebook umaster.1]$ sudo ./inst2 slave.ko parm1=111 parm2=22
+загрузка модуля: slave.ko parm1=111 parm2=22 
+размер файла модуля slave.ko = 94816 байт
+модуль slave.ko успешно загружен!
+
+[olej@notebook umaster.1]$ lsmod | grep slave
+slave                   1009  0 
+
+[olej@notebook umaster.1]$ dmesg | tail -n30 | grep +
++ модуль slave.ko загружен: parm1=111, parm2=22
+
+[olej@notebook umaster.1]$ sudo ./rem2
+выгружается модуль slave
+
+[olej@notebook umaster.1]$ lsmod | grep slave
+
+----------------------------------------------------------------------------------------------

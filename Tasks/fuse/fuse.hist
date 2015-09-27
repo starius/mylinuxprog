@@ -1,0 +1,330 @@
+11.03.2015
+==========
+
+[Olej@modules fuse]$ make
+gcc -Wall hello.c `pkg-config fuse --cflags --libs` -o hello
+Package fuse was not found in the pkg-config search path.
+Perhaps you should add the directory containing `fuse.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'fuse' found
+hello.c:13:18: фатальная ошибка: fuse.h: Нет такого файла или каталога
+ #include <fuse.h>
+                  ^
+компиляция прервана.
+make: *** [all] Ошибка 1
+
+===================================================================================================
+
+http://lxr.missinglinkelectronics.com/linux/Documentation/filesystems/fuse.txt
+
+http://fuse.sourceforge.net/
+
+http://en.wikipedia.org/wiki/Filesystem_in_Userspace
+
+
+
+[Olej@modules load_module]$ lsmod | grep fuse
+fuse                   91410  3
+
+[Olej@modules load_module]$ which fusermount
+/usr/bin/fusermount
+
+[root@modules lib64]# pwd
+/lib64
+
+[root@modules lib64]# ls -l *fuse*
+lrwxrwxrwx. 1 root root     16 янв 17  2014 libfuse.so.2 -> libfuse.so.2.9.3
+-rwxr-xr-x. 1 root root 256640 авг  3  2013 libfuse.so.2.9.3
+
+
+[Olej@modules ~]$ man fuse
+fuse(8)                                       System Manager's Manual                                       fuse(8)
+
+NAME
+       fuse - format and options for the fuse file systems
+...
+SEE ALSO
+       fusermount(1) mount(8)
+
+===================================================================================================
+
+[Olej@modules include]$ yum list *fuse*
+Загружены модули: aliases, auto-update-debuginfo, changelog, dellsysid, fastestmirror, filter-data, fs-snapshot, keys,
+                : langpacks, list-data, local, merge-conf, post-transaction-actions, priorities, protectbase, ps,
+                : puppetverify, refresh-packagekit, refresh-updatesd, remove-with-leaves, rpm-warm-cache, show-leaves,
+                : tmprepo, tsflags, upgrade-helper, verify, versionlock
+Loading mirror speeds from cached hostfile
+ * fedora: ftp.halifax.rwth-aachen.de
+ * rpmfusion-free: mirror.karneval.cz
+ * rpmfusion-free-updates: mirror.karneval.cz
+ * rpmfusion-nonfree: mirror.karneval.cz
+ * rpmfusion-nonfree-updates: mirror.karneval.cz
+ * updates: ftp.wsisiz.edu.pl
+0 packages excluded due to repository protections
+Установленные пакеты
+fuse.x86_64                                    2.9.3-2.fc20                                        @fedora/$releasever
+fuse-encfs.x86_64                              1.7.4-13.fc20                                       @fedora/$releasever
+fuse-libs.x86_64                               2.9.3-2.fc20                                        @fedora/$releasever
+fuseiso.x86_64                                 20070708-14.fc20                                    @fedora            
+glusterfs-fuse.x86_64                          3.4.2-1.fc20                                        @updates           
+gvfs-fuse.x86_64                               1.18.3-3.fc20                                       @updates           
+Доступные пакеты
+afuse.x86_64                                   0.4.1-1.fc20                                        updates            
+ceph-fuse.x86_64                               1:0.80.7-1.fc20                                     updates            
+diffuse.noarch                                 0.4.8-1.fc20                                        updates            
+fuse-afp.x86_64                                0.8.1-13.fc20                                       updates            
+fuse-convmvfs.x86_64                           0.2.6-7.fc20                                        fedora             
+fuse-devel.i686                                2.9.3-2.fc20                                        fedora             
+fuse-devel.x86_64                              2.9.3-2.fc20                                        fedora             
+fuse-dislocker.x86_64                          0.3.1-2.20140423git.fc20                            updates            
+fuse-emulator.x86_64                           1.1.1-2.fc20                                        fedora             
+fuse-emulator-roms.noarch                      1:0.9.0-5.fc19                                      rpmfusion-nonfree  
+fuse-emulator-utils.x86_64                     1.1.1-2.fc20                                        fedora             
+fuse-encfs.i686                                1.7.4-13.fc20                                       fedora             
+fuse-exfat.x86_64                              1.0.1-1.fc20.R                                      russianfedora-free 
+fuse-libs.i686                                 2.9.3-2.fc20                                        fedora             
+fuse-python.x86_64                             0.2.1-7.fc20                                        fedora             
+fuse-s3fs.noarch                               0.9-5.fc20                                          fedora             
+fuse-smb.x86_64                                0.8.7-11.fc18                                       fedora             
+fuse-sshfs.x86_64                              2.4-5.fc20                                          fedora             
+fuse-uadefs.x86_64                             2.13-4.fc19                                         rpmfusion-nonfree  
+fuse-zip.x86_64                                0.4.0-1.fc20                                        updates            
+fuse9p.noarch                                  1.0.9-3.fc20                                        fedora             
+fusecompress.x86_64                            2.6-20.20110801git913897f4.fc20                     fedora             
+fusesource-pom.noarch                          1.9-5.fc20                                          fedora             
+glusterfs-fuse.x86_64                          3.5.3-1.fc20                                        updates            
+gvfs-fuse.x86_64                               1.18.4-1.fc20                                       updates            
+hadoop-hdfs-fuse.x86_64                        2.2.0-5.fc20                                        updates            
+ifuse.x86_64                                   1.1.3-3.fc20                                        updates            
+libconfuse.i686                                2.7-6.fc20                                          fedora             
+libconfuse.x86_64                              2.7-6.fc20                                          fedora             
+libconfuse-devel.i686                          2.7-6.fc20                                          fedora             
+libconfuse-devel.x86_64                        2.7-6.fc20                                          fedora             
+python-defusedxml.noarch                       0.4-2.fc20                                          fedora             
+python-llfuse.x86_64                           0.40-1.fc20                                         updates            
+python3-defusedxml.noarch                      0.4-2.fc20                                          fedora             
+python3-llfuse.x86_64                          0.40-1.fc20                                         updates            
+rbd-fuse.x86_64                                1:0.80.7-1.fc20                                     updates            
+xrootd-fuse.x86_64                             1:4.1.1-1.fc20                                      updates            
+zfs-fuse.x86_64                                0.7.0-15.fc20                                       fedora             
+
+
+[Olej@modules include]$ sudo yum install fuse-devel
+[sudo] пароль для Olej: 
+Загружены модули: aliases, auto-update-debuginfo, changelog, dellsysid, fastestmirror, filter-data, fs-snapshot, keys,
+                : langpacks, list-data, local, merge-conf, post-transaction-actions, priorities, protectbase, ps,
+                : puppetverify, refresh-packagekit, refresh-updatesd, remove-with-leaves, rpm-warm-cache, show-leaves,
+                : tmprepo, tsflags, upgrade-helper, verify, versionlock
+Loading mirror speeds from cached hostfile
+ * fedora: mirror.yandex.ru
+ * rpmfusion-free: mirror.yandex.ru
+ * rpmfusion-free-updates: mirror.yandex.ru
+ * rpmfusion-nonfree: mirror.yandex.ru
+ * rpmfusion-nonfree-updates: mirror.yandex.ru
+ * updates: mirror.yandex.ru
+Skipping filters plugin, no data
+0 packages excluded due to repository protections
+Разрешение зависимостей
+Skipping filters plugin, no data
+--> Проверка сценария
+---> Пакет fuse-devel.x86_64 0:2.9.3-2.fc20 помечен для установки
+--> Проверка зависимостей окончена
+
+Зависимости определены
+
+======================================================================================================================
+ Package                      Архитектура              Версия                          Репозиторий              Размер
+======================================================================================================================
+Установка:
+ fuse-devel                   x86_64                   2.9.3-2.fc20                    fedora                    37 k
+
+Итого за операцию
+======================================================================================================================
+Установить  1 пакет
+
+Объем загрузки: 37 k
+Объем изменений: 123 k
+Is this ok [y/d/N]: y
+Downloading packages:
+fuse-devel-2.9.3-2.fc20.x86_64.rpm                                                             |  37 kB  00:00:01     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Установка   : fuse-devel-2.9.3-2.fc20.x86_64                                                                    1/1 
+yum-updatesd not on the bus
+  Проверка    : fuse-devel-2.9.3-2.fc20.x86_64                                                                    1/1 
+
+Установлено:
+  fuse-devel.x86_64 0:2.9.3-2.fc20                                                                                    
+
+Выполнено!
+New leaves:
+  fuse-devel.x86_64
+
+
+===================================================================================================
+
+[Olej@modules fuse]$ make
+gcc -Wall hello.c `pkg-config fuse --cflags --libs` -o hello
+
+[Olej@modules fuse]$ mkdir ./fuse
+
+[Olej@modules fuse]$ ./hello fuse
+
+[Olej@modules fuse]$ ls -l fuse
+итого 0
+-r--r--r--. 1 root root 13 янв  1  1970 hello
+
+[Olej@modules fuse]$ cat fuse/hello
+Hello World!
+
+[Olej@modules fuse]$ fusermount -u fuse
+
+[Olej@modules fuse]$ ls -l fuse
+итого 0
+
+[Olej@modules fuse]$ rmdir fuse
+
+===================================================================================================
+
+[Olej@modules fuse]$ make
+gcc -Wall `pkg-config fuse --cflags --libs` hello.c -o hello
+gcc -Wall `pkg-config fuse --cflags --libs` cusexmp.c -o cusexmp
+
+[Olej@modules fuse]$ ./cusexmp -h
+usage: cusexmp [options]
+
+options:
+    --help|-h             print this help message
+    --maj=MAJ|-M MAJ      device major number
+    --min=MIN|-m MIN      device minor number
+    --name=NAME|-n NAME   device name (mandatory)
+
+FUSE options:
+    -d   -o debug          enable debug output (implies -f)
+    -f                     foreground operation
+    -s                     disable multi-threaded operation
+
+    -o max_write=N         set maximum size of write requests
+    -o max_readahead=N     set maximum readahead
+    -o max_background=N    set number of maximum background requests
+    -o congestion_threshold=N  set kernel's congestion threshold
+    -o async_read          perform reads asynchronously (default)
+    -o sync_read           perform reads synchronously
+    -o atomic_o_trunc      enable atomic open+truncate support
+    -o big_writes          enable larger than 4kB writes
+    -o no_remote_lock      disable remote file locking
+    -o no_remote_flock     disable remote file locking (BSD)
+    -o no_remote_posix_lock disable remove file locking (POSIX)
+    -o [no_]splice_write   use splice to write to the fuse device
+    -o [no_]splice_move    move data while splicing to the fuse device
+    -o [no_]splice_read    use splice to read from the fuse device
+
+[Olej@modules fuse]$ ./cusexmp --maj=10 --min=56 --name=fcd
+cuse: failed to open /dev/cuse: Permission denied
+
+---------------------------------------------------------------------------------------------------
+
+
+[Olej@modules fuse]$ sudo ./cusexmp --maj=100 --min=100 --name=zzz
+[sudo] пароль для Olej: 
+
+[Olej@modules fuse]$ echo $?
+0
+
+[Olej@modules fuse]$ ls -Rl /dev | grep 100
+drwxr-xr-x. 2 root root         100 мар 11 07:22 dri
+crw-------. 1 root root    100, 100 мар 11 15:53 zzz
+drwxr-xr-x. 2 root root 100 мар 11 07:22 003
+drwxr-xr-x. 2 root root 100 мар 11 07:22 004
+lrwxrwxrwx. 1 root root  6 мар 11 15:53 100:100 -> ../zzz
+
+[root@modules dev]# ls -l /dev/zzz
+crw-------. 1 root root 100, 100 мар 11 15:53 /dev/zzz
+
+
+===================================================================================================
+
+[Olej@modules fuse]$ make xmp
+gcc -Wall `pkg-config fuse --cflags --libs` xmp.c -o xmp
+In file included from /usr/include/fuse/fuse.h:26:0,
+                 from xmp.c:16:
+/usr/include/fuse/fuse_common.h:491:4: предупреждение: #warning Compatibility with API version 11 is deprecated [-Wcpp]
+ #  warning Compatibility with API version 11 is deprecated
+    ^
+
+[Olej@modules fuse]$ ./xmp tmp
+
+[Olej@modules fuse]$ ls tmp
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+[Olej@modules fuse]$ fusermount -u tmp
+
+[Olej@modules fuse]$ ls tmp
+
+
+===================================================================================================
+
+[Olej@modules fuse]$ ./fsel tmp
+
+[Olej@modules fuse]$ ls tmp
+0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+
+[Olej@modules fuse]$ ls -l tmp
+итого 0
+-r--r--r--. 1 root root 1 янв  1  1970 0
+-r--r--r--. 1 root root 0 янв  1  1970 1
+-r--r--r--. 1 root root 0 янв  1  1970 2
+-r--r--r--. 1 root root 0 янв  1  1970 3
+-r--r--r--. 1 root root 0 янв  1  1970 4
+-r--r--r--. 1 root root 0 янв  1  1970 5
+-r--r--r--. 1 root root 0 янв  1  1970 6
+-r--r--r--. 1 root root 0 янв  1  1970 7
+-r--r--r--. 1 root root 0 янв  1  1970 8
+-r--r--r--. 1 root root 0 янв  1  1970 9
+-r--r--r--. 1 root root 0 янв  1  1970 A
+-r--r--r--. 1 root root 0 янв  1  1970 B
+-r--r--r--. 1 root root 0 янв  1  1970 C
+-r--r--r--. 1 root root 0 янв  1  1970 D
+-r--r--r--. 1 root root 0 янв  1  1970 E
+-r--r--r--. 1 root root 0 янв  1  1970 F
+
+===================================================================================================
+
+[Olej@modules fuse]$ make
+gcc -Wall `pkg-config fuse --cflags --libs` fusexmp.c -o fusexmp
+gcc -Wall `pkg-config fuse --cflags --libs` fusexmp_fh.c -o fusexmp_fh
+/tmp/cce7TpI2.o: In function `xmp_lock':
+fusexmp_fh.c:(.text+0x9ed): undefined reference to `ulockmgr_op'
+collect2: ошибка: выполнение ld завершилось с кодом возврата 1
+make: *** [fusexmp_fh] Ошибка 1
+
+[Olej@modules fuse]$ ./fusexmp tmp 
+
+[Olej@modules fuse]$ cd tmp
+
+[Olej@modules tmp]$ ls
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+[Olej@modules tmp]$ cd ..
+
+[Olej@modules fuse]$ fusermount -u tmp
+
+[Olej@modules fuse]$ ls tmp
+
+===================================================================================================
+
+[Olej@modules fuse]$ make
+gcc -Wall `pkg-config fuse --cflags --libs` fusexmp_fh.c -lulockmgr -o fusexmp_fh
+
+[Olej@modules fuse]$ ./fusexmp_fh tmp 
+
+[Olej@modules fuse]$ ls tmp
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+[Olej@modules fuse]$ fusermount -u tmp
+
+[Olej@modules fuse]$ ls tmp
+
+===================================================================================================

@@ -1,0 +1,38 @@
+[olej@notebook call_table]$ cat /proc/kallsyms | grep T | grep sys_write
+c04e12fc T sys_write
+c04e196b T sys_writev
+c05f99fc T fb_sys_write
+
+----------------------------------------------------------------------
+
+<linux/syscalls.h>
+
+asmlinkage long sys_write(unsigned int fd, const char __user *buf,
+                          size_t count);
+
+----------------------------------------------------------------------
+
+[olej@notebook new_sys]$ sudo insmod mod_wrc.ko
+адрес системного обработчика sys_write = c04e12fc
+insmod: error inserting 'mod_wrc.ko': -1 Operation not permitted
+
+[olej@notebook new_sys]$ dmesg | tail -n30 | grep +
++ [77]: адрес системного обработчика sys_write = c04e12fc
++ write return : 77
+
+----------------------------------------------------------------------
+
+[olej@notebook new_sys]$ sudo insmod mod_wrchg.ko
+:-) [olej@notebook new_sys]$ :-) 
+:-) [olej@notebook new_sys]$ :-) sudo rmmod mod_wrchg:-) 
+
+[olej@notebook new_sys]$ dmesg | tail -n40 | grep -v audit
+! адрес sys_write = c04e12fc
+! адрес нового sys_write = fd5ef024
+! CR0 = 8005003b
+! CR0 = 8004003b
+! CR0 = 8005003b
+! адрес sys_write при выгрузке = fd5ef024
+
+----------------------------------------------------------------------
+

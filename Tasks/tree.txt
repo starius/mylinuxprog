@@ -1,0 +1,596 @@
+.
+├── blkdev
+│   ├── block_mod.ELDD_14
+│   │   ├── block_mod_e.c
+│   │   ├── block_mod_e.fc15.hist
+│   │   ├── block_mod_orig.tgz
+│   │   └── Makefile
+│   ├── block_mod.hist
+│   ├── block_mod.LDD3
+│   │   ├── block_mod_orig.tgz
+│   │   ├── block_mod_s.c
+│   │   ├── block_mod_s.fc15.hist
+│   │   ├── block_mod_s.fc17.hist
+│   │   ├── block_mod_s.fc20.hist
+│   │   ├── Makefile
+│   │   ├── mnt-xda.png
+│   │   └── mnt-xdb.png
+│   ├── block_mod.LDD_35
+│   │   ├── block_mod_c.c
+│   │   ├── block_mod_c.fc15.hist
+│   │   ├── block_mod_orig.tgz
+│   │   └── Makefile
+│   ├── common.c
+│   ├── common.h
+│   ├── dubfl
+│   │   ├── dubfl.c
+│   │   ├── dubfl.Deb6.hist
+│   │   ├── dubfl.Deb7.hist
+│   │   ├── dubfl.fc14.hist
+│   │   ├── dubfl.fc15.hist
+│   │   ├── dubfl.fc17.hist
+│   │   ├── dubfl.fc20.hist
+│   │   ├── dubfl.Ub10.hist
+│   │   ├── fchange.c
+│   │   ├── ioctl-diag.c
+│   │   ├── ioctl.h
+│   │   └── Makefile
+│   ├── ioctl.c
+│   ├── Makefile
+│   ├── request.c
+│   ├── test_blk.c
+│   └── test_seq.c
+├── config
+│   ├── config.c
+│   ├── config.hist
+│   ├── config.sh
+│   └── Makefile
+├── dev
+│   ├── cdev
+│   │   ├── cdev.hist
+│   │   ├── dyndev.c
+│   │   ├── dyndev.old.c
+│   │   ├── fixdev.c
+│   │   └── Makefile
+│   ├── dev.h
+│   ├── dev.hist
+│   ├── devices.txt
+│   ├── ioctl
+│   │   ├── ioctl.c
+│   │   ├── ioctl_dev.c
+│   │   ├── ioctl_dev.new.c
+│   │   ├── ioctl_dev.old.c
+│   │   ├── ioctl.h
+│   │   ├── ioctl.hist
+│   │   ├── Makefile
+│   │   └── test
+│   ├── Makefile
+│   ├── misc
+│   │   ├── Makefile
+│   │   ├── misc_dev.c
+│   │   ├── misc.hist
+│   │   └── misc.rules
+│   ├── mopen
+│   │   ├── Makefile
+│   │   ├── mmopen.0.c
+│   │   ├── mmopen.c
+│   │   ├── mopen.h
+│   │   ├── mopen.hist
+│   │   ├── pmopen.c
+│   │   └── simple.c
+│   └── poll.le.3.14
+│       ├── Makefile
+│       ├── pcat.c
+│       ├── pecho.c
+│       ├── poll.c
+│       ├── poll.h
+│       ├── poll.hist
+│       └── user.h
+├── dma
+│   ├── DMA.hist
+│   ├── lab1_dma.c
+│   ├── lab1_dma_PCI_API.c
+│   ├── Makefile
+│   └── out.c
+├── exec
+│   ├── exec.hist
+│   ├── Makefile
+│   ├── mod_exec.c
+│   └── mod_execho.c
+├── export-data
+│   ├── Makefile
+│   ├── md1.c
+│   ├── md2.c
+│   ├── md3.c
+│   ├── md.h
+│   └── md.hist
+├── file
+│   ├── fs.h
+│   ├── Makefile
+│   ├── mdw.c
+│   ├── mod_file.c
+│   ├── mod_file.hist
+│   ├── module.log
+│   ├── mod_vfs.c
+│   └── xxx
+├── first_hello
+│   ├── hello_printk.c
+│   ├── Makefile
+│   └── printk.hist
+├── fuse
+│   ├── cusexmp.c
+│   ├── Documentation-filesystems-fuse.txt
+│   ├── fioc.h
+│   ├── fsel.c
+│   ├── fselclient.c
+│   ├── fuse.hist
+│   ├── fusexmp.c
+│   ├── fusexmp_fh.c
+│   ├── hello.c
+│   ├── Makefile
+│   ├── tmp
+│   └── xmp.c
+├── int80
+│   ├── common.c
+│   ├── int80.hist
+│   ├── Makefile
+│   ├── mdc.c
+│   ├── mds.c
+│   ├── mdu.c
+│   ├── mp.c
+│   ├── mplib.c
+│   ├── mpsys.c
+│   └── syscall.h
+├── IRQ
+│   ├── IRQ.hist
+│   ├── IRQ.VM.hist
+│   ├── lab1_interrupt.c
+│   ├── Makefile
+│   ├── mod_ser.c
+│   ├── mod_tasklet.c
+│   └── mod_workqueue.c
+├── load_module
+│   ├── common.c
+│   ├── find.c
+│   ├── load_module.hist
+│   ├── Makefile
+│   ├── master
+│   │   ├── Makefile
+│   │   ├── master.c
+│   │   ├── master.hist
+│   │   └── slave.c
+│   ├── plugin
+│   │   ├── CR0.c
+│   │   ├── dec.c
+│   │   ├── hex.c
+│   │   ├── Makefile
+│   │   ├── master.c
+│   │   ├── oct.c
+│   │   ├── plugin.hist
+│   │   ├── slave.c
+│   │   ├── syscall.c
+│   │   └── syscall.h
+│   └── umaster
+│       ├── common.h
+│       ├── inst1.c
+│       ├── inst2.c
+│       ├── Makefile
+│       ├── rem1.c
+│       ├── rem2.c
+│       ├── slave.c
+│       └── umaster.hist
+├── Makefile
+├── memory
+│   ├── list
+│   │   ├── list.hist
+│   │   ├── Makefile
+│   │   └── mod_list.c
+│   ├── Makefile
+│   ├── memory.hist
+│   ├── mtest
+│   │   ├── Makefile
+│   │   ├── memmax.c
+│   │   ├── memtim.c
+│   │   ├── mtest.hist
+│   │   └── tim.sh
+│   └── slab
+│       ├── Makefile
+│       ├── pool.c
+│       ├── pool.hist
+│       ├── slab.c
+│       └── slab.hist
+├── mobj
+│   ├── Makefile
+│   ├── mcall.c
+│   ├── mfA.c
+│   ├── mfB.c
+│   ├── mfC.c
+│   ├── mf.h
+│   ├── mobj.hist
+│   └── mod.c
+├── network
+│   ├── Makefile
+│   ├── net
+│   │   ├── devices.c
+│   │   ├── Makefile
+│   │   ├── mulnet.c
+│   │   ├── net.hist
+│   │   ├── network.c
+│   │   ├── receive.c
+│   │   ├── transmit.c
+│   │   └── transmit_simple.c
+│   ├── netproto
+│   │   ├── client
+│   │   ├── Makefile
+│   │   ├── net_common.c
+│   │   ├── net.hist
+│   │   ├── net_proto2.c
+│   │   ├── net_proto.c
+│   │   ├── net_proto.hist
+│   │   ├── net_protox.c
+│   │   ├── server
+│   │   └── trn_proto.c
+│   ├── network.hist
+│   ├── virt
+│   │   ├── Makefile
+│   │   ├── virt1.c
+│   │   ├── virt2.c
+│   │   ├── virt.c
+│   │   └── virt.hist
+│   ├── virt-full
+│   │   ├── Makefile
+│   │   ├── virt.c
+│   │   └── virt.hist
+│   └── virt-proto
+│       ├── Makefile
+│       ├── virt.c
+│       ├── virt.hist
+│       └── virtl.c
+├── parms
+│   ├── Makefile
+│   ├── mod_params.c
+│   └── params.hist
+├── pci
+│   ├── lab2_pci.c
+│   ├── Makefile
+│   ├── pci.hist
+│   └── pci.ids
+├── !previous
+│   ├── blkdev.lt.3.11
+│   │   ├── block_mod.hist
+│   │   ├── block_mod.LDD3
+│   │   │   ├── block_mod_orig.tgz
+│   │   │   ├── block_mod_s.c
+│   │   │   ├── block_mod_s.fc15.hist
+│   │   │   ├── Makefile
+│   │   │   └── mnt-xda.png
+│   │   ├── common.c
+│   │   ├── common.h
+│   │   ├── ioctl.c
+│   │   ├── Makefile
+│   │   ├── request.c
+│   │   ├── test_blk.c
+│   │   └── test_seq.c
+│   ├── network.lt.3.17
+│   │   ├── Makefile
+│   │   ├── net
+│   │   │   ├── devices.c
+│   │   │   ├── Makefile
+│   │   │   ├── net.hist
+│   │   │   ├── network.c
+│   │   │   ├── receive.c
+│   │   │   ├── transmit.c
+│   │   │   └── transmit_simple.c
+│   │   ├── netproto
+│   │   │   ├── client
+│   │   │   ├── Makefile
+│   │   │   ├── net_common.c
+│   │   │   ├── net.hist
+│   │   │   ├── net_proto2.c
+│   │   │   ├── net_proto.c
+│   │   │   ├── net_proto.hist
+│   │   │   ├── net_protox.c
+│   │   │   ├── server
+│   │   │   └── trn_proto.c
+│   │   ├── network.hist
+│   │   ├── virt
+│   │   │   ├── Makefile
+│   │   │   ├── virt1.c
+│   │   │   ├── virt2.c
+│   │   │   ├── virt.c
+│   │   │   └── virt.hist
+│   │   ├── virt-full
+│   │   │   ├── Makefile
+│   │   │   ├── virt.c
+│   │   │   └── virt.hist
+│   │   └── virt-proto
+│   │       ├── Makefile
+│   │       ├── virt.c
+│   │       ├── virt.hist
+│   │       └── virtl.c
+│   └── proc.le.3.9
+│       ├── Makefile
+│       ├── proc
+│       │   ├── common.h
+│       │   ├── fops_rw.c
+│       │   ├── Makefile
+│       │   ├── mcat.c
+│       │   ├── mod_2.c
+│       │   ├── mod_proc.c
+│       │   ├── mod_proc.h
+│       │   ├── mod_procr2.c
+│       │   ├── mod_procr.c
+│       │   ├── mod_proct.c
+│       │   ├── proc.hist
+│       │   └── proc_node_read.c
+│       └── variants
+│           ├── build
+│           ├── common.h
+│           ├── def_prog.c
+│           ├── insm
+│           ├── Makefile
+│           ├── mcat.c
+│           ├── mod_proc.c
+│           ├── mod_proc.h
+│           ├── proc_node_read.c
+│           ├── proc_node_write.c
+│           ├── recho.c
+│           ├── remm
+│           ├── rtest.c
+│           └── variants.hist
+├── proc
+│   ├── Makefile
+│   ├── proc
+│   │   ├── common.h
+│   │   ├── fops_rw.c
+│   │   ├── Makefile
+│   │   ├── mcat.c
+│   │   ├── mod_2.c
+│   │   ├── mod_proc.c
+│   │   ├── mod_proc.h
+│   │   ├── mod_procr2.c
+│   │   ├── mod_procr.c
+│   │   ├── mod_proct.c
+│   │   ├── proc.hist
+│   │   └── proc_node_read.c
+│   └── variants.le.3.9
+│       ├── build
+│       ├── common.h
+│       ├── def_prog.c
+│       ├── insm
+│       ├── Makefile
+│       ├── mcat.c
+│       ├── mod_proc.c
+│       ├── mod_proc.h
+│       ├── proc_node_read.c
+│       ├── proc_node_write.c
+│       ├── recho.c
+│       ├── remm
+│       ├── rtest.c
+│       └── variants.hist
+├── prog_sys_call
+│   ├── Makefile
+│   ├── prog_c.c
+│   ├── prog_cc.cc
+│   └── prog.hist
+├── signal
+│   ├── ioctl.c
+│   ├── ioctl.h
+│   ├── ioctl_signal.c
+│   ├── Makefile
+│   ├── miscdev.h
+│   ├── signal.hist
+│   └── sigreq.c
+├── simple-debug
+│   ├── debug.hist
+│   ├── Makefile
+│   ├── md1.c
+│   ├── md1.h
+│   ├── md.c
+│   ├── mdsys2.c
+│   ├── mdsys2.h
+│   ├── mdsys.c
+│   ├── mdsysc.c
+│   ├── mt1.c
+│   └── test2.sh
+├── sys
+│   ├── Makefile
+│   ├── sys.hist
+│   ├── xxe.c
+│   ├── xxm.c
+│   └── xxx.c
+├── sys_call_table
+│   ├── add_sys
+│   │   ├── add-sys.c
+│   │   ├── add-sys.hist
+│   │   ├── dec.c
+│   │   ├── Makefile
+│   │   ├── ni-test.c
+│   │   ├── syscall.c
+│   │   └── syscall.h
+│   ├── call_table
+│   │   ├── call_table-2.hist
+│   │   ├── call_table.hist
+│   │   ├── Makefile
+│   │   ├── mod_kct.c
+│   │   ├── mod_koes.c
+│   │   ├── mod_rct.c
+│   │   ├── mod_rct.c.0
+│   │   ├── test3-.dat
+│   │   ├── test3.dat
+│   │   └── test8.dat
+│   ├── CR0.c
+│   ├── export
+│   │   ├── export.hist
+│   │   ├── Makefile
+│   │   ├── md_0c.c
+│   │   └── md_0o.c
+│   ├── find.c
+│   ├── hidden
+│   │   ├── getpid.c
+│   │   ├── hidden.c
+│   │   ├── hidden.hist
+│   │   ├── local.c
+│   │   ├── Makefile
+│   │   ├── null.c
+│   │   ├── printk.c
+│   │   ├── restore.c
+│   │   ├── strlen_1.c
+│   │   ├── strlen_2.c
+│   │   ├── syscall.c
+│   │   ├── syscall.h
+│   │   ├── variant.h
+│   │   └── write.c
+│   ├── Makefile
+│   ├── new_sys
+│   │   ├── Makefile
+│   │   ├── mod_wrc.c
+│   │   ├── mod_wrchg.c
+│   │   └── wr.hist
+│   └── sys_call_table.hist
+├── +TASKS
+│   ├── asu
+│   │   ├── asu-deb-32.hist
+│   │   ├── asu-f15-2642.hist
+│   │   ├── asu-f17-36.hist
+│   │   ├── asu-f20-314.hist
+│   │   ├── asu-f20-318.hist
+│   │   ├── asu-ub-32.hist
+│   │   ├── cli.c
+│   │   ├── common.h
+│   │   ├── kern.c
+│   │   ├── locl.c
+│   │   ├── Makefile
+│   │   ├── modpasu.c
+│   │   ├── modsasu.c
+│   │   └── user.h
+│   ├── confm
+│   │   ├── confm.c
+│   │   ├── confm.hist
+│   │   ├── Makefile
+│   │   ├── x1.cfg
+│   │   └── x.cfg
+│   ├── gas-prog
+│   │   ├── test.c
+│   │   ├── test.hist
+│   │   ├── test_i386.S
+│   │   └── test_x86_64.S
+│   ├── hello -> ../first_hello
+│   ├── irq
+│   │   ├── irqcntp.c
+│   │   ├── irqcntpv.c
+│   │   ├── irqcnts.c
+│   │   ├── irq-d606_32.hist
+│   │   ├── irq-f15_2642.hist
+│   │   ├── irq-f17_36.hist
+│   │   ├── irq-f20_314.hist
+│   │   ├── irq-f20_318.hist
+│   │   ├── irqs.c
+│   │   └── Makefile
+│   ├── jiffies
+│   │   ├── jiff.c
+│   │   ├── jiffies.hist
+│   │   ├── jifft.c
+│   │   └── Makefile
+│   ├── load -> ../load_module/umaster
+│   ├── lproc
+│   │   ├── Makefile
+│   │   ├── procdat.c
+│   │   ├── procdatlt.c
+│   │   └── proc.hist
+│   ├── Makefile
+│   ├── memmax
+│   │   ├── iter.c
+│   │   ├── Makefile
+│   │   ├── memmax.c
+│   │   └── memmax.hist
+│   ├── params -> ../parms
+│   ├── queue
+│   │   ├── common.c
+│   │   ├── Makefile
+│   │   ├── queue.hist
+│   │   ├── queuel.c
+│   │   ├── queues.c
+│   │   ├── testM.dat
+│   │   └── testX.dat
+│   ├── ramdisk -> ../blkdev
+│   ├── smp
+│   │   ├── Makefile
+│   │   ├── nproc.c
+│   │   ├── smp.hist
+│   │   ├── thr1.c
+│   │   ├── thr2.c
+│   │   ├── thr3.c
+│   │   └── thr4.c
+│   ├── synch
+│   │   ├── Makefile
+│   │   ├── pamixab.c
+│   │   ├── pamixad.c
+│   │   ├── pamix.c
+│   │   ├── pamixm.c
+│   │   ├── pamixx.c
+│   │   └── synch.hist
+│   ├── sys
+│   │   ├── Makefile
+│   │   ├── sysdat.c
+│   │   ├── sysdat.hist
+│   │   └── syskdat.c
+│   └── vnet -> ../network
+├── thread
+│   ├── Makefile
+│   ├── mlock
+│   │   ├── Makefile
+│   │   ├── mlock.c
+│   │   └── mlock.hist
+│   ├── prefix.c
+│   ├── tcreat
+│   │   ├── Makefile
+│   │   ├── mod_thr1.c
+│   │   ├── mod_thr2.c
+│   │   ├── mod_thr3.c
+│   │   └── tcreat.hist
+│   ├── tfor
+│   │   ├── Makefile
+│   │   ├── mod_for.c
+│   │   └── mod_for.hist
+│   └── thread.hist
+├── time
+│   ├── calibr.c
+│   ├── clock.c
+│   ├── htick.c
+│   ├── interv.c
+│   ├── libdiag.h
+│   ├── Makefile
+│   ├── pdelay.c
+│   ├── proc_hz.c
+│   ├── rdtsc.c
+│   ├── rtcr.c
+│   ├── rtprd.c
+│   ├── set_rt.c
+│   ├── tick.c
+│   └── time.hist
+├── tree.txt
+├── udev
+│   ├── Makefile
+│   ├── mondev
+│   │   ├── Makefile
+│   │   ├── mondev.c
+│   │   └── mondev.hist
+│   ├── monitor
+│   │   ├── Makefile
+│   │   ├── monitor.c
+│   │   └── monitor.hist
+│   └── udev.hist
+├── usb
+│   ├── lab1_usb.c
+│   ├── Makefile
+│   ├── usb.hist
+│   └── usb.ids
+└── user_io
+    ├── io.h
+    ├── ioperm.c
+    ├── ioports.c
+    ├── ioports.hist
+    └── Makefile
+
+90 directories, 503 files

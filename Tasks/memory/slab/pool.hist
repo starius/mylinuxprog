@@ -1,0 +1,126 @@
+===============================================================================
+
+28.07.2012
+==========
+
+[olej@notebook slab]$ sudo insmod ./pool.ko
+
+[olej@notebook slab]$ dmesg | tail -n30 | grep -v audit
+11 objects in pool before allocation
+11 objects in pool after allocation
+allocate 31 objects
+object size 7 bytes, full size 217 bytes
+
+[olej@notebook slab]$ sudo rmmod pool
+
+
+
+[olej@notebook slab]$ sudo insmod ./pool.ko mode=1
+
+[olej@notebook slab]$ dmesg | tail -n30 | grep -v audit
+11 objects in pool before allocation
+11 objects in pool after allocation
+allocate 31 objects
+object size 7 bytes, full size 217 bytes
+
+[olej@notebook slab]$ sudo rmmod pool
+
+
+
+[olej@notebook slab]$ sudo insmod ./pool.ko mode=2
+
+[olej@notebook slab]$ dmesg | tail -n30 | grep -v audit
+11 objects in pool before allocation
+11 objects in pool after allocation
+allocate 31 objects
+object size 7 bytes, full size 217 bytes
+
+[olej@notebook slab]$ sudo rmmod pool
+
+===============================================================================
+
+03.06.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ sudo insmod ./pool.ko mode=2
+insmod: ERROR: could not insert module ./pool.ko: Invalid parameters
+
+bash-4.2$ dmesg | tail -n2
+[ 9990.381301] pool destroyed
+[10028.382993] illegal mode value
+
+
+bash-4.2$ sudo insmod ./pool.ko mode=1
+insmod: ERROR: could not insert module ./pool.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n7
+[ 9848.544286] pool destroyed
+[ 9990.381231] pool created
+[ 9990.381240] 11 objects in pool before allocation
+[ 9990.381287] 11 objects in pool after allocation
+[ 9990.381291] allocate 31 objects (size 7) in 298 cycles
+[ 9990.381295] tested OK objects: 31
+[ 9990.381301] pool destroyed
+
+
+bash-4.2$ sudo insmod ./pool.ko mode=0
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module ./pool.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n7
+[ 9170.425340] constructor called 3225 times
+[ 9848.544241] pool created
+[ 9848.544248] 11 objects in pool before allocation
+[ 9848.544277] 11 objects in pool after allocation
+[ 9848.544280] allocate 31 objects (size 7) in 177 cycles
+[ 9848.544282] tested OK objects: 31
+[ 9848.544286] pool destroyed
+
+-------------------------------------------------------------------------------
+
+[Olej@modules slab]$ uname -a
+Linux modules.localdomain 3.14.4-200.fc20.x86_64 #1 SMP Tue May 13 13:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules slab]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+[Olej@modules slab]$ sudo insmod ./pool.ko mode=2
+[sudo] password for Olej: 
+
+insmod: ERROR: could not insert module ./pool.ko: Invalid parameters
+[Olej@modules slab]$ dmesg | tail -n3
+[ 8917.618722] object size 1111 bytes, full size 3333000 bytes
+[ 8917.618725] constructor called 3132 times
+[ 9392.832016] illegal mode value
+
+
+[Olej@modules slab]$ sudo insmod ./pool.ko mode=1
+
+[Olej@modules slab]$ dmesg | tail -n7
+[ 9392.832016] illegal mode value
+[ 9540.110318] pool created
+[ 9540.110322] 11 objects in pool before allocation
+[ 9540.110333] 11 objects in pool after allocation
+[ 9540.110334] allocate 31 objects (size 7) in 341 cycles
+[ 9540.110335] tested OK objects: 31
+[ 9540.110337] pool destroyed
+
+
+[Olej@modules slab]$ sudo insmod ./pool.ko mode=0
+insmod: ERROR: could not insert module ./pool.ko: Cannot allocate memory
+
+[Olej@modules slab]$ dmesg | tail -n4
+[ 9540.110337] pool destroyed
+[ 9641.006272] kmem_cache_create(my_cache) integrity check failed
+[ 9641.006277] cache create error
+[ 9641.006278] pool create error
+
+-------------------------------------------------------------------------------

@@ -1,0 +1,313 @@
+31.01.2015
+==========
+
+Задача: Создайте модель системы авторегулирования в /proc:
+1. Есть некоторое регулируемое значение (это одна переменная, /proc/.../val);
+2. Есть корректирующая переменная (это одна переменная, /proc/.../cor) — при записи
+в эту переменную регулируемое значение корректируется (суммируется) с записанным значением,
+умноженным на коэффициент петлевого усиления (константу).
+Последовательно считывая (cat) val — выбираем значение коррекции и записываем (echo) в cor,
+с целью привести val к условному значению 0.
+Значение /proc/.../val должно допускать запись для начальной инициализации,  коэффициент
+петлевого усиления задаём как параметр при старте модуля.
+
+Задача: Для предыдущей задачи сделать приложение, которое будет циклически, с фиксированным
+интервалом времени, формировать разницу и записывать корректирующее значение до тех пор,
+пока val не установится в 0. 
+
+Подсказка: Для упрощения обеих предыдущих задач сделайте сначала в одногм приложении модель
+циклического авторегулирования:
+3. Значение управляемой переменной считывается, и в зависимости от разбалансировки вырабатывается
+управляющее воздействие (разница значений); 
+4. Из управляющего воздействия формируется шаг корректировки (умножением разбалансировки
+на коэффициент петлевого усиления), поэтому можно имитировать недорегулирование, перерегулирование...
+5. Шаг корректировки записывается во вторую переменную;
+6. Устройство корректирует регулируемое значение на полученный шаг корректировки;
+7. Если в результате записи п.5 разбалансировка всё ещё не нулевая — возвращаемся на п.3.
+
+Задача: Проанализируйте, как такие именнованные «точки данных» могут использоваться в качестве базы для SCADA системы.
+
+--------------------------------------------------------------------------------------------------
+
+Задача: Проделайте в /sys аналогичные действия как для /proc.
+
+==================================================================================================
+
+06.02.2015
+==========
+
+[olej@fedora asu]$ sudo insmod modasu.ko 
+
+[olej@fedora asu]$ lsmod | head -n2
+Module                  Size  Used by
+modasu                 12698  0 
+[olej@fedora asu]$ 
+[olej@fedora asu]$ tree /proc/asu/
+/proc/asu/
+├── increment
+└── value
+
+0 directories, 2 files
+[olej@fedora asu]$ cat /proc/asu/value 
+0
+[olej@fedora asu]$ cat /proc/asu/increment 
+cat: /proc/asu/increment: Ошибка ввода/вывода
+[olej@fedora asu]$ echo 123 > /proc/asu/increment 
+[olej@fedora asu]$ cat /proc/asu/value 
+123
+[olej@fedora asu]$ echo -120 > /proc/asu/increment 
+[olej@fedora asu]$ cat /proc/asu/value 
+3
+[olej@fedora asu]$ sudo rmmod modasu.ko 
+
+==================================================================================================
+
+[olej@fedora asu]$ sudo insmod modpasu.ko 
+
+[olej@fedora asu]$ dmesg | tail -n4
+[22058.873962] ! read: return -55
+[22106.524562] ! module removed
+[21979.722153] ! module installed
+[22452.536191] ! module installed
+
+[olej@fedora asu]$ cat /proc/asu/value 
+0
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+30
+
+[olej@fedora asu]$ echo -60 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+-30
+
+[olej@fedora asu]$ echo +90 > /proc/asu/increment 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@fedora asu]$ echo 90 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+60
+
+[olej@fedora asu]$ cat /proc/asu/multiply 
+100
+
+[olej@fedora asu]$ echo 150 > /proc/asu/multiply 
+
+[olej@fedora asu]$ cat /proc/asu/multiply 
+150
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+105
+
+[olej@fedora asu]$ echo 30 > /proc/asu/increment 
+
+[olej@fedora asu]$ cat /proc/asu/value 
+150
+
+[olej@fedora asu]$ sudo rmmod modpasu.ko 
+
+==================================================================================================
+
+06.02.2015
+==========
+
+[olej@fedora asu]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora asu]$ cat /etc/system-release
+RFRemix release 17 (Beefy Miracle)
+
+[olej@fedora asu]$ sudo insmod modpasu.ko
+
+[olej@fedora asu]$ tree /proc/asu
+/proc/asu
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+[olej@fedora asu]$ cd /proc/asu
+
+[olej@fedora asu]$ ls -l
+итого 0
+-rw-rw-rw-. 1 root root 0 февр.  6 18:17 increment
+-rw-rw-rw-. 1 root root 0 февр.  6 18:17 multiply
+-rw-rw-rw-. 1 root root 0 февр.  6 18:17 value
+
+[olej@fedora asu]$ cat value 
+0
+
+[olej@fedora asu]$ cat multiply 
+100
+
+[olej@fedora asu]$ echo 30 > value
+
+[olej@fedora asu]$ cat value 
+30
+
+[olej@fedora asu]$ echo -10 > increment 
+
+[olej@fedora asu]$ cat value 
+20
+
+[olej@fedora asu]$ echo 195 > multiply 
+
+[olej@fedora asu]$ cat multiply 
+195
+
+[olej@fedora asu]$ echo -10 > increment 
+
+[olej@fedora asu]$ cat value 
+1
+
+[olej@fedora asu]$ sudo rmmod modpasu.ko
+
+--------------------------------------------------------------------------------------------------
+
+[olej@fedora asu]$ sudo insmod modpasu.ko 
+
+[olej@fedora asu]$ tree /proc/asu
+/proc/asu
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+[olej@fedora asu]$ ./cli_kern 
+ошибка открытия /proc/asu/value: File exists
+
+--------------------------------------------------------------------------------------------------
+
+==================================================================================================
+
+[olej@fedora asu]$ ./cli_locl 
+команда (h-подсказка): h
+реализованные команды: ? =N *[N] h q
+команда (h-подсказка): ?
+текущее значение = 0
+команда (h-подсказка): *
+усиление = 100%
+команда (h-подсказка): *80
+усиление = 80%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => 20
+20 -20 => 4
+4 -4 => 1
+команда (h-подсказка): =1000
+новое значение = 1000
+1000 -1000 => 200
+200 -200 => 40
+40 -40 => 8
+8 -8 => 2
+2 -2 => 1
+команда (h-подсказка): q
+
+==================================================================================================
+
+[olej@fedora asu]$ sudo insmod modpasu.ko
+
+[olej@fedora asu]$ lsmod | head -n2
+Module                  Size  Used by
+modpasu                12785  0 
+
+[olej@fedora asu]$ dmesg | tail -n1
+[32492.189711] ! module installed
+
+[olej@fedora asu]$ tree /proc/asu
+/proc/asu
+├── increment
+├── multiply
+└── value
+
+0 directories, 3 files
+
+[olej@fedora asu]$ ls -l /proc/asu
+итого 0
+-rw-rw-rw-. 1 root root 0 февр.  6 20:38 increment
+-rw-rw-rw-. 1 root root 0 февр.  6 20:38 multiply
+-rw-rw-rw-. 1 root root 0 февр.  6 20:38 value
+
+[olej@fedora asu]$ ./cli_kern 
+команда (h-подсказка): ?
+текущее значение = 0
+команда (h-подсказка): *
+усиление = 100%
+команда (h-подсказка): *80
+усиление = 80%
+команда (h-подсказка): =1000
+новое значение = 1000
+1000 -1000 => 200
+200 -200 => 40
+40 -40 => 8
+8 -8 => 2
+2 -2 => 1
+команда (h-подсказка): *180
+усиление = 180%
+команда (h-подсказка): =1000
+новое значение = 1000
+1000 -1000 => -800
+-800 +800 => 640
+640 -640 => -512
+-512 +512 => 409
+409 -409 => -327
+-327 +327 => 261
+261 -261 => -208
+-208 +208 => 166
+166 -166 => -132
+-132 +132 => 105
+105 -105 => -84
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -80
+-80 +80 => 64
+64 -64 => -51
+-51 +51 => 40
+40 -40 => -32
+-32 +32 => 25
+25 -25 => -20
+-20 +20 => 16
+16 -16 => -12
+-12 +12 => 9
+9 -9 => -7
+команда (h-подсказка): *205         
+усиление = 205%
+команда (h-подсказка): =5
+новое значение = 5
+5 -5 => -5
+-5 +5 => 5
+5 -5 => -5
+-5 +5 => 5
+5 -5 => -5
+-5 +5 => 5
+5 -5 => -5
+-5 +5 => 5
+5 -5 => -5
+-5 +5 => 5
+5 -5 => -5
+команда (h-подсказка): =50
+новое значение = 50
+50 -50 => -52
+-52 +52 => 54
+54 -54 => -56
+-56 +56 => 58
+58 -58 => -60
+-60 +60 => 63
+63 -63 => -66
+-66 +66 => 69
+69 -69 => -72
+-72 +72 => 75
+75 -75 => -78
+команда (h-подсказка): q
+
+
+[olej@fedora asu]$ sudo rmmod modpasu.ko
+
+==================================================================================================
+

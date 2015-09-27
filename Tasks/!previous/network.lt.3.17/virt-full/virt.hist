@@ -1,0 +1,192 @@
+===================================================================================
+
+10.04.2012
+==========
+
+[olej@nvidia ~]$ sudo ifconfig vboxnet0:1 192.168.50.1
+
+[olej@nvidia ~]$ route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         192.168.1.1     0.0.0.0         UG    0      0        0 eth0
+192.168.1.0     *               255.255.255.0   U     1      0        0 eth0
+192.168.50.0    *               255.255.255.0   U     0      0        0 vboxnet0
+192.168.56.0    *               255.255.255.0   U     0      0        0 vboxnet0
+192.168.60.0    *               255.255.255.0   U     0      0        0 vboxnet0
+
+-----------------------------------------------------------------------------------
+
+[olej@fedora16vm virt]$ sudo insmod ./virt.ko link=p7p1 debug=1
+
+[olej@fedora16vm virt]$ dmesg | tail -n3
+[58354.983782] ! module virt loaded
+[58354.983785] ! virt: create link virt0
+[58354.983786] ! virt: registered rx handler for p7p1
+
+
+[olej@fedora16vm virt]$ sudo ifconfig virt0 192.168.50.2
+
+[olej@fedora16vm virt]$ dmesg | tail -n26
+[58354.983782] ! module virt loaded
+[58354.983785] ! virt: create link virt0
+[58354.983786] ! virt: registered rx handler for p7p1
+[58371.480100] ! virt0: device opened
+[58371.480103] ! virt0: 192.168.50.2:255.255.255.0
+[58371.482183] ! tx: injecting frame from virt0 to p7p1
+[58371.482230] ! tx: injecting frame from virt0 to p7p1
+[58371.697741] ! tx: injecting frame from virt0 to p7p1
+[58371.726655] ! tx: injecting frame from virt0 to p7p1
+[58371.943563] ! tx: injecting frame from virt0 to p7p1
+[58372.194566] ! tx: injecting frame from virt0 to p7p1
+[58372.394657] ! tx: injecting frame from virt0 to p7p1
+[58372.409174] ! tx: injecting frame from virt0 to p7p1
+[58372.478196] ! tx: injecting frame from virt0 to p7p1
+[58372.888218] ! tx: injecting frame from virt0 to p7p1
+[58372.888762] ! tx: injecting frame from virt0 to p7p1
+[58373.480219] ! tx: injecting frame from virt0 to p7p1
+[58373.554621] ! tx: injecting frame from virt0 to p7p1
+[58373.554972] ! tx: injecting frame from virt0 to p7p1
+[58373.569482] ! tx: injecting frame from virt0 to p7p1
+[58373.691549] ! tx: injecting frame from virt0 to p7p1
+[58373.942204] ! tx: injecting frame from virt0 to p7p1
+[58374.192390] ! tx: injecting frame from virt0 to p7p1
+[58374.392772] ! tx: injecting frame from virt0 to p7p1
+[58375.049073] ! tx: injecting frame from virt0 to p7p1
+[58375.120203] ! tx: injecting frame from virt0 to p7p1
+
+
+
+[olej@nvidia ~]$ ping 192.168.50.2
+PING 192.168.50.2 (192.168.50.2) 56(84) bytes of data.
+64 bytes from 192.168.50.2: icmp_req=1 ttl=64 time=0.473 ms
+64 bytes from 192.168.50.2: icmp_req=2 ttl=64 time=0.256 ms
+64 bytes from 192.168.50.2: icmp_req=3 ttl=64 time=0.281 ms
+^C
+--- 192.168.50.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.256/0.336/0.473/0.099 ms
+
+
+
+[olej@fedora16vm virt]$ sudo tcpdump -i virt0 
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on virt0, link-type EN10MB (Ethernet), capture size 65535 bytes
+00:13:02.228615 IP 192.168.50.1 > 192.168.50.2: ICMP echo request, id 5609, seq 1, length 64
+00:13:02.228716 ARP, Request who-has 192.168.50.1 tell 192.168.50.2, length 28
+00:13:02.228786 ARP, Reply 192.168.50.1 is-at 0a:00:27:00:00:00 (oui Unknown), length 46
+00:13:02.228803 IP 192.168.50.2 > 192.168.50.1: ICMP echo reply, id 5609, seq 1, length 64
+00:13:03.227996 IP 192.168.50.1 > 192.168.50.2: ICMP echo request, id 5609, seq 2, length 64
+00:13:03.228059 IP 192.168.50.2 > 192.168.50.1: ICMP echo reply, id 5609, seq 2, length 64
+00:13:04.228016 IP 192.168.50.1 > 192.168.50.2: ICMP echo request, id 5609, seq 3, length 64
+00:13:04.228075 IP 192.168.50.2 > 192.168.50.1: ICMP echo reply, id 5609, seq 3, length 64
+00:14:04.232701 IP 192.168.50.2 > 192.168.50.1: ICMP echo request, id 8834, seq 1, length 64
+00:14:04.232905 IP 192.168.50.1 > 192.168.50.2: ICMP echo reply, id 8834, seq 1, length 64
+00:14:05.233727 IP 192.168.50.2 > 192.168.50.1: ICMP echo request, id 8834, seq 2, length 64
+00:14:05.233929 IP 192.168.50.1 > 192.168.50.2: ICMP echo reply, id 8834, seq 2, length 64
+00:14:06.233844 IP 192.168.50.2 > 192.168.50.1: ICMP echo request, id 8834, seq 3, length 64
+00:14:06.234213 IP 192.168.50.1 > 192.168.50.2: ICMP echo reply, id 8834, seq 3, length 64
+00:14:09.236014 ARP, Request who-has 192.168.50.2 tell 192.168.50.1, length 46
+00:14:09.236052 ARP, Reply 192.168.50.2 is-at 08:00:27:9e:02:02 (oui Unknown), length 28
+tcpdump: pcap_loop: The interface went down
+16 packets captured
+16 packets received by filter
+0 packets dropped by kernel
+
+
+
+[olej@nvidia ~]$ ping 192.168.56.101
+PING 192.168.56.101 (192.168.56.101) 56(84) bytes of data.
+64 bytes from 192.168.56.101: icmp_req=1 ttl=64 time=2.63 ms
+64 bytes from 192.168.56.101: icmp_req=2 ttl=64 time=0.306 ms
+64 bytes from 192.168.56.101: icmp_req=3 ttl=64 time=0.225 ms
+^C
+--- 192.168.56.101 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 0.225/1.053/2.630/1.115 ms
+
+
+[olej@fedora16vm virt]$ dmesg | tail -n19
+[58382.498200] virt0: no IPv6 routers present
+[58391.368273] device virt0 entered promiscuous mode
+[58409.904046] ! rx: IP4 to IP=192.168.50.2
+[58409.904050] ! rx: injecting frame from p7p1 to virt0
+[58409.904197] ! tx: injecting frame from virt0 to p7p1
+[58409.904212] ! rx: ARP for 192.168.50.2
+[58409.904214] ! rx: injecting frame from p7p1 to virt0
+[58409.904262] ! tx: injecting frame from virt0 to p7p1
+[58410.903427] ! rx: IP4 to IP=192.168.50.2
+[58410.903431] ! rx: injecting frame from p7p1 to virt0
+[58410.903531] ! tx: injecting frame from virt0 to p7p1
+[58411.903447] ! rx: IP4 to IP=192.168.50.2
+[58411.903451] ! rx: injecting frame from p7p1 to virt0
+[58411.903547] ! tx: injecting frame from virt0 to p7p1
+[58414.694485] ! rx: ARP for 192.168.56.101
+[58414.696846] ! rx: IP4 to IP=192.168.56.101
+[58415.696508] ! rx: IP4 to IP=192.168.56.101
+[58416.696572] ! rx: IP4 to IP=192.168.56.101
+[58419.712245] ! rx: ARP for 192.168.56.101
+
+
+[olej@fedora16vm virt]$ ping 192.168.50.1
+PING 192.168.50.1 (192.168.50.1) 56(84) bytes of data.
+64 bytes from 192.168.50.1: icmp_req=1 ttl=64 time=0.416 ms
+64 bytes from 192.168.50.1: icmp_req=2 ttl=64 time=0.238 ms
+64 bytes from 192.168.50.1: icmp_req=3 ttl=64 time=0.406 ms
+^C
+--- 192.168.50.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 0.238/0.353/0.416/0.083 ms
+
+
+[olej@fedora16vm virt]$ dmesg | tail -n30
+[58391.368273] device virt0 entered promiscuous mode
+[58409.904046] ! rx: IP4 to IP=192.168.50.2
+[58409.904050] ! rx: injecting frame from p7p1 to virt0
+[58409.904197] ! tx: injecting frame from virt0 to p7p1
+[58409.904212] ! rx: ARP for 192.168.50.2
+[58409.904214] ! rx: injecting frame from p7p1 to virt0
+[58409.904262] ! tx: injecting frame from virt0 to p7p1
+[58410.903427] ! rx: IP4 to IP=192.168.50.2
+[58410.903431] ! rx: injecting frame from p7p1 to virt0
+[58410.903531] ! tx: injecting frame from virt0 to p7p1
+[58411.903447] ! rx: IP4 to IP=192.168.50.2
+[58411.903451] ! rx: injecting frame from p7p1 to virt0
+[58411.903547] ! tx: injecting frame from virt0 to p7p1
+[58414.694485] ! rx: ARP for 192.168.56.101
+[58414.696846] ! rx: IP4 to IP=192.168.56.101
+[58415.696508] ! rx: IP4 to IP=192.168.56.101
+[58416.696572] ! rx: IP4 to IP=192.168.56.101
+[58419.712245] ! rx: ARP for 192.168.56.101
+[58471.908318] ! tx: injecting frame from virt0 to p7p1
+[58471.908329] ! rx: IP4 to IP=192.168.50.2
+[58471.908330] ! rx: injecting frame from p7p1 to virt0
+[58472.909327] ! tx: injecting frame from virt0 to p7p1
+[58472.909354] ! rx: IP4 to IP=192.168.50.2
+[58472.909357] ! rx: injecting frame from p7p1 to virt0
+[58473.909450] ! tx: injecting frame from virt0 to p7p1
+[58473.909639] ! rx: IP4 to IP=192.168.50.2
+[58473.909642] ! rx: injecting frame from p7p1 to virt0
+[58476.911445] ! rx: ARP for 192.168.50.2
+[58476.911449] ! rx: injecting frame from p7p1 to virt0
+[58476.911525] ! tx: injecting frame from virt0 to p7p1
+
+
+[olej@fedora16vm virt]$ sudo rmmod virt
+
+[olej@fedora16vm virt]$ dmesg | tail -n4
+[58534.297796] ! virt: unregister rx handler for p7p1
+[58534.297896] ! virt0: device closed
+[58534.299225] device virt0 left promiscuous mode
+[58534.306169] ! module virt unloaded
+
+
+-----------------------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------
+
+
+
+===================================================================================
+
+

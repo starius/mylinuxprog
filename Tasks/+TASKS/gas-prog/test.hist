@@ -1,0 +1,129 @@
+04.03.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ uname -i
+i386
+
+bash-4.2$ make
+gcc -Wall -O0 test.c -o test
+gcc -Wall -O0 -S test.c -o test_`uname -i`.S
+
+bash-4.2$ ls -l test_*
+-rw-rw-r-- 1 Olej Olej 700 мар  4 15:06 test_i386.S
+-rw-rw-r-- 1 Olej Olej 669 мар  4 14:57 test_x86_64.S
+
+===========================================================================
+
+[Olej@modules 32]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules 32]$ make
+gcc -Wall -O0 test.c -o test
+gcc -Wall -O0 -S test.c -o test_`uname -i`.S
+
+[Olej@modules 32]$ ./test 
+test
+
+===========================================================================
+
+[Olej@modules 32]$ yum list all gcc*
+Загружены модули: aliases, auto-update-debuginfo, changelog, dellsysid, fastestmirror, filter-data, fs-snapshot, keys,
+                : langpacks, list-data, local, merge-conf, post-transaction-actions, priorities, protectbase, ps,
+                : puppetverify, refresh-packagekit, refresh-updatesd, remove-with-leaves, rpm-warm-cache, show-leaves,
+                : tmprepo, tsflags, upgrade-helper, verify, versionlock
+_local                                                                                         | 2.9 kB  00:00:00     
+_local/primary_db                                                                              | 1.2 MB  00:00:00     
+Determining fastest mirrors
+ * fedora: ftp.halifax.rwth-aachen.de
+ * rpmfusion-free: mirror.karneval.cz
+ * rpmfusion-free-updates: mirror.karneval.cz
+ * rpmfusion-nonfree: mirror.karneval.cz
+ * rpmfusion-nonfree-updates: mirror.karneval.cz
+ * updates: ftp.wsisiz.edu.pl
+google-chrome/primary                                                                          | 1.9 kB  00:00:00     
+google-chrome                                                                                                     3/3
+0 packages excluded due to repository protections
+Установленные пакеты
+gcc.x86_64                                             4.8.3-1.fc20                                           @updates
+gcc-c++.i686                                           4.8.3-1.fc20                                           @updates
+gcc-c++.x86_64                                         4.8.3-1.fc20                                           @updates
+gcc-go.x86_64                                          4.8.3-1.fc20                                           @updates
+Доступные пакеты
+gcc.x86_64                                             4.8.3-7.fc20                                           updates 
+gcc-aarch64-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-alpha-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-arm-linux-gnu.x86_64                               4.9.1-1.fc20                                           updates 
+gcc-avr32-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-bfin-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-c++.i686                                           4.8.3-7.fc20                                           updates 
+gcc-c++.x86_64                                         4.8.3-7.fc20                                           updates 
+gcc-c++-aarch64-linux-gnu.x86_64                       4.9.1-1.fc20                                           updates 
+gcc-c++-alpha-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-arm-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-c++-avr32-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-bfin-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-c6x-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-c++-cris-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-frv-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-c++-h8300-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-hppa-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-hppa64-linux-gnu.x86_64                        4.9.1-1.fc20                                           updates 
+gcc-c++-ia64-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-m32r-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-m68k-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-microblaze-linux-gnu.x86_64                    4.9.1-1.fc20                                           updates 
+gcc-c++-mips64-linux-gnu.x86_64                        4.9.1-1.fc20                                           updates 
+gcc-c++-mn10300-linux-gnu.x86_64                       4.9.1-1.fc20                                           updates 
+gcc-c++-nios2-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-powerpc64-linux-gnu.x86_64                     4.9.1-1.fc20                                           updates 
+gcc-c++-ppc64-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-s390x-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-c++-sh-linux-gnu.x86_64                            4.9.1-1.fc20                                           updates 
+gcc-c++-sh64-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-sparc64-linux-gnu.x86_64                       4.9.1-1.fc20                                           updates 
+gcc-c++-tile-linux-gnu.x86_64                          4.9.1-1.fc20                                           updates 
+gcc-c++-x86_64-linux-gnu.x86_64                        4.9.1-1.fc20                                           updates 
+gcc-c++-xtensa-linux-gnu.x86_64                        4.9.1-1.fc20                                           updates 
+gcc-c6x-linux-gnu.x86_64                               4.9.1-1.fc20                                           updates 
+gcc-cris-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-frv-linux-gnu.x86_64                               4.9.1-1.fc20                                           updates 
+gcc-gfortran.i686                                      4.8.3-7.fc20                                           updates 
+gcc-gfortran.x86_64                                    4.8.3-7.fc20                                           updates 
+gcc-gnat.x86_64                                        4.8.3-7.fc20                                           updates 
+gcc-go.x86_64                                          4.8.3-7.fc20                                           updates 
+gcc-h8300-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-hppa-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-hppa64-linux-gnu.x86_64                            4.9.1-1.fc20                                           updates 
+gcc-ia64-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-java.x86_64                                        4.8.3-7.fc20                                           updates 
+gcc-m32r-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-m68k-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-microblaze-linux-gnu.x86_64                        4.9.1-1.fc20                                           updates 
+gcc-mips64-linux-gnu.x86_64                            4.9.1-1.fc20                                           updates 
+gcc-mn10300-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-nios2-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-objc.x86_64                                        4.8.3-7.fc20                                           updates 
+gcc-objc++.x86_64                                      4.8.3-7.fc20                                           updates 
+gcc-plugin-devel.i686                                  4.8.3-7.fc20                                           updates 
+gcc-plugin-devel.x86_64                                4.8.3-7.fc20                                           updates 
+gcc-powerpc64-linux-gnu.x86_64                         4.9.1-1.fc20                                           updates 
+gcc-ppc64-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-python-plugin-c-api.x86_64                         0.12-16.fc20                                           updates 
+gcc-python-plugin-docs.x86_64                          0.12-16.fc20                                           updates 
+gcc-python2-debug-plugin.x86_64                        0.12-16.fc20                                           updates 
+gcc-python2-plugin.x86_64                              0.12-16.fc20                                           updates 
+gcc-python3-debug-plugin.x86_64                        0.12-16.fc20                                           updates 
+gcc-python3-plugin.x86_64                              0.12-16.fc20                                           updates 
+gcc-s390x-linux-gnu.x86_64                             4.9.1-1.fc20                                           updates 
+gcc-sh-linux-gnu.x86_64                                4.9.1-1.fc20                                           updates 
+gcc-sh64-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-sparc64-linux-gnu.x86_64                           4.9.1-1.fc20                                           updates 
+gcc-tile-linux-gnu.x86_64                              4.9.1-1.fc20                                           updates 
+gcc-x86_64-linux-gnu.x86_64                            4.9.1-1.fc20                                           updates 
+gcc-xtensa-linux-gnu.x86_64                            4.9.1-1.fc20                                           updates 
+gccxml.x86_64                                          0.9.0-0.25.20140718.gitab651a2.fc20                    updates 
+
+===========================================================================

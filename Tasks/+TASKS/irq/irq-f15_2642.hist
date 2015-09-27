@@ -1,0 +1,394 @@
+07.02.2015
+==========
+
+[olej@nvidia ~]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia irq]$ cat /etc/system-release
+RFRemix release 15.1 (Lovelock)
+
+================================================================================================================
+
+[olej@nvidia irq]$ make
+make -C /lib/modules/2.6.42.12-1.fc15.i686.PAE/build M=/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.o
+make[2]: Предупреждение: Время изменения файла `/home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.c' находится в будущем (2751)
+  CC [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.o
+make[2]: предупреждение: Неправильный ход часов.  Сборка может быть неполной.
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.ko
+  CC      /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.mod.o
+  LD [M]  /home/olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia irq]$ cat /proc/interrupts 
+           CPU0       CPU1       
+  0:        119          9   IO-APIC-edge      timer
+  1:          1          1   IO-APIC-edge      i8042
+  8:          1          0   IO-APIC-edge      rtc0
+  9:          0          0   IO-APIC-fasteoi   acpi
+ 12:          1          3   IO-APIC-edge      i8042
+ 16:        549       3021   IO-APIC-fasteoi   uhci_hcd:usb5, nvidia
+ 17:         94         53   IO-APIC-fasteoi   snd_hda_intel
+ 18:        632        635   IO-APIC-fasteoi   ata_piix, uhci_hcd:usb4
+ 19:         13         16   IO-APIC-fasteoi   uhci_hcd:usb3
+ 23:      12680      18414   IO-APIC-fasteoi   ata_piix, ehci_hcd:usb1, uhci_hcd:usb2
+ 43:     971706         54   PCI-MSI-edge      eth0
+ 44:        254        256   PCI-MSI-edge      snd_hda_intel
+NMI:         17         10   Non-maskable interrupts
+LOC:   29175407   29090864   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:         17         10   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RES:     917292    1324299   Rescheduling interrupts
+CAL:    6437324    6593348   Function call interrupts
+TLB:       4060       4617   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          9          9   Machine check polls
+ERR:          0
+MIS:          0
+
+[olej@nvidia irq]$ cat /proc/interrupts 
+           CPU0       CPU1       
+  0:        119          9   IO-APIC-edge      timer
+  1:          1          1   IO-APIC-edge      i8042
+  8:          1          0   IO-APIC-edge      rtc0
+  9:          0          0   IO-APIC-fasteoi   acpi
+ 12:          1          3   IO-APIC-edge      i8042
+ 16:        549       3021   IO-APIC-fasteoi   uhci_hcd:usb5, nvidia
+ 17:         94         53   IO-APIC-fasteoi   snd_hda_intel
+ 18:        632        635   IO-APIC-fasteoi   ata_piix, uhci_hcd:usb4
+ 19:         13         16   IO-APIC-fasteoi   uhci_hcd:usb3
+ 23:      12680      18414   IO-APIC-fasteoi   ata_piix, ehci_hcd:usb1, uhci_hcd:usb2
+ 43:     971706         54   PCI-MSI-edge      eth0
+ 44:        254        256   PCI-MSI-edge      snd_hda_intel
+NMI:         17         10   Non-maskable interrupts
+LOC:   29175407   29090864   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:         17         10   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RES:     917292    1324299   Rescheduling interrupts
+CAL:    6437324    6593348   Function call interrupts
+TLB:       4060       4617   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          9          9   Machine check polls
+ERR:          0
+MIS:          0
+
+
+[olej@nvidia irq]$ watch 'cat /proc/interrupts'
+...
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia irq]$ cat /proc/interrupts | grep 43:
+ 43:     985545         54   PCI-MSI-edge      eth0
+
+[olej@nvidia irq]$ sudo insmod irqcntp.ko irq=43
+insmod: error inserting 'irqcntp.ko': -1 Device or resource busy
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia irq]$ cat /proc/interrupts | grep 16:
+ 16:        569       3384   IO-APIC-fasteoi   uhci_hcd:usb5, nvidia
+[olej@nvidia irq]$ cat /proc/interrupts | grep 16:
+ 16:        569       3387   IO-APIC-fasteoi   uhci_hcd:usb5, nvidia
+[olej@nvidia irq]$ cat /proc/interrupts | grep 16:
+ 16:        569       3393   IO-APIC-fasteoi   uhci_hcd:usb5, nvidia
+
+[olej@nvidia irq]$ sudo insmod irqcntp.ko irq=16
+
+[olej@nvidia irq]$ dmesg | tail -n2
+[ 2837.100377] === can't install handler for IRQ=43
+[ 3004.641678] === register node /proc/irq_counter/counter
+
+[olej@nvidia irq]$ cat /proc/irq_counter/counter
+24
+
+[olej@nvidia irq]$ cat /proc/irq_counter/counter
+29
+
+[olej@nvidia irq]$ cat /proc/irq_counter/counter
+36
+
+[olej@nvidia irq]$ sudo rmmod irqcntp.ko 
+
+[olej@nvidia irq]$ dmesg | tail -n3
+[ 2837.100377] === can't install handler for IRQ=43
+[ 3004.641678] === register node /proc/irq_counter/counter
+[ 3052.178023] === module removed: registered 53 events
+
+================================================================================================================
+
+08.02.2015
+==========
+
+[olej@nvidia ~]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia DRAFT]$ cat /proc/softirqs
+                    CPU0       CPU1       CPU2       CPU3       
+          HI:          0          0          0          0
+       TIMER:      20003      24267          0          0
+      NET_TX:          0        188          0          0
+      NET_RX:       2953         82          0          0
+       BLOCK:       6273       4255          0          0
+BLOCK_IOPOLL:          0          0          0          0
+     TASKLET:       1205       1239          0          0
+       SCHED:       4256       7275          0          0
+     HRTIMER:         38         50          0          0
+         RCU:      20458      19545          0          0
+
+
+[olej@nvidia DRAFT]$ cat /proc/cpuinfo | grep 'model name' | head -n1
+model name	: Pentium(R) Dual-Core  CPU      E6600  @ 3.06GHz
+
+[olej@nvidia DRAFT]$ cat /proc/cpuinfo | grep 'model name' | wc -l
+2
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko  mode=i
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1813.852644] mode=i
+[ 1813.852647] mode=i
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko  mode=w
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1820.372964] mode=w
+[ 1820.372968] mode=w
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko  mode=t
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1827.403025] mode=t
+[ 1827.403027] mode=t
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko 
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1834.123080] mode=i
+[ 1834.123082] mode=i
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko  mode=X
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1846.541497] mode=X
+[ 1846.541500] === illegal mode X
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko  mode=abcd
+insmod: error inserting 'irqcntpv.ko': -1 No space left on device
+[olej@nvidia DRAFT]$ dmesg | tail -n2
+[ 1871.358456] mode: string doesn't fit in 1 chars.
+[ 1871.358460] irqcntpv: `abcd' too large for parameter `mode'
+
+================================================================================================================
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16
+
+[olej@nvidia DRAFT]$ lsmod | head -n3
+Module                  Size  Used by
+irqcntpv               12781  0 
+ppdev                  17363  0 
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[ 5794.110707] interrupt mode = i
+[ 5794.110722] irqcntpv: 
+[ 5794.110724] register node /proc/irq_counter/counter
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+181
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+185
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+191
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+193
+
+[olej@nvidia DRAFT]$ sudo rmmod irqcntpv.ko
+
+[olej@nvidia DRAFT]$ dmesg | tail -n5
+[ 5794.110707] interrupt mode = i
+[ 5794.110722] irqcntpv: 
+[ 5794.110724] register node /proc/irq_counter/counter
+[ 5907.192636] irqcntpv: 
+[ 5907.192641] module removed: registered 237 events
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=w
+insmod: error inserting 'irqcntpv.ko': -1 Operation not permitted
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[ 6022.371162] interrupt mode = w
+[ 6022.371164] irqcntpv: 
+[ 6022.371166] not implemented yet!
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=x
+insmod: error inserting 'irqcntpv.ko': -1 Invalid parameters
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[ 6038.264433] interrupt mode = x
+[ 6038.264434] irqcntpv: 
+[ 6038.264435] illegal interrupt mode x
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=x1d
+insmod: error inserting 'irqcntpv.ko': -1 No space left on device
+
+[olej@nvidia DRAFT]$ dmesg | tail -n5
+[ 6038.264433] interrupt mode = x
+[ 6038.264434] irqcntpv: 
+[ 6038.264435] illegal interrupt mode x
+[ 6056.123860] mode: string doesn't fit in 1 chars.
+[ 6056.123865] irqcntpv: `x1d' too large for parameter `mode'
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=t
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[ 8047.633772] not implemented yet!
+[16064.373414] irqcntpv: interrupt mode = t
+[16064.373431] irqcntpv: register node /proc/irq_counter/counter
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+144
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+153
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+157
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+162
+
+[olej@nvidia DRAFT]$ sudo rmmod irqcntpv.ko 
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[16064.373414] irqcntpv: interrupt mode = t
+[16064.373431] irqcntpv: register node /proc/irq_counter/counter
+[16137.610895] irqcntpv: module removed: registered 202 events
+
+[olej@nvidia DRAFT]$ ps -ALf | grep " \[ksoft"
+root         3     2     3  0    1 Feb08 ?        00:00:00 [ksoftirqd/0]
+root        10     2    10  0    1 Feb08 ?        00:00:00 [ksoftirqd/1]
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=w
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[16137.610895] irqcntpv: module removed: registered 202 events
+[18941.297134] irqcntpv: interrupt mode = w
+[18941.299505] irqcntpv: register node /proc/irq_counter/counter
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+41
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+50
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+56
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+68
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+400
+
+[olej@nvidia DRAFT]$ ps -ALf | grep " \[new_queue"
+root     17171     2 17171  0    1 02:59 ?        00:00:00 [new_queue]
+
+[olej@nvidia DRAFT]$ sudo rmmod irqcntpv.ko
+
+[olej@nvidia DRAFT]$ dmesg | tail -n30
+[16064.373431] irqcntpv: register node /proc/irq_counter/counter
+[16137.610895] irqcntpv: module removed: registered 202 events
+[18941.297134] irqcntpv: interrupt mode = w
+[18941.299505] irqcntpv: register node /proc/irq_counter/counter
+[19096.274942] ------------[ cut here ]------------
+[19096.274952] WARNING: at kernel/workqueue.c:997 __queue_work+0x369/0x380()
+[19096.274955] Hardware name: System Product Name
+[19096.274957] Modules linked in: irqcntpv(O-) ppdev parport_pc lp parport nfsd lockd nfs_acl auth_rpcgss bnep bluetooth rfkill sunrpc vboxpci(O) vboxnetadp(O) vboxnetflt(O) vboxdrv(O) cpufreq_ondemand acpi_cpufreq mperf fuse nvidia(P) snd_hda_codec_hdmi snd_hda_codec_via snd_hda_intel snd_hda_codec snd_hwdep asus_atk0110 snd_seq snd_seq_device snd_pcm snd_timer iTCO_wdt iTCO_vendor_support snd r8169 soundcore microcode mii snd_page_alloc serio_raw i2c_core virtio_net kvm_intel kvm [last unloaded: irqcntpv]
+[19096.274999] Pid: 17213, comm: rmmod Tainted: P         C O 2.6.42.12-1.fc15.i686.PAE #1
+[19096.275002] Call Trace:
+[19096.275009]  [<c0956a00>] ? panic+0xb1/0x164
+[19096.275014]  [<c045ec22>] warn_slowpath_common+0x72/0xa0
+[19096.275018]  [<c04768c9>] ? __queue_work+0x369/0x380
+[19096.275022]  [<c04768c9>] ? __queue_work+0x369/0x380
+[19096.275026]  [<c045ec72>] warn_slowpath_null+0x22/0x30
+[19096.275030]  [<c04768c9>] __queue_work+0x369/0x380
+[19096.275034]  [<c0476937>] queue_work_on+0x27/0x40
+[19096.275038]  [<c047698a>] queue_work+0x1a/0x20
+[19096.275042]  [<f801f077>] handler_wrk+0x17/0x20 [irqcntpv]
+[19096.275048]  [<c04c2466>] __free_irq+0x136/0x1c0
+[19096.275052]  [<c04c2583>] free_irq+0x43/0xa0
+[19096.275056]  [<f801f46f>] cleanup_module+0x4f/0xbe0 [irqcntpv]
+[19096.275061]  [<c0494902>] ? module_refcount+0x72/0x90
+[19096.275065]  [<c04964a5>] sys_delete_module+0x135/0x230
+[19096.275070]  [<c0518f04>] ? remove_vma+0x44/0x60
+[19096.275075]  [<c054c71a>] ? path_put+0x1a/0x20
+[19096.275080]  [<c04b3911>] ? audit_syscall_entry+0x1e1/0x2c0
+[19096.275085]  [<c09671df>] sysenter_do_call+0x12/0x28
+[19096.275088] ---[ end trace 692d1e832f19e58d ]---
+[19096.275107] irqcntpv: module removed: registered 423 events
+
+[olej@nvidia DRAFT]$ lsmod | head -n3
+Module                  Size  Used by
+ppdev                  17363  0 
+parport_pc             27442  0 
+
+----------------------------------------------------------------------------------------------------------------
+
+[olej@nvidia DRAFT]$ dmesg | tail -n1
+[19096.275107] irqcntpv: module removed: registered 423 events
+
+[olej@nvidia DRAFT]$ sudo insmod irqcntpv.ko irq=16 mode=w
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+19
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+23
+
+[olej@nvidia DRAFT]$ ps -ALf | grep " \[new_queue"
+root     17472     2 17472  0    1 03:09 ?        00:00:00 [new_queue]
+
+[olej@nvidia DRAFT]$ cat /proc/irq_counter/counter
+76
+
+[olej@nvidia DRAFT]$ dmesg | tail -n3
+[19096.275107] irqcntpv: module removed: registered 423 events
+[19572.364234] irqcntpv: interrupt mode = w
+[19572.364320] irqcntpv: register node /proc/irq_counter/counter
+
+[olej@nvidia DRAFT]$ sudo rmmod irqcntpv.ko 
+
+[olej@nvidia DRAFT]$ dmesg | tail -n5
+[19096.275088] ---[ end trace 692d1e832f19e58d ]---
+[19096.275107] irqcntpv: module removed: registered 423 events
+[19572.364234] irqcntpv: interrupt mode = w
+[19572.364320] irqcntpv: register node /proc/irq_counter/counter
+[19626.153576] irqcntpv: module removed: registered 153 events
+
+================================================================================================================

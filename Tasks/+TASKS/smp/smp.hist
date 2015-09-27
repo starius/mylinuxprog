@@ -1,0 +1,291 @@
+15.03.2014
+==========
+
+[Olej@modules tcreat]$ sudo insmod nproc.ko 
+[sudo] пароль для Olej: 
+
+[Olej@modules tcreat]$ dmesg | tail -n6
+[ 7163.046745] perf interrupt took too long (2563 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[13442.812384] nproc: module verification failed: signature and/or  required key missing - tainting kernel
+[13442.813070] CPU number 1 grater that 1
+[13442.813072] CPU number 2 grater that 1
+[13442.813079] CPU number 3 grater that 1
+[13443.814067] CPU in use: 0
+
+--------------------------------------------------------------------------
+
+[Olej@modules tcreat]$ sudo insmod nproc.ko 
+insmod: ERROR: could not insert module nproc.ko: Operation not permitted
+
+[Olej@modules tcreat]$ dmesg | tail -n1
+[13923.780948] CPU in use: 0, 1, 2, 3, 
+
+--------------------------------------------------------------------------
+
+[Olej@modules tcreat]$ sudo insmod nproc.ko 
+insmod: ERROR: could not insert module nproc.ko: Operation not permitted
+
+[Olej@modules tcreat]$ dmesg | tail -n1
+[14061.226373] CPU in use: 0 1 2 3 
+
+==========================================================================
+
+[Olej@modules smp]$ uname -a
+Linux modules.localdomain 3.18.9-100.fc20.x86_64 #1 SMP Mon Mar 9 16:27:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules smp]$ sudo insmod thr1.ko 
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module thr1.ko: Unknown symbol in module
+
+==========================================================================
+
+16.03.2014
+==========
+
+[olej@fedora smp]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora smp]$ make
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/nproc.o
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/thr1.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/nproc.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/nproc.ko
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/thr1.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/smp/thr1.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+--------------------------------------------------------------------------
+
+[olej@fedora smp]$ sudo insmod nproc.ko 
+Error: could not insert module nproc.ko: Operation not permitted
+
+[olej@fedora smp]$ dmesg | tail -n2
+[  422.143816] TCP: lp registered
+[  764.346704] CPU in use: 0 1 
+
+--------------------------------------------------------------------------
+
+[olej@fedora smp]$ time sudo insmod thr1.ko 
+Error: could not insert module thr1.ko: Operation not permitted
+
+real	0m1.093s
+user	0m0.027s
+sys	0m0.060s
+
+[olej@fedora smp]$ dmesg | tail -n2
+[  948.646487] ! 9E5C6: thread 2157 is running
+[  949.647395] ! 9E9AF: thread 2157 is completed
+
+--------------------------------------------------------------------------
+
+[olej@fedora smp]$ time sudo insmod thr1.ko 
+Error: could not insert module thr1.ko: Operation not permitted
+
+real	0m1.121s
+user	0m0.041s
+sys	0m0.071s
+
+[olej@fedora smp]$ dmesg | tail -n3
+[ 2425.969956] ! 3080: start time 207091
+[ 2426.970216] ! 3080: finish time 20747A
+[ 2426.970309] ! 3079: evaluation time was 1001 millisec.
+
+--------------------------------------------------------------------------
+
+[olej@fedora smp]$ uname -r
+3.6.11-5.fc17.i686
+
+[olej@fedora smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kernel_thread
+0x00000000	kernel_thread	vmlinux	EXPORT_SYMBOL
+
+[olej@fedora smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_run
+[olej@fedora smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_create
+0x00000000	kthread_create_on_node	vmlinux	EXPORT_SYMBOL
+
+==========================================================================
+
+[Olej@modules tcreat]$ uname -r
+3.18.9-100.fc20.x86_64
+
+[Olej@modules smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kernel_thread
+
+[Olej@modules smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_run
+
+[Olej@modules smp]$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_create
+0x00000000	kthread_create_on_node	vmlinux	EXPORT_SYMBOL
+
+==========================================================================
+
+-bash-4.2$ uname -r
+3.14.8-200.fc20.i686
+
+-bash-4.2$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kernel_thread
+
+-bash-4.2$ cat /lib/modules/`uname -r`/build/Module.symvers | grep kthread_create
+0x00000000	kthread_create_on_node	vmlinux	EXPORT_SYMBOL
+
+--------------------------------------------------------------------------
+
+http://lxr.missinglinkelectronics.com/linux+v3.6/Documentation/feature-removal-schedule.txt#L143
+
+ 143 What:   remove EXPORT_SYMBOL(kernel_thread)
+ 144 When:   August 2006
+ 145 Files:  arch/*/kernel/*_ksyms.c
+ 146 Check:  kernel_thread
+ 147 Why:    kernel_thread is a low-level implementation detail.  Drivers should
+ 148         use the <linux/kthread.h> API instead which shields them from
+ 149         implementation details and provides a higherlevel interface that
+ 150         prevents bugs and code duplication
+ 151 Who:    Christoph Hellwig <hch@lst.de>
+
+==========================================================================
+
+[olej@fedora smp]$ uname -r
+3.6.11-5.fc17.i686
+
+[olej@fedora smp]$ time sudo insmod thr1.ko
+Error: could not insert module thr1.ko: Operation not permitted
+
+real	0m1.140s
+user	0m0.035s
+sys	0m0.084s
+
+[olej@fedora smp]$ dmesg | tail -n3
+[  894.620303] ! 2332: start time 912BC
+[  895.621968] ! 2332: finish time 916A5
+[  895.622065] ! 2331: evaluation time was 1009 millisec.
+
+
+[olej@fedora smp]$ time sudo insmod thr2.ko
+Error: could not insert module thr2.ko: Operation not permitted
+
+real	0m1.090s
+user	0m0.030s
+sys	0m0.050s
+
+
+[olej@fedora smp]$ dmesg | tail -n3
+[ 1133.464595] ! 2354: start time CB7B8
+[ 1134.465327] ! 2354: finish time CBBA1
+[ 1134.465379] ! 2353: evaluation time was 1001 millisec.
+
+==========================================================================
+
+[Olej@modules smp]$ uname -r
+3.18.9-100.fc20.x86_64
+
+[Olej@modules smp]$ make
+make -C /lib/modules/3.18.9-100.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.9-100.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/nproc.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr1.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr2.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+WARNING: "kernel_thread" [/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr1.ko] undefined!
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/nproc.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/nproc.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr1.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr1.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr2.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/smp/thr2.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.9-100.fc20.x86_64'
+
+[Olej@modules smp]$ sudo insmod thr1.ko
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module thr1.ko: Unknown symbol in module
+
+
+[Olej@modules smp]$ time sudo insmod thr2.ko
+insmod: ERROR: could not insert module thr2.ko: Operation not permitted
+
+real	0m1.034s
+user	0m0.011s
+sys	0m0.014s
+
+
+[Olej@modules smp]$ dmesg | tail -n3
+[20298.553347] ! 13267: start time 10130F51D
+[20299.554329] ! 13267: finish time 10130F906
+[20299.554338] ! 13266: evaluation time was 1001 millisec.
+
+==========================================================================
+
+[olej@fedora smp]$ time sudo insmod thr3.ko
+Error: could not insert module thr3.ko: Operation not permitted
+
+real	0m1.063s
+user	0m0.023s
+sys	0m0.030s
+
+[olej@fedora smp]$ dmesg | tail -n3
+[  479.772670] ! 2042: evaluation time was 0 millisec.
+[  479.772676] ! 1807: start time 2BE3C
+[  480.773122] ! 1807: finish time 2C225
+
+--------------------------------------------------------------------------
+
+[olej@fedora smp]$ time sudo insmod thr3.ko
+Error: could not insert module thr3.ko: Operation not permitted
+
+real	0m1.112s
+user	0m0.035s
+sys	0m0.057s
+
+
+[olej@fedora smp]$ dmesg | tail -n3
+[  737.579134] ! 1807: start time 6AD4B
+[  738.580144] ! 1807: finish time 6B134
+[  738.580409] ! 2521: evaluation time was 1004 millisec.
+
+==========================================================================
+
+[olej@fedora smp]$ time sudo insmod thr4.ko
+Error: could not insert module thr4.ko: Operation not permitted
+
+real	0m1.110s
+user	0m0.018s
+sys	0m0.077s
+
+
+[olej@fedora smp]$ dmesg | tail -n3
+[ 4638.617181] ! 13: start time 4233B9
+[ 4639.617039] ! 13: finish time 4237A1
+[ 4639.617048] ! 3061: evaluation time was 1000 millisec.
+
+
+[olej@fedora smp]$ ps -ef | grep 13 | grep softirq
+root        13     2  0 15:06 ?        00:00:00 [ksoftirqd/1]
+
+[Olej@modules ~]$ ps -ef | grep softirq | grep '\['
+root         3     2  0 08:54 ?        00:00:01 [ksoftirqd/0]
+root        15     2  0 08:54 ?        00:00:01 [ksoftirqd/1]
+root        22     2  0 08:54 ?        00:00:01 [ksoftirqd/2]
+root        29     2  0 08:54 ?        00:00:00 [ksoftirqd/3]
+
+==========================================================================
+
+[Olej@modules smp]$ uname -a
+Linux modules.localdomain 3.18.9-100.fc20.x86_64 #1 SMP Mon Mar 9 16:27:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules smp]$ sudo insmod thr4.ko
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module thr4.ko: Operation not permitted
+
+[Olej@modules smp]$ dmesg | tail -n3
+[31653.131632] ! 3: start time 101DE1B0C
+[31654.131943] ! 3: finish time 101DE1EF4
+[31654.131947] ! 20700: evaluation time was 1000 millisec.
+
+[Olej@modules smp]$ ps -ef | grep softirq 
+root         3     2  0 08:54 ?        00:00:01 [ksoftirqd/0]
+root        15     2  0 08:54 ?        00:00:00 [ksoftirqd/1]
+root        22     2  0 08:54 ?        00:00:01 [ksoftirqd/2]
+root        29     2  0 08:54 ?        00:00:00 [ksoftirqd/3]
+Olej     20713  3659  0 17:42 pts/11   00:00:00 grep --color=auto softirq
+
+==========================================================================

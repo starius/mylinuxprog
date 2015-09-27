@@ -1,0 +1,85 @@
+07.02.2015
+==========
+
+[olej@fedora irq]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora irq]$ cat /proc/interrupts 
+           CPU0       CPU1       
+  0:        137          0   IO-APIC-edge      timer
+  1:         59          0   IO-APIC-edge      i8042
+  8:          0          0   IO-APIC-edge      rtc0
+  9:          0          0   IO-APIC-fasteoi   acpi
+ 12:        141          0   IO-APIC-edge      i8042
+ 14:          0          0   IO-APIC-edge      ata_piix
+ 15:       1788          0   IO-APIC-edge      ata_piix
+ 16:        940          0   IO-APIC-fasteoi   p7p1
+ 19:       2711          0   IO-APIC-fasteoi   ehci_hcd:usb1, p2p1
+ 21:       9987          0   IO-APIC-fasteoi   ahci, snd_intel8x0
+ 22:       1698          0   IO-APIC-fasteoi   ohci_hcd:usb2
+NMI:          0          0   Non-maskable interrupts
+LOC:     335854     290697   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:          0          0   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RTR:          0          0   APIC ICR read retries
+RES:     228214     216095   Rescheduling interrupts
+CAL:       1288       1295   Function call interrupts
+TLB:          0          0   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:          6          6   Machine check polls
+ERR:          0
+MIS:          0
+
+
+[olej@fedora irq]$ watch 'cat /proc/interrupts' 
+...
+
+[olej@fedora irq]$ cat /proc/interrupts | grep 19:
+ 19:       3597          0   IO-APIC-fasteoi   ehci_hcd:usb1, p2p1
+
+[olej@fedora irq]$ cat /proc/interrupts | grep 19:
+ 19:       3609          0   IO-APIC-fasteoi   ehci_hcd:usb1, p2p1
+
+===============================================================================================
+
+[olej@fedora irq]$ make
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.o
+make[2]: Предупреждение: Время изменения файла `/home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.c' находится в будущем (3263)
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.o
+make[2]: предупреждение: Неправильный ход часов.  Сборка может быть неполной.
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.ko
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+-----------------------------------------------------------------------------------------------
+
+[olej@fedora irq]$ sudo insmod irqcntp.ko irq=19
+
+[olej@fedora irq]$ dmesg | tail -n2
+[  397.940677] TCP: lp registered
+[ 1968.477380] === register node /proc/irq_counter/counter
+
+[olej@fedora irq]$ cat /proc/irq_counter/counter
+94
+
+[olej@fedora irq]$ cat /proc/irq_counter/counter
+109
+
+[olej@fedora irq]$ cat /proc/irq_counter/counter
+121
+
+[olej@fedora irq]$ echo 111 > /proc/irq_counter/counter
+bash: echo: ошибка записи: Ошибка ввода/вывода
+
+[olej@fedora irq]$ sudo rmmod irqcntp.ko 
+
+===============================================================================================

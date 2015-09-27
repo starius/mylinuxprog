@@ -1,0 +1,222 @@
+[olej@notebook etc]$ cat /proc/kallsyms | grep sys_call_table
+c07ab3d8 R sys_call_table
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook etc]$ cat /usr/include/asm/unistd_32.h | head -n20
+#ifndef _ASM_X86_UNISTD_32_H
+#define _ASM_X86_UNISTD_32_H
+
+/*
+ * This file contains the system call numbers.
+ */
+
+#define __NR_restart_syscall      0
+#define __NR_exit                 1
+#define __NR_fork                 2
+#define __NR_read                 3
+#define __NR_write                4
+#define __NR_open                 5
+#define __NR_close                6
+#define __NR_waitpid              7
+#define __NR_creat                8
+#define __NR_link                 9
+#define __NR_unlink              10
+#define __NR_execve              11
+#define __NR_chdir               12
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_exit | grep T
+c0444f47 T sys_exit_group
+c0444f63 T sys_exit
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_fork | grep T
+c040ee13 T sys_fork
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_read | grep T
+c04ac1f1 T sys_readahead
+c04e149d T sys_read
+c04e1ad9 T sys_readv
+c04e4c79 T sys_readlinkat
+c04e4cfd T sys_readlink
+c05f9aa6 T fb_sys_read
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_write | grep T
+c04e12fc T sys_write
+c04e196b T sys_writev
+c05f99fc T fb_sys_write
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_open | grep T
+c04deb28 T do_sys_open
+c04dec0c T sys_openat
+c04dec35 T sys_open
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | grep sys_close | grep T
+c04dea99 T sys_close
+
+хххххххх c0444f63 c040ee13 c04e149d c04e12fc c04dec35 c04dea99
+
+=================================================================================================
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook sys_call_table]$ sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Invalid parameters
+
+[olej@notebook sys_call_table]$ dmesg | tail -n 25
+audit(:0): major=340 name_count=0: freeing multiple contexts (3)
+audit(:0): major=340 name_count=0: freeing multiple contexts (4)
+audit(:0): major=340 name_count=0: freeing multiple contexts (5)
+audit(:0): major=252 name_count=0: freeing multiple contexts (1)
+audit(:0): major=340 name_count=0: freeing multiple contexts (2)
+audit(:0): major=340 name_count=0: freeing multiple contexts (3)
+**** openning file: /proc/kallsyms
+failed to lseek /proc/kallsyms
+
+-------------------------------------------------------------------------------------------------
+
+
+[olej@notebook sys_call_table]$ sudo insmod mod_rct.ko file=test8.dat
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook sys_call_table]$ dmesg | tail -n40 | grep +
++ openning file: test8.dat
++ c0400000 T startup_32
++ c0400000 T _text
++ c0400079 t bad_subarch
++ c0400000 T startup_32
++ c0400000 T _text
++ c0400079 t bad_subarch
++ c0400079 W xen_entry
++ c040007b t default_entry
++ close file: test8.dat
+
+
+[olej@notebook sys_call_table]$ sudo insmod mod_rct.ko file=test3.dat
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook sys_call_table]$ dmesg | tail -n40 | grep +
++ close file: test8.dat
++ openning file: test3.dat
++ c0400000 T startup_32
++ c0400000 T _text
++ c0400079 t bad_subarch
++ close file: test3.dat
+
+
+[olej@notebook sys_call_table]$ sudo insmod mod_rct.ko file=test3-.dat
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook sys_call_table]$ dmesg | tail -n40 | grep +
++ close file: test3.dat
++ openning file: test3-.dat
++ c0400000 T startup_32
++ c0400000 T _text
++ c0400079 t bad_subarch|
++ close file: test3-.dat
+
+-------------------------------------------------------------------------------------------------
+
+
+[olej@notebook sys_call_table]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/mod_rct.o
+/home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/mod_rct.c: В функции ‘stread_init’:
+/home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/mod_rct.c:20: предупреждение: неиспользуемая переменная ‘i’
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/mod_rct.mod.o
+  LD [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/sys_call_table/mod_rct.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+
+[olej@notebook sys_call_table]$ time sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+real	0m2.395s
+user	0m0.004s
+sys	0m1.288s
+
+[olej@notebook sys_call_table]$ dmesg | grep + | tail -n10
++ f7e6b1c8 r __ksymtab_video_output_unregister	[output]
++ f7e6b1d8 r __kstrtab_video_output_unregister	[output]
++ f7e6b1d0 r __ksymtab_video_output_register	[output]
++ f7e6b1f0 r __kstrtab_video_output_register	[output]
++ f7e6b250 d video_output_attributes	[output]
++ f7e6b278 d __this_module	[output]
++ f7e6b174 t cleanup_module	[output]
++ f7e6b0bb T video_output_register	[output]
++ f7e6b0a5 T video_output_unregister	[output]
++ close file: /proc/kallsyms
+
+[olej@notebook sys_call_table]$ cat /proc/kallsyms | tail -n10
+f7e6b3e0 b __key.15257	[output]
+f7e6b1c8 r __ksymtab_video_output_unregister	[output]
+f7e6b1d8 r __kstrtab_video_output_unregister	[output]
+f7e6b1d0 r __ksymtab_video_output_register	[output]
+f7e6b1f0 r __kstrtab_video_output_register	[output]
+f7e6b250 d video_output_attributes	[output]
+f7e6b278 d __this_module	[output]
+f7e6b174 t cleanup_module	[output]
+f7e6b0bb T video_output_register	[output]
+f7e6b0a5 T video_output_unregister	[output]
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook call_table]$ sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook call_table]$ dmesg | tail -n 25 | grep +
++ openning file: /proc/kallsyms
++ c07ab3d8 R sys_call_table
++ sys_call_table address = c07ab3d8
++ sys_call_table :c044ec61 c0444f63 c040929c c04e149d c04e12fc c04dec35 c04dea99 c0444767 c04dec60 c04ecb22 
++ close file: /proc/kallsyms
+
+                  хххххххх c0444f63 c040ee13 c04e149d c04e12fc c04dec35 c04dea99
+
+           restart_syscall exit     fork     read     write    open     close 
+
+=================================================================================================
+
++ sys_call_table :c044ec61 c0444f63 c040929c c04e149d c04e12fc c04dec35 c04dea99 c0444767 c04dec60 c04ecb22 
++ close file: /proc/kallsyms
+
+[olej@notebook call_table]$ cat /proc/kallsyms | grep c044ec61
+c044ec61 T sys_restart_syscall
+
+[olej@notebook call_table]$ cat /proc/kallsyms | grep c0444f63
+c0444f63 T sys_exit
+
+[olej@notebook call_table]$ cat /proc/kallsyms | grep c040929c
+c040929c t ptregs_fork
+
+[olej@notebook call_table]$ cat /proc/kallsyms | grep c04dea99
+c04dea99 T sys_close
+
+-------------------------------------------------------------------------------------------------
+
+[olej@notebook call_table]$ sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook call_table]$ dmesg | tail -n50 | grep +
++ openning file: /proc/kallsyms
++ sys_call_table address = c07ab3d8
++ sys_call_table : c044ec61 c0444f63 c040929c c04e149d c04e12fc c04dec35 c04dea99 c0444767 c04dec60 c04ecb22  ...
++ close file: /proc/kallsyms
+
+
+
+[olej@notebook call_table]$ sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+
+[olej@notebook call_table]$ dmesg | tail -n50 | grep +
++ openning file: /proc/kallsyms
++ sys_call_table address = c07ab3d8
++ sys_close address not valid!
++ close file: /proc/kallsyms
+
+-------------------------------------------------------------------------------------------------
+

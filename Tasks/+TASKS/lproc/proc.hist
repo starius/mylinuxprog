@@ -1,0 +1,754 @@
+============================================================================
+
+05.02.2015
+==========
+
+[Olej@modules proc]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules proc]$ sudo insmod procdat.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module procdat.ko: Operation canceled
+
+[Olej@modules proc]$ dmesg | tail -n3
+[ 3940.727427] perf interrupt took too long (2507 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[17604.298404] procdat: module verification failed: signature and/or  required key missing - tainting kernel
+[17604.298694] ! it's work only for kernrl LE 3.9
+
+----------------------------------------------------------------------------
+
+[olej@nvidia proc]$ sudo insmod procdat.ko
+
+[olej@nvidia proc]$ cat /proc/data 
+123
+
+[olej@nvidia proc]$ echo 432 > /proc/data 
+
+[olej@nvidia proc]$ cat /proc/data 
+432
+
+[olej@nvidia proc]$ sudo rmmod procdat.ko
+
+----------------------------------------------------------------------------
+
+[olej@nvidia proc]$ sudo insmod procdat.ko
+
+[olej@nvidia proc]$ echo 432 > /proc/data 
+
+[olej@nvidia proc]$ cat /proc/data 
+432
+
+[olej@nvidia proc]$ echo 6v43 > /proc/data 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@nvidia proc]$ echo $?
+1
+
+[olej@nvidia proc]$ cat /proc/data 
+432
+
+[olej@nvidia proc]$ echo 643 > /proc/data 
+
+[olej@nvidia proc]$ cat /proc/data 
+643
+
+[olej@nvidia proc]$ sudo rmmod procdat.ko
+
+============================================================================
+
+olej@debian:~$ uname -a
+Linux debian 3.2.0-2-686-pae #1 SMP Fri Jun 1 18:56:14 UTC 2012 i686 GNU/Linux
+
+olej@debian:~/WORK$ mkdir -p GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ make
+make -C /lib/modules/3.2.0-2-686-pae/build M=/home/olej/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+  CC [M]  /home/olej/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.mod.o
+  LD [M]  /home/olej/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-2-686-pae'
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo insmod procdat.ko path=Xdir/Ydir/node
+[sudo] password for olej: 
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ lsmod | head -n3
+Module                  Size  Used by
+procdat                12437  0 
+mperf                  12421  0 
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ dmesg | tail -n10
+[   30.567792] Bluetooth: BNEP filters: protocol multicast
+[   33.006251] lp: driver loaded but no devices found
+[   33.161272] ppdev: user-space parallel port driver
+[   36.608201] eth1: no IPv6 routers present
+[   37.001529] eth0: no IPv6 routers present
+[   41.595684] colord[1904]: segfault at 8 ip 08052674 sp bff17650 error 4 in colord[8048000+20000]
+[ 1758.570829] ! create directory: Xdir
+[ 1758.570833] ! create directory: Ydir
+[ 1758.570834] ! create node: node
+[ 1758.570835] ! /proc/Xdir/Ydir/node installed
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ ls -l /proc/Xdir/Ydir/node
+-rw-rw-rw- 1 root root 0 Фев  5 21:10 /proc/Xdir/Ydir/node
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/node
+0
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ echo 12345 > /proc/Xdir/Ydir/node
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/node
+12345
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ echo 54321 > /proc/Xdir/Ydir/node
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/node
+54321
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ echo 5432a > /proc/Xdir/Ydir/node
+bash: echo: ошибка записи: Недопустимый аргумент
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/node
+54321
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ dmesg | tail -n10[ 1758.570829] ! create directory: Xdir
+[ 1758.570833] ! create directory: Ydir
+[ 1758.570834] ! create node: node
+[ 1758.570835] ! /proc/Xdir/Ydir/node installed
+[ 1859.264267] ! read: return 0
+[ 1877.217169] ! write: update 12345
+[ 1880.305347] ! read: return 12345
+[ 1895.441622] ! write: update 54321
+[ 1898.015813] ! read: return 54321
+[ 1987.806856] ! read: return 54321
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo rmmod procdat.ko
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ dmesg | tail -n30
+[ 1859.264267] ! read: return 0
+[ 1877.217169] ! write: update 12345
+[ 1880.305347] ! read: return 12345
+[ 1895.441622] ! write: update 54321
+[ 1898.015813] ! read: return 54321
+[ 1987.806856] ! read: return 54321
+[ 2201.031814] remove entry node - parent Ydir
+[ 2201.031822] remove entry Ydir - parent Xdir
+[ 2201.031824] remove entry Xdir - parent /proc
+[ 2201.031825] remove entry /proc - parent /proc
+[ 2201.031829] ------------[ cut here ]------------
+[ 2201.031851] WARNING: at /build/buildd-linux-2.6_3.2.19-1-i386-c_JlIT/linux-2.6-3.2.19/debian/build/source_i386_none/fs/proc/generic.c:323 __xlate_proc_name+0x88/0x92()
+[ 2201.031854] Hardware name: VirtualBox
+[ 2201.031855] name '/proc'
+[ 2201.031856] Modules linked in: procdat(O-) mperf cpufreq_stats cpufreq_powersave cpufreq_conservative cpufreq_userspace ppdev lp bnep rfcomm bluetooth rfkill vboxvideo(O) drm binfmt_misc nfsd nfs nfs_acl auth_rpcgss fscache lockd sunrpc loop snd_intel8x0 snd_ac97_codec snd_pcm snd_page_alloc snd_seq snd_seq_device snd_timer snd psmouse i2c_piix4 soundcore evdev i2c_core parport_pc joydev parport ac vboxguest(O) serio_raw pcspkr ac97_bus power_supply processor thermal_sys button usbhid hid ext4 crc16 jbd2 mbcache sr_mod cdrom sd_mod crc_t10dif ata_generic ohci_hcd ehci_hcd ahci libahci ata_piix usbcore e1000 usb_common libata scsi_mod [last unloaded: scsi_wait_scan]
+[ 2201.031954] Pid: 6675, comm: rmmod Tainted: G           O 3.2.0-2-686-pae #1
+[ 2201.031955] Call Trace:
+[ 2201.031960]  [<c10384ec>] ? warn_slowpath_common+0x68/0x79
+[ 2201.031962]  [<c1105965>] ? __xlate_proc_name+0x88/0x92
+[ 2201.031964]  [<c1038565>] ? warn_slowpath_fmt+0x29/0x2d
+[ 2201.031966]  [<c1105965>] ? __xlate_proc_name+0x88/0x92
+[ 2201.031968]  [<c1105f01>] ? remove_proc_entry+0x27/0x191
+[ 2201.031971]  [<f998715b>] ? erase+0x2b/0x38 [procdat]
+[ 2201.031974]  [<c105fbc1>] ? sys_delete_module+0x19f/0x217
+[ 2201.031977]  [<c10d9f6a>] ? dput+0x47/0xc2
+[ 2201.031979]  [<c10cd09e>] ? fput+0x148/0x160
+[ 2201.031982]  [<c10deb63>] ? mntput_no_expire+0x1b/0xb0
+[ 2201.031985]  [<c10cae60>] ? filp_close+0x52/0x58
+[ 2201.031993]  [<c12c5e1f>] ? sysenter_do_call+0x12/0x28
+[ 2201.031995] ---[ end trace edffb1891599265c ]---
+
+----------------------------------------------------------------------------
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo insmod procdat.ko path=Xdir/Ydir/node
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ echo 54321 > /proc/Xdir/Ydir/node
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/node54321
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo rmmod procdat.ko
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ 
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ dmesg | tail -n10
+[ 2201.031995] ---[ end trace edffb1891599265c ]---
+[ 2622.179147] ! create directory: Xdir
+[ 2622.180466] ! create directory: Ydir
+[ 2622.180469] ! create node: node
+[ 2622.180470] ! /proc/Xdir/Ydir/node installed
+[ 2633.717153] ! write: update 54321
+[ 2639.536878] ! read: return 54321
+[ 2646.254154] remove entry node - parent Ydir
+[ 2646.254170] remove entry Ydir - parent Xdir
+[ 2646.254172] remove entry Xdir - parent /proc
+
+----------------------------------------------------------------------------
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo insmod procdat.ko path=Xdir/Ydir/point
+[sudo] password for olej: 
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ ls -l /proc/Xdir/Ydir/point
+-rw-rw-rw- 1 root root 0 Фев  6 04:30 /proc/Xdir/Ydir/point
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ echo 9876 > /proc/Xdir/Ydir/point
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ cat /proc/Xdir/Ydir/point
+9876
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ sudo rmmod procdat.ko
+
+olej@debian:~/WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc$ dmesg | tail -n13
+[ 2646.254170] remove entry Ydir - parent Xdir
+[ 2646.254172] remove entry Xdir - parent /proc
+[ 6106.035883] hrtimer: interrupt took 33033154 ns
+[28206.728516] ! create directory: Xdir
+[28206.728527] ! create directory: Ydir
+[28206.728529] ! create node: point
+[28206.728530] ! module installed
+[28238.495098] ! write: update 9876
+[28253.212291] ! read: return 9876
+[28265.964698] ! remove entry point - parent Ydir
+[28265.964701] ! remove entry Ydir - parent Xdir
+[28265.964702] ! remove entry Xdir - parent /proc
+[28265.964704] ! module removed
+
+============================================================================
+
+[olej@fedora proc]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.23  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 13491  bytes 4420164 (4.2 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 8245  bytes 1750229 (1.6 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[olej@fedora first_hello]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora first_hello]$ make
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+[olej@fedora proc]$ sudo insmod procdat.ko path=Xdir/Ydir/point
+
+[olej@fedora proc]$ dmesg | tail -n3
+[ 4796.872324] ! create directory: Ydir
+[ 4796.872326] ! create node: point
+[ 4796.872327] ! module installed
+
+[olej@fedora proc]$ dmesg | tail -n6
+[  575.610647] EIP: [<c0536ffb>] khugepaged+0xeeb/0x1230 SS:ESP 0068:eace7f20
+[  575.610654] ---[ end trace dc9ee6c9d1afbf79 ]---
+[ 4796.872319] ! create directory: Xdir
+[ 4796.872324] ! create directory: Ydir
+[ 4796.872326] ! create node: point
+[ 4796.872327] ! module installed
+
+[olej@fedora proc]$ tree /proc/Xdir/
+/proc/Xdir/
+└── Ydir
+    └── point
+
+1 directory, 1 file
+
+[olej@fedora proc]$ ls -l /proc/Xdir/Ydir/point
+-rw-rw-rw-. 1 root root 0 февр.  5 20:57 /proc/Xdir/Ydir/point
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+0
+
+[olej@fedora proc]$ echo 9876 > /proc/Xdir/Ydir/point
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+9876
+
+[olej@fedora proc]$ echo 987x6 > /proc/Xdir/Ydir/point
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+9876
+
+[olej@fedora proc]$ sudo rmmod procdat.ko 
+
+[olej@fedora proc]$ dmesg | tail -n13
+[  575.610654] ---[ end trace dc9ee6c9d1afbf79 ]---
+[ 4796.872319] ! create directory: Xdir
+[ 4796.872324] ! create directory: Ydir
+[ 4796.872326] ! create node: point
+[ 4796.872327] ! module installed
+[ 4886.028149] ! read: return 0
+[ 4898.028718] ! write: update 9876
+[ 4899.663511] ! read: return 9876
+[ 4913.564621] ! read: return 9876
+[ 4943.175589] remove entry point - parent Ydir
+[ 4943.175599] remove entry Ydir - parent Xdir
+[ 4943.175600] remove entry Xdir - parent /proc
+[ 4943.175602] ! module removed
+
+----------------------------------------------------------------------------
+
+[olej@fedora proc]$ sudo insmod procdat.ko path=Xdir/Ydir/point
+
+[olej@fedora proc]$ dmesg | tail -n3
+[ 5487.823368] ! create directory: Ydir
+[ 5487.823369] ! create node: point
+[ 5487.823370] ! module installed
+
+[olej@fedora proc]$ dmesg | tail -n5
+[ 4943.175602] ! module removed
+[ 5487.823363] ! create directory: Xdir
+[ 5487.823368] ! create directory: Ydir
+[ 5487.823369] ! create node: point
+[ 5487.823370] ! module installed
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+0
+
+[olej@fedora proc]$ echo 9999 > /proc/Xdir/Ydir/point
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+9999
+
+[olej@fedora proc]$ sudo rmmod procdat.ko 
+
+[olej@fedora proc]$ dmesg | tail -n12
+[ 4943.175602] ! module removed
+[ 5487.823363] ! create directory: Xdir
+[ 5487.823368] ! create directory: Ydir
+[ 5487.823369] ! create node: point
+[ 5487.823370] ! module installed
+[ 5536.755388] ! read: return 0
+[ 5550.253241] ! write: update 9999
+[ 5551.667813] ! read: return 9999
+[ 5562.160558] ! remove entry point - parent Ydir
+[ 5562.160563] ! remove entry Ydir - parent Xdir
+[ 5562.160564] ! remove entry Xdir - parent /proc
+[ 5562.160565] ! module removed
+
+----------------------------------------------------------------------------
+
+[olej@fedora proc]$ sudo insmod procdat.ko path=Xdir/Ydir/point
+
+[olej@fedora proc]$ dmesg | tail -n5
+[ 5562.160565] ! module removed
+[ 6989.724243] ! create directory: Xdir
+[ 6989.724248] ! create directory: Ydir
+[ 6989.724250] ! create node: point
+[ 6989.724250] ! module installed
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+0
+
+[olej@fedora proc]$ echo 1111 > /proc/Xdir/Ydir/point
+
+[olej@fedora proc]$ cat /proc/Xdir/Ydir/point
+1111
+
+[olej@fedora proc]$ sudo rmmod procdat.ko 
+
+[olej@fedora proc]$ dmesg | tail -n11
+[ 6989.724243] ! create directory: Xdir
+[ 6989.724248] ! create directory: Ydir
+[ 6989.724250] ! create node: point
+[ 6989.724250] ! module installed
+[ 7011.376307] ! read: return 0
+[ 7023.264486] ! write: update 1111
+[ 7026.117338] ! read: return 1111
+[ 7037.411268] ! remove entry point - parent Ydir
+[ 7037.411272] ! remove entry Ydir - parent Xdir
+[ 7037.411273] ! remove entry Xdir - parent /proc
+[ 7037.411275] ! module removed
+
+============================================================================
+
+[Olej@modules proc]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules proc]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/proc/procdat.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+[Olej@modules proc]$ sudo insmod procdat.ko path=xxx/yyy/zzz
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module procdat.ko: Operation canceled
+
+[Olej@modules proc]$ dmesg | tail -n1
+[41496.795546] ! it's work only for kernrl LE 3.9
+
+============================================================================
+
+13.02.2015
+==========
+
+[olej@nvidia proc]$ sudo insmod procdat.ko
+
+[olej@nvidia proc]$ ls /proc/da*
+ls: невозможно получить доступ к /proc/da*: Нет такого файла или каталога
+
+[olej@nvidia proc]$ sudo rmmod procdat.ko 
+[olej@nvidia proc]$ 
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550146] Oops: 0000 [#1] SMP 
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550217] Process rmmod (pid: 5413, ti=d25ca000 task=ed138000 task.ti=d25ca000)
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550219] Stack:
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550244] Call Trace:
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550283] Code: 74 c8 c7 43 04 00 00 00 00 89 03 89 f0 e8 73 36 74 c8 e9 79 ff ff ff 00 00 55 89 e5 57 56 53 83 ec 0c 3e 8d 74 26 00 eb 02 89 d8 <8b> 58 24 8d 78 4f 89 7c 24 04 c7 04 24 24 a0 f4 f7 8d 73 4f 89 
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550327] EIP: [<f7f49186>] erase+0x12/0x50 [procdat] SS:ESP 0068:d25cbf20
+
+Message from syslogd@nvidia at Feb 14 02:19:25 ...
+ kernel:[19973.550333] CR2: 0000000000000024
+
+[olej@nvidia proc]$ lsmod | head -n3
+Module                  Size  Used by
+procdat                12629  0 
+ppdev                  17363  0 
+
+============================================================================
+
+14.02.2015
+==========
+
+[olej@nvidia proc]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia proc]$ sudo insmod procdat.ko 
+
+[olej@nvidia proc]$ dmesg | tail -n2
+[   37.608163] hda-intel: IRQ timing workaround is activated for card #0. Suggest a bigger bdl_pos_adj.
+[ 8440.197458] ! create node: data1
+
+[olej@nvidia proc]$ cat /proc/data1 
+0
+
+[olej@nvidia proc]$ echo 12344 > /proc/data1 
+
+[olej@nvidia proc]$ cat /proc/data1 
+12344
+
+[olej@nvidia proc]$ sudo rmmod procdat.ko 
+
+[olej@nvidia proc]$ dmesg | tail -n7
+[   37.608163] hda-intel: IRQ timing workaround is activated for card #0. Suggest a bigger bdl_pos_adj.
+[ 8440.197458] ! create node: data1
+[ 8465.901352] ! read: return 0
+[ 8474.972526] ! write: update 12344
+[ 8476.229515] ! read: return 12344
+[ 8487.846263] ! remove entry data1 - parent /proc
+[ 8487.846268] ! erased /proc/data1
+
+----------------------------------------------------------------------------
+
+[olej@nvidia proc]$ sudo insmod procdat.ko path=xxx/yyy/zzz
+
+[olej@nvidia proc]$ dmesg | tail -n4
+[ 8487.846268] ! erased /proc/data1
+[ 8593.573834] ! create directory: xxx
+[ 8593.573836] ! create directory: yyy
+[ 8593.573838] ! create node: zzz
+
+[olej@nvidia proc]$ ls -l /proc/xxx/yyy/
+итого 0
+-rw-rw-rw-. 1 root root 0 февр. 14 14:26 zzz
+
+[olej@nvidia proc]$ cat /proc/xxx/yyy/zzz 
+0
+[olej@nvidia proc]$ echo qweer > /proc/xxx/yyy/zzz 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@nvidia proc]$ dmesg | tail -n4
+[ 8593.573834] ! create directory: xxx
+[ 8593.573836] ! create directory: yyy
+[ 8593.573838] ! create node: zzz
+[ 8633.352742] ! read: return 0
+
+[olej@nvidia proc]$ echo 'qweer' > /proc/xxx/yyy/zzz 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@nvidia proc]$ echo 1251345 | sudo tee /proc/xxx/yyy/zzz 
+1251345
+
+[olej@nvidia proc]$ cat /proc/xxx/yyy/zzz 
+1251345
+
+[olej@nvidia proc]$ dmesg | tail -n4
+[ 8633.352742] ! read: return 0
+[ 8743.255433] ! read: return 0
+[ 8915.688299] ! write: update 1251345
+[ 8925.198751] ! read: return 1251345
+
+[olej@nvidia proc]$ echo qweer > /proc/xxx/yyy/zzz 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@nvidia proc]$ echo $?
+1
+
+[olej@nvidia proc]$ sudo rmmod procdat.ko 
+
+----------------------------------------------------------------------------
+
+[olej@nvidia proc]$ sudo insmod procdat.ko path=xxx/yyy/ttt/node
+[olej@nvidia proc]$ tree /proc/xxx
+/proc/xxx
+└── yyy
+    └── ttt
+        └── node
+
+2 directories, 1 file
+[olej@nvidia proc]$ ls -lR /proc/xxx
+/proc/xxx:
+итого 0
+drwxrwxrwx. 3 root root 0 февр. 14 16:40 yyy
+
+/proc/xxx/yyy:
+итого 0
+drwxrwxrwx. 2 root root 0 февр. 14 16:40 ttt
+
+/proc/xxx/yyy/ttt:
+итого 0
+-rw-rw-rw-. 1 root root 0 февр. 14 16:40 node
+[olej@nvidia proc]$ cat /proc/xxx/yyy/ttt/node
+0
+[olej@nvidia proc]$ echo 222222222 >/proc/xxx/yyy/ttt/node
+[olej@nvidia proc]$ cat /proc/xxx/yyy/ttt/node
+222222222
+
+[olej@nvidia proc]$ dmesg | tail -n12
+[16606.820543] ! create directory: xxx
+[16606.820548] ! create directory: yyy
+[16606.820551] ! create directory: ttt
+[16606.820553] ! create node: node
+[16658.773080] ! read: return 0
+[16668.652327] ! write: update 222222222
+[16670.157148] ! read: return 222222222
+[16713.812579] ! remove entry node - parent ttt
+[16713.812582] ! remove entry ttt - parent yyy
+[16713.812584] ! remove entry yyy - parent xxx
+[16713.812585] ! remove entry xxx - parent /proc
+[16713.812600] ! erased /proc/xxx/yyy/ttt/node
+
+============================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ sudo insmod procdat.ko path=xxx/yyy/www
+
+bash-4.2$ dmesg | tail -n3
+[ 8796.622551] ! create directory: xxx
+[ 8796.622555] ! create directory: yyy
+[ 8796.622559] ! create node: www
+bash-4.2$ tree /proc/xxx
+/proc/xxx
+└── yyy
+    └── www
+
+1 directory, 1 file
+
+bash-4.2$ ls -lR /proc/xxx
+/proc/xxx:
+итого 0
+dr-xr-xr-x 2 root root 0 фев 14 16:50 yyy
+
+/proc/xxx/yyy:
+итого 0
+-rw-rw-rw- 1 root root 0 фев 14 16:50 www
+
+bash-4.2$ cat /proc/xxx/yyy/www 
+0
+bash-4.2$ echo 33333333 >/proc/xxx/yyy/www 
+bash-4.2$ cat /proc/xxx/yyy/www 
+33333333
+
+bash-4.2$ sudo rmmod procdat.ko 
+
+bash-4.2$ dmesg | tail -n9
+[ 8796.622191] procdat: module verification failed: signature and/or  required key missing - tainting kernel
+[ 8796.622551] ! create directory: xxx
+[ 8796.622555] ! create directory: yyy
+[ 8796.622559] ! create node: www
+[ 8882.128712] ! read: return 0
+[ 8891.703359] ! write: update 33333333
+[ 8893.800847] ! read: return 33333333
+[ 8915.978606] ! remove subtree /proc/xxx
+[ 8915.978613] ! erased /proc/xxx/yyy/www
+
+============================================================================
+
+[Olej@modules lproc]$ sudo insmod procdat.ko path=d1/d2/d3/d4/t
+[sudo] password for Olej: 
+
+[Olej@modules lproc]$ dmesg | tail -n6
+[18390.992986] procdat: module verification failed: signature and/or  required key missing - tainting kernel
+[18390.994203] ! create directory: d1
+[18390.994206] ! create directory: d2
+[18390.994207] ! create directory: d3
+[18390.994209] ! create directory: d4
+[18390.994210] ! create node: t
+
+
+[Olej@modules lproc]$ ls -lR /proc/d1
+/proc/d1:
+итого 0
+dr-xr-xr-x. 3 root root 0 фев 14 17:11 d2
+
+/proc/d1/d2:
+итого 0
+dr-xr-xr-x. 3 root root 0 фев 14 17:11 d3
+
+/proc/d1/d2/d3:
+итого 0
+dr-xr-xr-x. 2 root root 0 фев 14 17:11 d4
+
+/proc/d1/d2/d3/d4:
+итого 0
+-rw-rw-rw-. 1 root root 0 фев 14 17:11 t
+
+
+[Olej@modules lproc]$ tree /proc/d1
+/proc/d1
+└── d2
+    └── d3
+        └── d4
+            └── t
+
+3 directories, 1 file
+
+[Olej@modules lproc]$ cat /proc/d1/d2/d3/d4/t 
+0
+
+[Olej@modules lproc]$ echo 4444444444 >/proc/d1/d2/d3/d4/t 
+
+[Olej@modules lproc]$ cat /proc/d1/d2/d3/d4/t 
+4444444444
+
+[Olej@modules lproc]$ sudo rmmod procdat.ko 
+
+[Olej@modules lproc]$ dmesg | tail -n10
+[18390.994203] ! create directory: d1
+[18390.994206] ! create directory: d2
+[18390.994207] ! create directory: d3
+[18390.994209] ! create directory: d4
+[18390.994210] ! create node: t
+[18606.878035] ! read: return 0
+[18615.763125] ! write: update 4444444444
+[18617.212690] ! read: return 4444444444
+[18644.632811] ! remove subtree /proc/d1
+[18644.632815] ! erased /proc/d1/d2/d3/d4/t
+
+----------------------------------------------------------------------------
+
+[Olej@modules lproc]$ sudo insmod procdat.ko 
+[sudo] password for Olej: 
+
+[Olej@modules lproc]$ sudo rmmod procdat.ko 
+
+[Olej@modules lproc]$ dmesg | tail -n3
+[  346.091785] ! create node: data
+[  352.272678] ! remove subtree /proc/data
+[  352.272684] ! erased /proc/data
+
+----------------------------------------------------------------------------
+
+[Olej@modules lproc]$ sudo insmod procdat.ko path=x1/x2/x3
+
+[Olej@modules lproc]$ cat /proc/x1/x2/x3 
+0
+
+[Olej@modules lproc]$ echo 999 > /proc/x1/x2/x3 
+
+[Olej@modules lproc]$ cat /proc/x1/x2/x3 
+999
+
+[Olej@modules lproc]$ echo строка > /proc/x1/x2/x3 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[Olej@modules lproc]$ echo 99i9 > /proc/x1/x2/x3 
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[Olej@modules lproc]$ cat /proc/x1/x2/x3 
+999
+
+[Olej@modules lproc]$ sudo rmmod procdat.ko 
+
+[Olej@modules lproc]$ dmesg | tail -n10
+[  352.272684] ! erased /proc/data
+[  422.985734] ! create directory: x1
+[  422.985741] ! create directory: x2
+[  422.985746] ! create node: x3
+[  436.219151] ! read: return 0
+[  445.311893] ! write: update 999
+[  447.546330] ! read: return 999
+[  468.000214] ! read: return 999
+[  474.721664] ! remove subtree /proc/x1
+[  474.721672] ! erased /proc/x1/x2/x3
+
+============================================================================
+
+[olej@nvidia lproc]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia lproc]$ sudo insmod procdat.ko 
+
+[olej@nvidia lproc]$ sudo rmmod procdat.ko 
+
+[olej@nvidia lproc]$ dmesg | tail -n4
+[16713.812600] ! erased /proc/xxx/yyy/ttt/node
+[20318.328204] ! create node: data
+[20332.399355] ! remove entry data
+[20332.399360] ! erased /proc/data
+
+----------------------------------------------------------------------------
+
+[olej@nvidia lproc]$ sudo insmod procdat.ko path=D1/2/3
+
+[olej@nvidia lproc]$ cat /proc/D1/2/3
+0
+
+[olej@nvidia lproc]$ echo xxx > /proc/D1/2/3
+bash: echo: ошибка записи: Недопустимый аргумент
+
+[olej@nvidia lproc]$ echo 765 > /proc/D1/2/3
+
+[olej@nvidia lproc]$ cat /proc/D1/2/3
+765
+
+[olej@nvidia lproc]$ sudo rmmod procdat.ko 
+
+[olej@nvidia lproc]$ dmesg | tail -n10
+[20392.320536] ! create directory: D1
+[20392.320540] ! create directory: 2
+[20392.320543] ! create node: 3
+[20409.264421] ! read: return 0
+[20430.505115] ! write: update 765
+[20440.369192] ! read: return 765
+[20448.585166] ! remove entry 3
+[20448.585169] ! remove entry 2
+[20448.585170] ! remove entry D1
+[20448.585171] ! erased /proc/D1/2/3
+
+============================================================================
+

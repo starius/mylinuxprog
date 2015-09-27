@@ -1,0 +1,178 @@
+--------------------------------------------------------------------------
+
+22.01.2012
+==========
+
+[olej@notebook misc]$ sudo insmod misc_dev.ko 
+
+[olej@notebook misc]$ lsmod | head -n2
+Module                  Size  Used by
+misc_dev                1167  0 
+
+[olej@notebook misc]$ cat /proc/modules | grep misc
+misc_dev 1167 0 - Live 0xf99e8000
+
+[olej@notebook misc]$ cat /proc/devices  | grep misc
+ 10 misc
+
+[olej@notebook misc]$ ls -l  /dev/own*
+crw-rw---- 1 root root 10, 54 Янв 22 22:08 /dev/own_misc_dev
+
+[olej@notebook misc]$ cat /dev/own_misc_dev 
+Hello, world!
+
+
+[olej@notebook cdev]$ ls -l /dev | grep 10,
+crw-------  1 root video      10, 175 Янв 22 11:49 agpgart
+crw-rw----  1 root root       10,  57 Янв 22 11:50 autofs
+crw-rw----  1 root root       10,  61 Янв 22 11:49 cpu_dma_latency
+crw-rw-rw-  1 root root       10, 229 Янв 22 11:49 fuse
+crw-rw----  1 root root       10, 228 Янв 22 11:49 hpet
+crw-rw-rw-+ 1 root kvm        10, 232 Янв 22 11:50 kvm
+crw-rw----  1 root root       10, 227 Янв 22 11:49 mcelog
+crw-rw----  1 root root       10,  60 Янв 22 11:49 network_latency
+crw-rw----  1 root root       10,  59 Янв 22 11:49 network_throughput
+crw-r-----  1 root kmem       10, 144 Янв 22 11:49 nvram
+crw-rw----  1 root root       10,  54 Янв 22 22:08 own_misc_dev
+crw-rw-r--+ 1 root root       10,  58 Янв 22 11:49 rfkill
+crw-rw----  1 root root       10, 231 Янв 22 11:49 snapshot
+crw-------  1 root root       10,  56 Янв 22 11:50 vboxdrv
+crw-rw----  1 root root       10,  55 Янв 22 11:50 vboxnetctl
+crw-rw----  1 root root       10,  63 Янв 22 11:49 vga_arbiter
+crw-rw----  1 root root       10, 130 Янв 22 11:49 watchdog
+
+[olej@notebook misc]$ ls /sys/class/misc/own_misc_dev
+dev  power  subsystem  uevent
+
+[olej@notebook misc]$ tree /sys/devices/virtual/misc/own_misc_dev/
+/sys/devices/virtual/misc/own_misc_dev/
+├── dev
+├── power
+│   └── wakeup
+├── subsystem -> ../../../../class/misc
+└── uevent
+
+
+[olej@notebook misc]$ sudo rmmod misc_dev
+
+--------------------------------------------------------------------------
+
+[olej@notebook misc]$ sudo insmod misc_dev.ko minor=55
+insmod: error inserting 'misc_dev.ko': -1 Device or resource busy
+
+[olej@notebook misc]$ sudo insmod misc_dev.ko minor=200
+
+[olej@notebook misc]$ ls -l /dev/own*
+crw-rw---- 1 root root 10, 200 Янв 22 22:15 /dev/own_misc_dev
+
+[olej@notebook misc]$ cat /dev/own*
+Hello, world!
+
+==========================================================================
+
+10.01.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+--------------------------------------------------------------------------
+
+[Olej@modules misc]$ uname -a
+Linux modules.localdomain 3.13.8-200.fc20.x86_64 #1 SMP Tue Apr 1 03:35:46 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules misc]$ make
+make -C /lib/modules/3.13.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.o
+In file included from /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.c:3:0:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/../dev.h: В функции «dev_read»:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/../dev.h:15:4: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «size_t» [-Wformat=]
+    printk( KERN_INFO "=== read : %d\n", count );
+    ^
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+
+--------------------------------------------------------------------------
+
+21.04.2014
+==========
+
+[Olej@modules misc]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/misc/misc_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+
+==========================================================================
+
+30.01.2015
+==========
+
+[Olej@modules dev]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules misc]$ sudo insmod misc_dev.ko 
+
+[Olej@modules misc]$ lsmod | head -n3
+Module                  Size  Used by
+misc_dev               12633  0 
+fuse                   91410  3 
+
+[Olej@modules misc]$ sudo rmmod misc_dev.ko 
+
+[Olej@modules ~]$ udevadm monitor --property --kernel 
+monitor will print the received events for:
+KERNEL - the kernel uevent
+
+KERNEL[33428.459744] add      /module/misc_dev (module)
+ACTION=add
+DEVPATH=/module/misc_dev
+SEQNUM=2724
+SUBSYSTEM=module
+
+KERNEL[33428.461018] add      /devices/virtual/misc/own_misc_dev (misc)
+ACTION=add
+DEVNAME=/dev/own_misc_dev
+DEVPATH=/devices/virtual/misc/own_misc_dev
+MAJOR=10
+MINOR=57
+SEQNUM=2725
+SUBSYSTEM=misc
+
+KERNEL[33466.443870] remove   /devices/virtual/misc/own_misc_dev (misc)
+ACTION=remove
+DEVNAME=/dev/own_misc_dev
+DEVPATH=/devices/virtual/misc/own_misc_dev
+MAJOR=10
+MINOR=57
+SEQNUM=2726
+SUBSYSTEM=misc
+
+KERNEL[33466.443907] remove   /module/misc_dev (module)
+ACTION=remove
+DEVPATH=/module/misc_dev
+SEQNUM=2727
+SUBSYSTEM=module
+
+^C
+
+==========================================================================

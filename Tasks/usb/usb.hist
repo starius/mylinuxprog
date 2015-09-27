@@ -1,0 +1,119 @@
+18.06.2011
+==========
+
+[olej@notebook usb]$ sudo insmod lab1_usb.ko 
+
+[olej@notebook usb]$ lsmod | grep lab
+lab1_usb                1546  0 
+
+[olej@notebook usb]$ dmesg | tail -n 10
+Hello USB
+usbcore: registered new interface driver usb-hotplug
+
+... размыкаем USB-камеру ...
+
+[olej@notebook usb]$ dmesg | tail -n 3
+Hello USB
+usbcore: registered new interface driver usb-hotplug
+usb 1-3: USB disconnect, address 3
+
+... подключаем USB-камеру ...
+
+[olej@notebook usb]$ dmesg | tail -n 10
+Hello USB
+usbcore: registered new interface driver usb-hotplug
+usb 1-3: USB disconnect, address 3
+usb 1-3: new high speed USB device using ehci_hcd and address 7
+usb 1-3: New USB device found, idVendor=046d, idProduct=080f
+usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=2
+usb 1-3: SerialNumber: 1DC23270
+usb 1-3: configuration #1 chosen from 1 choice
+uvcvideo: Found UVC 1.00 device <unnamed> (046d:080f)
+input: UVC Camera (046d:080f) as /devices/pci0000:00/0000:00:1d.7/usb1/1-3/1-3:1.0/input/input13
+
+[olej@notebook usb]$ sudo rmmod lab1_usb
+
+[olej@notebook usb]$ dmesg | tail -n 2
+Goodbye USB
+usbcore: deregistering interface driver usb-hotplug
+
+============================================================================================
+
+27.08.2011
+==========
+
+[olej@notebook linux]$ lsmod | grep uvcvideo
+uvcvideo               47532  0 
+videodev               28423  1 uvcvideo
+v4l1_compat            11370  2 uvcvideo,videodev
+
+[olej@notebook linux]$ sudo rmmod uvcvideo
+
+[olej@notebook linux]$ lsmod | grep uvcvideo
+
+[olej@notebook linux]$ sudo insmod lab1_usb.ko. 
+
+[olej@notebook linux]$ lsmod | grep lab 
+lab1_usb                1546  0
+
+ON:
+===
+
+[olej@notebook usb]$ dmesg | tail -n50
+...
+usb 1-4: USB disconnect, address 19
+usb 1-4: new high speed USB device using ehci_hcd and address 20
+usb 1-4: New USB device found, idVendor=046d, idProduct=080f
+usb 1-4: New USB device strings: Mfr=0, Product=0, SerialNumber=2
+usb 1-4: SerialNumber: 1DC23270
+usb 1-4: configuration #1 chosen from 1 choice
+MY: connect
+MY: devnum=20, speed=3
+MY: idVendor=0x46D, idProduct=0x80F, bcdDevice=0x9
+MY: class=0xEF, subclass=0x2
+MY: protocol=0x1, packetsize=64
+MY: manufacturer=0x0, product=0x0, serial=2
+MY: connect_count=0
+
+MY: connect
+MY: devnum=20, speed=3
+MY: idVendor=0x46D, idProduct=0x80F, bcdDevice=0x9
+MY: class=0xEF, subclass=0x2
+MY: protocol=0x1, packetsize=64
+MY: manufacturer=0x0, product=0x0, serial=2
+MY: connect_count=1
+
+
+OFF:
+===
+
+[olej@notebook linux]$ dmesg | tail -n20
+...
+usb 1-4: USB disconnect, address 21
+MY: disconnect
+MY: disconnect
+
+============================================================================================
+
+26.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/usb modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/usb/lab1_usb.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/usb/lab1_usb.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/usb/lab1_usb.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+============================================================================================
+

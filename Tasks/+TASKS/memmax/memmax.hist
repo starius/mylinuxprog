@@ -1,0 +1,1150 @@
+28.07.2012
+==========
+
+[olej@notebook mtest]$ uname -r
+2.6.32.9-70.fc12.i686.PAE
+
+[olej@notebook ~]$ cat /proc/meminfo | grep MemTotal
+MemTotal:        2053828 kB
+
+-------------------------------------------------------------------------
+
+[olej@notebook mtest]$ sudo insmod memmax.ko mode=0
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n100 | grep order
+order= 0, pages=     1, size=     4096 - kmalloc OK
+order= 1, pages=     2, size=     8192 - kmalloc OK
+order= 2, pages=     4, size=    16384 - kmalloc OK
+order= 3, pages=     8, size=    32768 - kmalloc OK
+order= 4, pages=    16, size=    65536 - kmalloc OK
+order= 5, pages=    32, size=   131072 - kmalloc OK
+order= 6, pages=    64, size=   262144 - kmalloc OK
+order= 7, pages=   128, size=   524288 - kmalloc OK
+order= 8, pages=   256, size=  1048576 - kmalloc OK
+order= 9, pages=   512, size=  2097152 - kmalloc OK
+order=10, pages=  1024, size=  4194304 - kmalloc OK
+order=11, pages=  2048, size=  8388608 - kmalloc failed
+
+-------------------------------------------------------------------------
+
+[olej@notebook mtest]$ sudo insmod memmax.ko mode=1
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n100 | grep order
+order= 0, pages=     1, size=     4096 - __get_free_pages OK
+order= 1, pages=     2, size=     8192 - __get_free_pages OK
+order= 2, pages=     4, size=    16384 - __get_free_pages OK
+order= 3, pages=     8, size=    32768 - __get_free_pages OK
+order= 4, pages=    16, size=    65536 - __get_free_pages OK
+order= 5, pages=    32, size=   131072 - __get_free_pages OK
+order= 6, pages=    64, size=   262144 - __get_free_pages OK
+order= 7, pages=   128, size=   524288 - __get_free_pages OK
+order= 8, pages=   256, size=  1048576 - __get_free_pages OK
+order= 9, pages=   512, size=  2097152 - __get_free_pages OK
+order=10, pages=  1024, size=  4194304 - __get_free_pages OK
+order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+
+-------------------------------------------------------------------------
+
+[olej@notebook mtest]$ sudo insmod memmax.ko mode=2
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n100 | grep order
+order= 0, pages=     1, size=     4096 - vmalloc OK
+order= 1, pages=     2, size=     8192 - vmalloc OK
+order= 2, pages=     4, size=    16384 - vmalloc OK
+order= 3, pages=     8, size=    32768 - vmalloc OK
+order= 4, pages=    16, size=    65536 - vmalloc OK
+order= 5, pages=    32, size=   131072 - vmalloc OK
+order= 6, pages=    64, size=   262144 - vmalloc OK
+order= 7, pages=   128, size=   524288 - vmalloc OK
+order= 8, pages=   256, size=  1048576 - vmalloc OK
+order= 9, pages=   512, size=  2097152 - vmalloc OK
+order=10, pages=  1024, size=  4194304 - vmalloc OK
+order=11, pages=  2048, size=  8388608 - vmalloc OK
+order=12, pages=  4096, size= 16777216 - vmalloc OK
+order=13, pages=  8192, size= 33554432 - vmalloc OK
+order=14, pages= 16384, size= 67108864 - vmalloc failed
+
+=========================================================================
+
+[olej@home mtest]$ uname -r
+2.6.18-92.el5
+
+[olej@home mtest]$ cat /proc/meminfo | grep MemTotal
+MemTotal:       255600 kB
+
+-------------------------------------------------------------------------
+
+[olej@home mtest]$ sudo /sbin/insmod memmax.ko mode=0
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@home mtest]$ dmesg | tail -n100 | grep order
+EXT3-fs: mounted filesystem with ordered data mode.
+order= 0, pages=     1, size=     4096 - kmalloc OK
+order= 1, pages=     2, size=     8192 - kmalloc OK
+order= 2, pages=     4, size=    16384 - kmalloc OK
+order= 3, pages=     8, size=    32768 - kmalloc OK
+order= 4, pages=    16, size=    65536 - kmalloc OK
+order= 5, pages=    32, size=   131072 - kmalloc OK
+order= 6, pages=    64, size=   262144 - kmalloc failed
+
+-------------------------------------------------------------------------
+
+[olej@home mtest]$ sudo /sbin/insmod memmax.ko mode=1
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@home mtest]$ dmesg | tail -n100 | grep order
+order= 0, pages=     1, size=     4096 - __get_free_pages OK
+order= 1, pages=     2, size=     8192 - __get_free_pages OK
+order= 2, pages=     4, size=    16384 - __get_free_pages OK
+order= 3, pages=     8, size=    32768 - __get_free_pages OK
+order= 4, pages=    16, size=    65536 - __get_free_pages OK
+order= 5, pages=    32, size=   131072 - __get_free_pages OK
+order= 6, pages=    64, size=   262144 - __get_free_pages OK
+order= 7, pages=   128, size=   524288 - __get_free_pages OK
+order= 8, pages=   256, size=  1048576 - __get_free_pages OK
+order= 9, pages=   512, size=  2097152 - __get_free_pages OK
+order=10, pages=  1024, size=  4194304 - __get_free_pages OK
+order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+
+-------------------------------------------------------------------------
+
+[olej@home mtest]$ sudo /sbin/insmod memmax.ko mode=2
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@home mtest]$ dmesg | tail -n100 | grep order
+order= 0, pages=     1, size=     4096 - vmalloc OK
+order= 1, pages=     2, size=     8192 - vmalloc OK
+order= 2, pages=     4, size=    16384 - vmalloc OK
+order= 3, pages=     8, size=    32768 - vmalloc OK
+order= 4, pages=    16, size=    65536 - vmalloc OK
+order= 5, pages=    32, size=   131072 - vmalloc OK
+order= 6, pages=    64, size=   262144 - vmalloc OK
+order= 7, pages=   128, size=   524288 - vmalloc OK
+order= 8, pages=   256, size=  1048576 - vmalloc OK
+order= 9, pages=   512, size=  2097152 - vmalloc OK
+order=10, pages=  1024, size=  4194304 - vmalloc OK
+order=11, pages=  2048, size=  8388608 - vmalloc OK
+order=12, pages=  4096, size= 16777216 - vmalloc OK
+order=13, pages=  8192, size= 33554432 - vmalloc OK
+order=14, pages= 16384, size= 67108864 - vmalloc OK
+order=15, pages= 32768, size=134217728 - vmalloc OK
+order=16, pages= 65536, size=268435456 - vmalloc failed
+
+=========================================================================
+
+[olej@localhost ~]$ uname -r
+2.6.35.13-92.fc14.x86_64
+
+[olej@localhost mtest]$ cat /proc/meminfo | grep MemTotal
+MemTotal:        4047192 kB
+
+-------------------------------------------------------------------------
+
+[olej@localhost mtest]$ sudo /sbin/insmod memmax.ko mode=0
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@localhost mtest]$ dmesg | tail -n100 | grep order
+[1747955.216447] order= 0, pages=     1, size=     4096 - kmalloc OK
+[1747955.216452] order= 1, pages=     2, size=     8192 - kmalloc OK
+[1747955.216456] order= 2, pages=     4, size=    16384 - kmalloc OK
+[1747955.216460] order= 3, pages=     8, size=    32768 - kmalloc OK
+[1747955.216465] order= 4, pages=    16, size=    65536 - kmalloc OK
+[1747955.216469] order= 5, pages=    32, size=   131072 - kmalloc OK
+[1747955.216475] order= 6, pages=    64, size=   262144 - kmalloc OK
+[1747955.216481] order= 7, pages=   128, size=   524288 - kmalloc OK
+[1747955.216495] order= 8, pages=   256, size=  1048576 - kmalloc OK
+[1747955.216519] order= 9, pages=   512, size=  2097152 - kmalloc OK
+[1747955.325561] order=10, pages=  1024, size=  4194304 - kmalloc OK
+[1747955.325695] order=11, pages=  2048, size=  8388608 - kmalloc failed
+
+-------------------------------------------------------------------------
+
+[olej@localhost mtest]$ sudo /sbin/insmod memmax.ko mode=1
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@localhost mtest]$ dmesg | tail -n100 | grep order
+[1748395.522702] order= 0, pages=     1, size=     4096 - __get_free_pages OK
+[1748395.522708] order= 1, pages=     2, size=     8192 - __get_free_pages OK
+[1748395.522712] order= 2, pages=     4, size=    16384 - __get_free_pages OK
+[1748395.522716] order= 3, pages=     8, size=    32768 - __get_free_pages OK
+[1748395.522720] order= 4, pages=    16, size=    65536 - __get_free_pages OK
+[1748395.522725] order= 5, pages=    32, size=   131072 - __get_free_pages OK
+[1748395.522730] order= 6, pages=    64, size=   262144 - __get_free_pages OK
+[1748395.522737] order= 7, pages=   128, size=   524288 - __get_free_pages OK
+[1748395.522745] order= 8, pages=   256, size=  1048576 - __get_free_pages OK
+[1748395.522759] order= 9, pages=   512, size=  2097152 - __get_free_pages OK
+[1748395.522777] order=10, pages=  1024, size=  4194304 - __get_free_pages OK
+[1748395.522788] order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+
+-------------------------------------------------------------------------
+
+[olej@localhost mtest]$ sudo /sbin/insmod memmax.ko mode=2
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@localhost mtest]$ dmesg | tail -n100 | grep order
+[1747830.678358] order= 0, pages=     1, size=     4096 - vmalloc OK
+[1747830.678445] order= 1, pages=     2, size=     8192 - vmalloc OK
+[1747830.678496] order= 2, pages=     4, size=    16384 - vmalloc OK
+[1747830.678552] order= 3, pages=     8, size=    32768 - vmalloc OK
+[1747830.678607] order= 4, pages=    16, size=    65536 - vmalloc OK
+[1747830.678667] order= 5, pages=    32, size=   131072 - vmalloc OK
+[1747830.678745] order= 6, pages=    64, size=   262144 - vmalloc OK
+[1747830.678848] order= 7, pages=   128, size=   524288 - vmalloc OK
+[1747830.679015] order= 8, pages=   256, size=  1048576 - vmalloc OK
+[1747830.679312] order= 9, pages=   512, size=  2097152 - vmalloc OK
+[1747830.679932] order=10, pages=  1024, size=  4194304 - vmalloc OK
+[1747830.681139] order=11, pages=  2048, size=  8388608 - vmalloc OK
+[1747830.683463] order=12, pages=  4096, size= 16777216 - vmalloc OK
+[1747830.688677] order=13, pages=  8192, size= 33554432 - vmalloc OK
+[1747830.697957] order=14, pages= 16384, size= 67108864 - vmalloc OK
+[1747830.712238] order=15, pages= 32768, size=134217728 - vmalloc OK
+[1747830.742639] order=16, pages= 65536, size=268435456 - vmalloc OK
+[1747830.810859] order=17, pages=131072, size=536870912 - vmalloc OK
+[1747831.040146] order=18, pages=262144, size=1073741824 - vmalloc OK
+[1747831.636957] order=19, pages=524288, size=2147483648 - vmalloc OK
+[1747831.784385] order=20, pages=1048576, size=4294967296 - vmalloc failed
+
+=========================================================================
+
+[olej@notebook mtest]$ uname -r
+2.6.32.9-70.fc12.i686.PAE
+
+[olej@notebook ~]$ cat /proc/meminfo | grep MemTotal
+MemTotal:        2053828 kB
+
+-------------------------------------------------------------------------
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n300 | grep -v audit
+size = 1000 order = 1(4096)
+proc. cycles for allocate kmalloc : 146
+proc. cycles for allocate __get_free_pages : 438
+proc. cycles for allocate vmalloc : 210210
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko size=4096
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n30 | grep -v audit
+size = 4096 order = 1(4096)
+proc. cycles for allocate kmalloc : 181
+proc. cycles for allocate __get_free_pages : 877
+proc. cycles for allocate vmalloc : 59626
+
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko size=65536
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n30 | grep -v audit
+size = 65536 order = 5(65536)
+proc. cycles for allocate kmalloc : 1157
+proc. cycles for allocate __get_free_pages : 940
+proc. cycles for allocate vmalloc : 84129
+
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko size=262144
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n30 | grep -v audit
+size = 262144 order = 7(262144)
+proc. cycles for allocate kmalloc : 2151
+proc. cycles for allocate __get_free_pages : 2382
+proc. cycles for allocate vmalloc : 52026
+
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko size=262000
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+
+[olej@notebook mtest]$ dmesg | tail -n30 | grep -v audit
+size = 262000 order = 7(262144)
+proc. cycles for allocate kmalloc : 8674
+proc. cycles for allocate __get_free_pages : 4730
+proc. cycles for allocate vmalloc : 55612
+
+-------------------------------------------------------------------------
+
+[olej@notebook mtest]$ sudo insmod ./memtim.ko size=5
+insmod: error inserting './memtim.ko': -1 Operation not permitted
+[olej@notebook mtest]$ dmesg | tail -n30 | grep -v audit
+size = 5 order = 1(4096)
+proc. cycles for allocate kmalloc : 143
+proc. cycles for allocate __get_free_pages : 890
+proc. cycles for allocate vmalloc : 152552
+
+==========================================================================
+
+[olej@notebook mtest]$ ./tim 100
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 100 order = 1(4096)
+proc. cycles for allocate kmalloc : 158
+proc. cycles for allocate __get_free_pages : 458
+proc. cycles for allocate vmalloc : 188931
+
+[olej@notebook mtest]$ ./tim 1000
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 1000 order = 1(4096)
+proc. cycles for allocate kmalloc : 159
+proc. cycles for allocate __get_free_pages : 443
+proc. cycles for allocate vmalloc : 245386
+
+[olej@notebook mtest]$ ./tim 10000
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 10000 order = 3(16384)
+proc. cycles for allocate kmalloc : 531
+proc. cycles for allocate __get_free_pages : 518
+proc. cycles for allocate vmalloc : 272249
+
+[olej@notebook mtest]$ ./tim 100000
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 100000 order = 6(131072)
+proc. cycles for allocate kmalloc : 1077
+proc. cycles for allocate __get_free_pages : 1646
+proc. cycles for allocate vmalloc : 53327
+
+[olej@notebook mtest]$ ./tim 1000000
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 1000000 order = 9(1048576)
+proc. cycles for allocate kmalloc : 4715
+proc. cycles for allocate __get_free_pages : 7307
+proc. cycles for allocate vmalloc : 112111
+
+[olej@notebook mtest]$ ./tim 10000000
+insmod: error inserting 'memtim.ko': -1 Operation not permitted
+size = 10000000 order = 13(16777216)
+proc. cycles for allocate kmalloc : failed
+proc. cycles for allocate __get_free_pages : failed
+proc. cycles for allocate vmalloc : 1367143
+
+==========================================================================
+
+02.06.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+bash-4.2$ ls -l *.ko
+-rw-rw-r-- 1 Olej Olej  75282 июн  2 16:22 memmax.ko
+-rw-rw-r-- 1 Olej Olej 103759 июн  2 16:22 memtim.ko
+
+
+bash-4.2$ free
+             total       used       free     shared    buffers     cached
+Mem:       2057080    1980736      76344     190828     132008     603400
+-/+ buffers/cache:    1245328     811752
+Swap:      2028540      10144    2018396
+
+
+bash-4.2$ sudo insmod memmax.ko mode=0
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+option                 33967  0 
+usb_wwan               19076  1 option
+
+bash-4.2$ dmesg | tail -n60 | grep order
+[24147.293157] order= 0, pages=     1, size=     4096 - kmalloc OK
+[24147.293166] order= 1, pages=     2, size=     8192 - kmalloc OK
+[24147.293174] order= 2, pages=     4, size=    16384 - kmalloc OK
+[24147.293183] order= 3, pages=     8, size=    32768 - kmalloc OK
+[24147.293192] order= 4, pages=    16, size=    65536 - kmalloc OK
+[24147.293206] order= 5, pages=    32, size=   131072 - kmalloc OK
+[24147.293217] order= 6, pages=    64, size=   262144 - kmalloc OK
+[24147.293232] order= 7, pages=   128, size=   524288 - kmalloc OK
+[24147.293257] order= 8, pages=   256, size=  1048576 - kmalloc OK
+[24147.293305] order= 9, pages=   512, size=  2097152 - kmalloc OK
+[24147.293379] order=10, pages=  1024, size=  4194304 - kmalloc OK
+[24147.293719]  [<c0525354>] kmalloc_order_trace+0x24/0x90
+[24147.293859] order=11, pages=  2048, size=  8388608 - kmalloc failed
+
+--------------------------------------------------------------------------
+
+03.06.2014
+==========
+
+bash-4.2$ sudo insmod memmax.ko mode=1
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n 60 | grep order
+[10223.294742] order= 0, pages=     1, size=     4096 - __get_free_pages OK
+[10223.294751] order= 1, pages=     2, size=     8192 - __get_free_pages OK
+[10223.294756] order= 2, pages=     4, size=    16384 - __get_free_pages OK
+[10223.294761] order= 3, pages=     8, size=    32768 - __get_free_pages OK
+[10223.294766] order= 4, pages=    16, size=    65536 - __get_free_pages OK
+[10223.294772] order= 5, pages=    32, size=   131072 - __get_free_pages OK
+[10223.294779] order= 6, pages=    64, size=   262144 - __get_free_pages OK
+[10223.294788] order= 7, pages=   128, size=   524288 - __get_free_pages OK
+[10223.294808] order= 8, pages=   256, size=  1048576 - __get_free_pages OK
+[10223.294924] order= 9, pages=   512, size=  2097152 - __get_free_pages OK
+[10223.294992] order=10, pages=  1024, size=  4194304 - __get_free_pages OK
+[10223.295304] order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+
+
+
+bash-4.2$ sudo insmod memmax.ko mode=2
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n 100 | grep order
+[10223.295304] order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+[10353.602513] order= 0, pages=     1, size=     4096 - vmalloc OK
+[10353.602523] order= 1, pages=     2, size=     8192 - vmalloc OK
+[10353.602529] order= 2, pages=     4, size=    16384 - vmalloc OK
+[10353.602769] order= 3, pages=     8, size=    32768 - vmalloc OK
+[10353.602780] order= 4, pages=    16, size=    65536 - vmalloc OK
+[10353.602795] order= 5, pages=    32, size=   131072 - vmalloc OK
+[10353.602826] order= 6, pages=    64, size=   262144 - vmalloc OK
+[10353.602874] order= 7, pages=   128, size=   524288 - vmalloc OK
+[10353.602999] order= 8, pages=   256, size=  1048576 - vmalloc OK
+[10353.603487] order= 9, pages=   512, size=  2097152 - vmalloc OK
+[10353.603931] order=10, pages=  1024, size=  4194304 - vmalloc OK
+[10353.605000] order=11, pages=  2048, size=  8388608 - vmalloc OK
+[10353.607195] order=12, pages=  4096, size= 16777216 - vmalloc OK
+[10353.611617] order=13, pages=  8192, size= 33554432 - vmalloc OK
+[10353.627586] order=14, pages= 16384, size= 67108864 - vmalloc OK
+[10353.633878] insmod: page allocation failure: order:0, mode:0xd2
+[10353.634333] order=15, pages= 32768, size=134217728 - vmalloc failed
+
+--------------------------------------------------------------------------
+
+02.06.2014
+==========
+
+[Olej@modules mtest]$ uname -a
+Linux modules.localdomain 3.14.4-200.fc20.x86_64 #1 SMP Tue May 13 13:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules mtest]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+Olej@modules mtest]$ make
+make -C /lib/modules/3.14.4-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memmax.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/mtest/memtim.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+
+
+[Olej@modules mtest]$ sudo insmod memmax.ko mode=0
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+
+[Olej@modules mtest]$ lsmod | head -n3
+Module                  Size  Used by
+usblp                  22842  0 
+fuse                   86935  3 
+
+
+[Olej@modules mtest]$ dmesg | tail -n60 | grep order
+[24381.992556] order= 0, pages=     1, size=     4096 - kmalloc OK
+[24381.992565] order= 1, pages=     2, size=     8192 - kmalloc OK
+[24381.992572] order= 2, pages=     4, size=    16384 - kmalloc OK
+[24381.992580] order= 3, pages=     8, size=    32768 - kmalloc OK
+[24381.992588] order= 4, pages=    16, size=    65536 - kmalloc OK
+[24381.992595] order= 5, pages=    32, size=   131072 - kmalloc OK
+[24381.992603] order= 6, pages=    64, size=   262144 - kmalloc OK
+[24381.992617] order= 7, pages=   128, size=   524288 - kmalloc OK
+[24381.992641] order= 8, pages=   256, size=  1048576 - kmalloc OK
+[24381.992680] order= 9, pages=   512, size=  2097152 - kmalloc OK
+[24381.992753] order=10, pages=  1024, size=  4194304 - kmalloc OK
+[24381.993070]  [<ffffffff8119824e>] kmalloc_order_trace+0x2e/0xa0
+[24381.993168] order=11, pages=  2048, size=  8388608 - kmalloc failed
+
+
+bash-4.2$ free
+             total       used       free     shared    buffers     cached
+Mem:       2057080    1949632     107448     189148      78820     558204
+-/+ buffers/cache:    1312608     744472
+Swap:      2028540      35000    1993540
+
+--------------------------------------------------------------------------
+
+03.06.2014
+==========
+
+[Olej@modules mtest]$ sudo insmod memmax.ko mode=1
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+
+[Olej@modules mtest]$ dmesg | tail -n 60 | grep order
+[10431.867234] order= 0, pages=     1, size=     4096 - __get_free_pages OK
+[10431.867242] order= 1, pages=     2, size=     8192 - __get_free_pages OK
+[10431.867246] order= 2, pages=     4, size=    16384 - __get_free_pages OK
+[10431.867251] order= 3, pages=     8, size=    32768 - __get_free_pages OK
+[10431.867256] order= 4, pages=    16, size=    65536 - __get_free_pages OK
+[10431.867260] order= 5, pages=    32, size=   131072 - __get_free_pages OK
+[10431.867266] order= 6, pages=    64, size=   262144 - __get_free_pages OK
+[10431.867275] order= 7, pages=   128, size=   524288 - __get_free_pages OK
+[10431.867290] order= 8, pages=   256, size=  1048576 - __get_free_pages OK
+[10431.867311] order= 9, pages=   512, size=  2097152 - __get_free_pages OK
+[10431.867352] order=10, pages=  1024, size=  4194304 - __get_free_pages OK
+[10431.867632] order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+
+
+[Olej@modules mtest]$ sudo insmod memmax.ko mode=2
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+[Olej@modules mtest]$ dmesg | tail -n 100 | grep order
+[10431.867632] order=11, pages=  2048, size=  8388608 - __get_free_pages failed
+[10512.722787] order= 0, pages=     1, size=     4096 - vmalloc OK
+[10512.722800] order= 1, pages=     2, size=     8192 - vmalloc OK
+[10512.722809] order= 2, pages=     4, size=    16384 - vmalloc OK
+[10512.722819] order= 3, pages=     8, size=    32768 - vmalloc OK
+[10512.722834] order= 4, pages=    16, size=    65536 - vmalloc OK
+[10512.722859] order= 5, pages=    32, size=   131072 - vmalloc OK
+[10512.722903] order= 6, pages=    64, size=   262144 - vmalloc OK
+[10512.723045] order= 7, pages=   128, size=   524288 - vmalloc OK
+[10512.723236] order= 8, pages=   256, size=  1048576 - vmalloc OK
+[10512.723640] order= 9, pages=   512, size=  2097152 - vmalloc OK
+[10512.724491] order=10, pages=  1024, size=  4194304 - vmalloc OK
+[10512.725606] order=11, pages=  2048, size=  8388608 - vmalloc OK
+[10512.727522] order=12, pages=  4096, size= 16777216 - vmalloc OK
+[10512.731315] order=13, pages=  8192, size= 33554432 - vmalloc OK
+[10512.738867] order=14, pages= 16384, size= 67108864 - vmalloc OK
+[10512.752007] order=15, pages= 32768, size=134217728 - vmalloc OK
+[10512.775780] order=16, pages= 65536, size=268435456 - vmalloc OK
+[10512.815441] order=17, pages=131072, size=536870912 - vmalloc OK
+[10512.878825] order=18, pages=262144, size=1073741824 - vmalloc OK
+[10512.983299] order=19, pages=524288, size=2147483648 - vmalloc OK
+[10513.188474] order=20, pages=1048576, size=4294967296 - vmalloc OK
+[10513.299465] insmod: page allocation failure: order:0, mode:0xd2
+[10513.299605] order=21, pages=2097152, size=8589934592 - vmalloc failed
+
+
+[Olej@modules mtest]$ free
+             total       used       free     shared    buffers     cached
+Mem:       8053772    2758764    5295008     155008      74716    1435704
+-/+ buffers/cache:    1248344    6805428
+Swap:            0          0          0
+
+==========================================================================
+
+16.02.2015
+==========
+
+[Olej@modules memmax]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/memory/memmax modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/memory/memmax/memmax.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/memory/memmax/memmax.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/+OLD.TASKS/memory/memmax/memmax.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+
+[Olej@modules memmax]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules memmax]$ free
+             total       used       free     shared    buffers     cached
+Mem:       8053260    6955432    1097828     544500     234080    3003172
+-/+ buffers/cache:    3718180    4335080
+Swap:            0          0          0
+
+--------------------------------------------------------------------------
+
+[Olej@modules memmax]$ sudo insmod memmax.ko mode=0
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+[Olej@modules memmax]$ dmesg | tail -n50
+[   21.752753] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 3047.908380] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 6704.408920] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 7325.305514] perf interrupt took too long (2503 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[26122.098804] memmax: module verification failed: signature and/or  required key missing - tainting kernel
+[26122.098997] + order= 0, pages=     1, size=     4096 - kmalloc OK
+[26122.099002] + order= 1, pages=     2, size=     8192 - kmalloc OK
+[26122.099006] + order= 2, pages=     4, size=    16384 - kmalloc OK
+[26122.099011] + order= 3, pages=     8, size=    32768 - kmalloc OK
+[26122.099016] + order= 4, pages=    16, size=    65536 - kmalloc OK
+[26122.099022] + order= 5, pages=    32, size=   131072 - kmalloc OK
+[26122.099029] + order= 6, pages=    64, size=   262144 - kmalloc OK
+[26122.099038] + order= 7, pages=   128, size=   524288 - kmalloc OK
+[26122.099054] + order= 8, pages=   256, size=  1048576 - kmalloc OK
+[26122.099074] + order= 9, pages=   512, size=  2097152 - kmalloc OK
+[26122.099109] + order=10, pages=  1024, size=  4194304 - kmalloc OK
+[26122.099135] ------------[ cut here ]------------
+[26122.099142] WARNING: CPU: 0 PID: 11178 at mm/page_alloc.c:2558 __alloc_pages_nodemask+0x2c4/0xa30()
+[26122.099143] Modules linked in: memmax(OE+) fuse ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 cfg80211 xt_conntrack ebtable_nat ebtable_broute bridge stp llc ebtable_filter ebtables ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_security ip6table_raw ip6table_filter ip6_tables iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack iptable_mangle iptable_security iptable_raw bnep binfmt_misc iTCO_wdt iTCO_vendor_support hp_wmi sparse_keymap ppdev intel_rapl tpm_infineon x86_pkg_temp_thermal coretemp kvm_intel kvm crct10dif_pclmul crc32_pclmul btusb bluetooth crc32c_intel rfkill ghash_clmulni_intel snd_hda_codec_hdmi uvcvideo snd_hda_codec_idt microcode snd_hda_codec_generic videobuf2_vmalloc videobuf2_core joydev videobuf2_memops serio_raw v4l2_common
+[26122.099192]  videodev media snd_hda_intel snd_hda_controller snd_hda_codec lpc_ich mfd_core snd_hwdep sdhci_pci sdhci snd_seq mmc_core snd_seq_device snd_pcm wacom shpchp snd_timer snd soundcore mei_me mei wmi parport_pc parport tpm_tis hp_accel tpm lis3lv02d input_polldev hp_wireless nfsd auth_rpcgss nfs_acl lockd grace sunrpc i915 firewire_ohci firewire_core i2c_algo_bit crc_itu_t drm_kms_helper e1000e drm ptp pps_core video
+[26122.099229] CPU: 0 PID: 11178 Comm: insmod Tainted: G        W  OE  3.18.5-101.fc20.x86_64 #1
+[26122.099231] Hardware name: Hewlett-Packard HP ProBook 6470b/179C, BIOS 68ICE Ver. F.46 01/17/2014
+[26122.099233]  0000000000000000 00000000d12673fe ffff8800475af998 ffffffff817455be
+[26122.099237]  0000000000000000 0000000000000000 ffff8800475af9d8 ffffffff81094f91
+[26122.099240]  0000000000000000 00000000000040d0 0000000000000002 0000000000000000
+[26122.099244] Call Trace:
+[26122.099251]  [<ffffffff817455be>] dump_stack+0x46/0x58
+[26122.099257]  [<ffffffff81094f91>] warn_slowpath_common+0x81/0xa0
+[26122.099261]  [<ffffffff810950aa>] warn_slowpath_null+0x1a/0x20
+[26122.099264]  [<ffffffff811991b4>] __alloc_pages_nodemask+0x2c4/0xa30
+[26122.099268]  [<ffffffff81388b7f>] ? sprintf+0x4f/0x70
+[26122.099273]  [<ffffffff811df3b7>] alloc_pages_current+0x97/0x110
+[26122.099279]  [<ffffffff81195acb>] alloc_kmem_pages+0x3b/0xf0
+[26122.099282]  [<ffffffff81388704>] ? vsnprintf+0x2a4/0x5c0
+[26122.099287]  [<ffffffff811b2f58>] kmalloc_order+0x18/0x50
+[26122.099291]  [<ffffffff811b2fb6>] kmalloc_order_trace+0x26/0xa0
+[26122.099298]  [<ffffffff811ebba1>] __kmalloc+0x221/0x240
+[26122.099304]  [<ffffffffa0017000>] ? 0xffffffffa0017000
+[26122.099308]  [<ffffffffa00170cb>] init+0xcb/0x1000 [memmax]
+[26122.099312]  [<ffffffff8138c657>] ? kasprintf+0x47/0x70
+[26122.099316]  [<ffffffffa0017000>] ? 0xffffffffa0017000
+[26122.099320]  [<ffffffff81002144>] do_one_initcall+0xd4/0x210
+[26122.099324]  [<ffffffff811cf072>] ? __vunmap+0xc2/0x110
+[26122.099329]  [<ffffffff811151cb>] load_module+0x1cab/0x2730
+[26122.099333]  [<ffffffff81110e20>] ? store_uevent+0x70/0x70
+[26122.099338]  [<ffffffff8120ee30>] ? kernel_read+0x50/0x80
+[26122.099343]  [<ffffffff81115e06>] SyS_finit_module+0xa6/0xd0
+[26122.099348]  [<ffffffff8174c9e9>] system_call_fastpath+0x12/0x17
+[26122.099351] ---[ end trace 9225bad841b4eb32 ]---
+[26122.099353] + order=11, pages=  2048, size=  8388608 - kmalloc failed
+
+--------------------------------------------------------------------------
+
+[Olej@modules memmax]$ sudo insmod memmax.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+[Olej@modules memmax]$ dmesg -n 20
+dmesg: unknown level '20'
+[Olej@modules memmax]$ dmesg | tail -n 20
+[   25.012279] fuse init (API version 7.23)
+[   25.020574] SELinux: initialized (dev fuse, type fuse), uses genfs_contexts
+[   25.033877] SELinux: initialized (dev fusectl, type fusectl), uses genfs_contexts
+[   27.056736] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[   27.073417] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[   28.574507] Adjusting tsc more than 11% (7516186 vs 7178855)
+[ 2302.619403] memmax: module verification failed: signature and/or  required key missing - tainting kernel
+[ 2302.619602] + mode=0 : kmalloc
+[ 2302.619605] + kmalloc : size=      4096 - OK
+[ 2302.619607] + kmalloc : size=      8192 - OK
+[ 2302.619611] + kmalloc : size=     16384 - OK
+[ 2302.619614] + kmalloc : size=     32768 - OK
+[ 2302.619618] + kmalloc : size=     65536 - OK
+[ 2302.619622] + kmalloc : size=    131072 - OK
+[ 2302.619627] + kmalloc : size=    262144 - OK
+[ 2302.619635] + kmalloc : size=    524288 - OK
+[ 2302.619646] + kmalloc : size=   1048576 - OK
+[ 2302.619665] + kmalloc : size=   2097152 - OK
+[ 2302.619715] + kmalloc : size=   4194304 - OK
+[ 2302.619736] + kmalloc : size=   8388608 - failed
+
+--------------------------------------------------------------------------
+
+[Olej@modules memmax]$ sudo insmod memmax.ko mode=1
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+[Olej@modules memmax]$ dmesg | tail -n 89
+[ 2395.136107] + mode=1 : vmalloc
+[ 2395.136122] + vmalloc : size=      4096 - OK
+[ 2395.136132] + vmalloc : size=      8192 - OK
+[ 2395.136137] + vmalloc : size=     16384 - OK
+[ 2395.136144] + vmalloc : size=     32768 - OK
+[ 2395.136152] + vmalloc : size=     65536 - OK
+[ 2395.136166] + vmalloc : size=    131072 - OK
+[ 2395.136195] + vmalloc : size=    262144 - OK
+[ 2395.136248] + vmalloc : size=    524288 - OK
+[ 2395.136360] + vmalloc : size=   1048576 - OK
+[ 2395.136601] + vmalloc : size=   2097152 - OK
+[ 2395.137391] + vmalloc : size=   4194304 - OK
+[ 2395.137958] + vmalloc : size=   8388608 - OK
+[ 2395.139073] + vmalloc : size=  16777216 - OK
+[ 2395.141380] + vmalloc : size=  33554432 - OK
+[ 2395.144963] + vmalloc : size=  67108864 - OK
+[ 2395.151498] + vmalloc : size= 134217728 - OK
+[ 2395.165685] + vmalloc : size= 268435456 - OK
+[ 2395.190794] + vmalloc : size= 536870912 - OK
+[ 2395.243104] + vmalloc : size=1073741824 - OK
+[ 2395.596203] + vmalloc : size=2147483648 - OK
+[ 2396.684643] + vmalloc : size=4294967296 - OK
+[ 2396.828583] vmalloc: allocation failure: 8589934592 bytes
+[ 2396.828586] insmod: page allocation failure: order:0, mode:0xd2
+[ 2396.828589] CPU: 3 PID: 4878 Comm: insmod Tainted: G        W  OE  3.18.5-101.fc20.x86_64 #1
+[ 2396.828590] Hardware name: Hewlett-Packard HP ProBook 6470b/179C, BIOS 68ICE Ver. F.46 01/17/2014
+[ 2396.828591]  0000000000000000 00000000608d33e6 ffff88005dedbb18 ffffffff817455be
+[ 2396.828593]  0000000000000000 00000000000000d2 ffff88005dedbba8 ffffffff8119593f
+[ 2396.828595]  ffffffff81a4f5e8 ffff88005dedbb38 ffff880000000018 ffff88005dedbbb8
+[ 2396.828597] Call Trace:
+[ 2396.828602]  [<ffffffff817455be>] dump_stack+0x46/0x58
+[ 2396.828606]  [<ffffffff8119593f>] warn_alloc_failed+0xff/0x170
+[ 2396.828608]  [<ffffffff811cf52e>] __vmalloc_node_range+0x1ce/0x280
+[ 2396.828611]  [<ffffffff811cf84b>] vmalloc+0x4b/0x50
+[ 2396.828614]  [<ffffffffa0783025>] ? alloc+0x25/0x30 [memmax]
+[ 2396.828616]  [<ffffffffa0783025>] alloc+0x25/0x30 [memmax]
+[ 2396.828618]  [<ffffffffa02ac0a1>] init+0xa1/0x1000 [memmax]
+[ 2396.828632]  [<ffffffffa02ac000>] ? 0xffffffffa02ac000
+[ 2396.828636]  [<ffffffff8138c657>] ? kasprintf+0x47/0x70
+[ 2396.828638]  [<ffffffffa02ac000>] ? 0xffffffffa02ac000
+[ 2396.828641]  [<ffffffff81002144>] do_one_initcall+0xd4/0x210
+[ 2396.828642]  [<ffffffff811cf072>] ? __vunmap+0xc2/0x110
+[ 2396.828646]  [<ffffffff811151cb>] load_module+0x1cab/0x2730
+[ 2396.828648]  [<ffffffff81110e20>] ? store_uevent+0x70/0x70
+[ 2396.828651]  [<ffffffff8120ee30>] ? kernel_read+0x50/0x80
+[ 2396.828653]  [<ffffffff81115e06>] SyS_finit_module+0xa6/0xd0
+[ 2396.828656]  [<ffffffff8174c9e9>] system_call_fastpath+0x12/0x17
+[ 2396.828657] Mem-Info:
+[ 2396.828658] Node 0 DMA per-cpu:
+[ 2396.828660] CPU    0: hi:    0, btch:   1 usd:   0
+[ 2396.828661] CPU    1: hi:    0, btch:   1 usd:   0
+[ 2396.828662] CPU    2: hi:    0, btch:   1 usd:   0
+[ 2396.828663] CPU    3: hi:    0, btch:   1 usd:   0
+[ 2396.828663] Node 0 DMA32 per-cpu:
+[ 2396.828665] CPU    0: hi:  186, btch:  31 usd:  23
+[ 2396.828666] CPU    1: hi:  186, btch:  31 usd: 173
+[ 2396.828667] CPU    2: hi:  186, btch:  31 usd:  22
+[ 2396.828667] CPU    3: hi:  186, btch:  31 usd: 174
+[ 2396.828668] Node 0 Normal per-cpu:
+[ 2396.828669] CPU    0: hi:  186, btch:  31 usd:  16
+[ 2396.828670] CPU    1: hi:  186, btch:  31 usd:  55
+[ 2396.828671] CPU    2: hi:  186, btch:  31 usd:  57
+[ 2396.828671] CPU    3: hi:  186, btch:  31 usd: 169
+[ 2396.828674] active_anon:748865 inactive_anon:101198 isolated_anon:0
+ active_file:3609 inactive_file:4010 isolated_file:0
+ unevictable:23 dirty:14 writeback:18 unstable:0
+ free:1076558 slab_reclaimable:9312 slab_unreclaimable:14747
+ mapped:71257 shmem:107446 pagetables:21535 bounce:0
+ free_cma:0
+[ 2396.828676] Node 0 DMA free:15884kB min:132kB low:164kB high:196kB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB isolated(anon):0kB isolated(file):0kB present:15984kB managed:15900kB mlocked:0kB dirty:0kB writeback:0kB mapped:0kB shmem:0kB slab_reclaimable:0kB slab_unreclaimable:16kB kernel_stack:0kB pagetables:0kB unstable:0kB bounce:0kB free_cma:0kB writeback_tmp:0kB pages_scanned:0 all_unreclaimable? yes
+[ 2396.828680] lowmem_reserve[]: 0 2857 7846 7846
+[ 2396.828682] Node 0 DMA32 free:1631348kB min:24564kB low:30704kB high:36844kB active_anon:1037308kB inactive_anon:159656kB active_file:4724kB inactive_file:4932kB unevictable:48kB isolated(anon):0kB isolated(file):0kB present:3008452kB managed:2929408kB mlocked:48kB dirty:0kB writeback:8kB mapped:113764kB shmem:166544kB slab_reclaimable:12556kB slab_unreclaimable:18584kB kernel_stack:5440kB pagetables:33160kB unstable:0kB bounce:0kB free_cma:0kB writeback_tmp:0kB pages_scanned:0 all_unreclaimable? no
+[ 2396.828685] lowmem_reserve[]: 0 0 4988 4988
+[ 2396.828687] Node 0 Normal free:2659000kB min:42880kB low:53600kB high:64320kB active_anon:1958152kB inactive_anon:245136kB active_file:9712kB inactive_file:11108kB unevictable:44kB isolated(anon):0kB isolated(file):0kB present:5240832kB managed:5107952kB mlocked:44kB dirty:56kB writeback:64kB mapped:171264kB shmem:263240kB slab_reclaimable:24692kB slab_unreclaimable:40388kB kernel_stack:10144kB pagetables:52980kB unstable:0kB bounce:0kB free_cma:0kB writeback_tmp:0kB pages_scanned:0 all_unreclaimable? no
+[ 2396.828690] lowmem_reserve[]: 0 0 0 0
+[ 2396.828691] Node 0 DMA: 1*4kB (U) 1*8kB (U) 2*16kB (U) 1*32kB (U) 1*64kB (U) 1*128kB (U) 1*256kB (U) 0*512kB 1*1024kB (U) 1*2048kB (R) 3*4096kB (EM) = 15884kB
+[ 2396.828699] Node 0 DMA32: 22207*4kB (UEM) 10524*8kB (UEM) 5771*16kB (UEM) 3774*32kB (UEM) 2228*64kB (UEM) 877*128kB (UEM) 373*256kB (UEM) 198*512kB (UEM) 85*1024kB (UEM) 31*2048kB (UEMR) 157*4096kB (UER) = 1631436kB
+[ 2396.828706] Node 0 Normal: 35828*4kB (UEM) 18745*8kB (UEM) 11248*16kB (UEM) 6663*32kB (UEM) 3711*64kB (UEM) 1504*128kB (UEM) 642*256kB (UEM) 316*512kB (UEM) 134*1024kB (UEM) 51*2048kB (UEM) 238*4096kB (UEMR) = 2659128kB
+[ 2396.828714] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[ 2396.828715] 115104 total pagecache pages
+[ 2396.828716] 0 pages in swap cache
+[ 2396.828717] Swap cache stats: add 0, delete 0, find 0/0
+[ 2396.828717] Free swap  = 0kB
+[ 2396.828718] Total swap = 0kB
+[ 2396.828719] 2066317 pages RAM
+[ 2396.828719] 0 pages HighMem/MovableOnly
+[ 2396.828720] 53002 pages reserved
+[ 2396.828721] 0 pages hwpoisoned
+[ 2396.828722] + vmalloc : size=8589934592 - failed
+
+==========================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ free
+             total       used       free     shared    buffers     cached
+Mem:       2056752     783044    1273708     102236      55340     547052
+-/+ buffers/cache:     180652    1876100
+Swap:      2028540          0    2028540
+
+bash-4.2$ sudo insmod memmax.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n55
+[   46.566919] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[  295.053393] fuse init (API version 7.22)
+[ 6255.460808] memmax: module verification failed: signature and/or  required key missing - tainting kernel
+[ 6255.461565] + mode=0 : kmalloc
+[ 6255.461570] + kmalloc : size=      4096 - OK
+[ 6255.461573] + kmalloc : size=      8192 - OK
+[ 6255.461578] + kmalloc : size=     16384 - OK
+[ 6255.463101] + kmalloc : size=     32768 - OK
+[ 6255.463109] + kmalloc : size=     65536 - OK
+[ 6255.463114] + kmalloc : size=    131072 - OK
+[ 6255.463120] + kmalloc : size=    262144 - OK
+[ 6255.463129] + kmalloc : size=    524288 - OK
+[ 6255.463142] + kmalloc : size=   1048576 - OK
+[ 6255.463165] + kmalloc : size=   2097152 - OK
+[ 6255.463206] + kmalloc : size=   4194304 - OK
+[ 6255.463233] ------------[ cut here ]------------
+[ 6255.463243] WARNING: CPU: 0 PID: 4279 at mm/page_alloc.c:2496 __alloc_pages_nodemask+0x395/0x930()
+[ 6255.463245] Modules linked in: memmax(OF+) fuse ip6table_filter ip6_tables ebtable_nat ebtables bnep coretemp snd_hda_codec_si3054 snd_hda_codec_analog uvcvideo kvm_intel snd_hda_codec_generic videobuf2_vmalloc kvm videobuf2_memops snd_usb_audio iTCO_wdt iTCO_vendor_support videobuf2_core hp_wmi sparse_keymap arc4 btusb snd_hda_intel iwl3945 bluetooth 6lowpan_iphc ppdev videodev snd_hda_codec snd_usbmidi_lib iwlegacy microcode serio_raw media snd_hwdep snd_rawmidi joydev sdhci_pci snd_seq tg3 sdhci ptp mac80211 cfg80211 snd_seq_device mmc_core rfkill pps_core tifm_7xx1 lpc_ich tifm_core snd_pcm snd_timer snd tpm_tis hp_accel tpm_infineon soundcore parport_pc tpm parport lis3lv02d input_polldev wmi acpi_cpufreq nfsd auth_rpcgss nfs_acl lockd sunrpc binfmt_misc firewire_ohci i915 ata_generic firewire_core
+[ 6255.463323]  i2c_algo_bit pata_acpi drm_kms_helper yenta_socket crc_itu_t drm i2c_core video
+[ 6255.463335] CPU: 0 PID: 4279 Comm: insmod Tainted: GF          O 3.14.8-200.fc20.i686 #1
+[ 6255.463338] Hardware name: Hewlett-Packard HP Compaq nc6320 (ES527EA#ACB)/30AA, BIOS 68YDU Ver. F.0E 02/21/2008
+[ 6255.463341]  c0c69907 c19351f5 00000000 e5167bdc c09eaca5 00000000 e5167c0c c044c9be
+[ 6255.463349]  c0b8ff28 00000000 000010b7 c0ba4999 000009c0 c0521695 c0521695 001240d0
+[ 6255.463357]  c0cd681c 001040d0 e5167c1c c044cac2 00000009 00000000 e5167ccc c0521695
+[ 6255.463366] Call Trace:
+[ 6255.463375]  [<c09eaca5>] dump_stack+0x41/0x52
+[ 6255.463381]  [<c044c9be>] warn_slowpath_common+0x7e/0xa0
+[ 6255.463386]  [<c0521695>] ? __alloc_pages_nodemask+0x395/0x930
+[ 6255.463391]  [<c0521695>] ? __alloc_pages_nodemask+0x395/0x930
+[ 6255.463395]  [<c044cac2>] warn_slowpath_null+0x22/0x30
+[ 6255.463399]  [<c0521695>] __alloc_pages_nodemask+0x395/0x930
+[ 6255.463405]  [<c049b1b1>] ? print_time.part.5+0x71/0xb0
+[ 6255.463411]  [<c076f3da>] ? vt_console_print+0x5a/0x3a0
+[ 6255.463415]  [<c049b252>] ? print_prefix+0x62/0xb0
+[ 6255.463420]  [<c0521c50>] __get_free_pages+0x20/0x40
+[ 6255.463426]  [<c0537284>] kmalloc_order_trace+0x24/0x90
+[ 6255.463432]  [<c055c6f0>] __kmalloc+0x1d0/0x1f0
+[ 6255.463439]  [<f8c41017>] alloc+0x17/0x30 [memmax]
+[ 6255.463444]  [<f8c46098>] init+0x98/0x1000 [memmax]
+[ 6255.463450]  [<c043f0f0>] ? __unmap_pmd_range.part.18+0x30/0x30
+[ 6255.463456]  [<c04b6e64>] ? smp_call_function_many+0x1d4/0x210
+[ 6255.463461]  [<c043f0f0>] ? __unmap_pmd_range.part.18+0x30/0x30
+[ 6255.463465]  [<c043f115>] ? __cpa_flush_range+0x25/0x30
+[ 6255.463473]  [<f8c46000>] ? 0xf8c45fff
+[ 6255.463478]  [<f8c46000>] ? 0xf8c45fff
+[ 6255.463483]  [<c04004a2>] do_one_initcall+0xd2/0x190
+[ 6255.463488]  [<f8c46000>] ? 0xf8c45fff
+[ 6255.463493]  [<c04409c7>] ? set_memory_ro+0x37/0x40
+[ 6255.463498]  [<c04bc598>] load_module+0x1a38/0x2370
+[ 6255.463509]  [<c04b8e39>] ? copy_module_from_fd.isra.46+0x109/0x1a0
+[ 6255.463516]  [<c04bd06d>] SyS_finit_module+0x8d/0xd0
+[ 6255.463520]  [<c0532f03>] ? vm_mmap_pgoff+0x93/0xb0
+[ 6255.463532]  [<c09f910d>] sysenter_do_call+0x12/0x28
+[ 6255.463536] ---[ end trace fab453e8a8a320c3 ]---
+[ 6255.463539] + kmalloc : size=   8388608 - failed
+
+==========================================================================
+
+[Olej@modules ~]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules ~]$ free
+             total       used       free     shared    buffers     cached
+Mem:       8053260    4285484    3767776     413376      53948     998276
+-/+ buffers/cache:    3233260    4820000
+Swap:            0          0          0
+
+[Olej@modules ~]$ cat /proc/cpuinfo | grep 'model name'
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+
+
+[Olej@modules memmax]$ time sudo insmod memmax.ko mode=1
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+real	0m1.011s
+user	0m0.010s
+sys	0m0.946s
+
+[Olej@modules ~]$ dmesg | tail -n 23
+[ 4698.640676] + mode=1 : vmalloc
+[ 4698.640688] + vmalloc : size=        4096 - OK
+[ 4698.640693] + vmalloc : size=        8192 - OK
+[ 4698.640699] + vmalloc : size=       16384 - OK
+[ 4698.640706] + vmalloc : size=       32768 - OK
+[ 4698.640714] + vmalloc : size=       65536 - OK
+[ 4698.640752] + vmalloc : size=      131072 - OK
+[ 4698.640781] + vmalloc : size=      262144 - OK
+[ 4698.640834] + vmalloc : size=      524288 - OK
+[ 4698.640958] + vmalloc : size=     1048576 - OK
+[ 4698.641249] + vmalloc : size=     2097152 - OK
+[ 4698.641716] + vmalloc : size=     4194304 - OK
+[ 4698.642838] + vmalloc : size=     8388608 - OK
+[ 4698.644953] + vmalloc : size=    16777216 - OK
+[ 4698.649708] + vmalloc : size=    33554432 - OK
+[ 4698.660320] + vmalloc : size=    67108864 - OK
+[ 4698.673619] + vmalloc : size=   134217728 - OK
+[ 4698.697139] + vmalloc : size=   268435456 - OK
+[ 4698.736762] + vmalloc : size=   536870912 - OK
+[ 4698.804350] + vmalloc : size=  1073741824 - OK
+[ 4698.941130] + vmalloc : size=  2147483648 - OK
+[ 4699.439544] + vmalloc : size=  4294967296 - OK
+[ 4699.577170] + vmalloc : size=  8589934592 - failed
+
+==========================================================================
+
+[Olej@modules memmax]$ gcc iter.c -Wall -oiter
+
+[Olej@modules memmax]$ ./iter 
+цель (число): 33
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 
+32 - 64 | 32 - 48 | 32 - 40 | 32 - 36 | 32 - 34 | 32 - 33 | 
+число = 33
+цель (число): 77
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 
+64 - 128 | 64 - 96 | 64 - 80 | 64 - 72 | 74 - 74 | 
+число = 74
+цель (число): 
+
+==========================================================================
+
+17.02.2015
+==========
+
+[Olej@modules memmax]$ make iter
+gcc -Wall iter.c -o iter
+
+[Olej@modules memmax]$ ./iter 
+цель (число): 77
+введена строка	77
+задана цель	77
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 
+64 - 128 | 64 - 96 | 64 - 80 | 72 - 80 | 76 - 80 | 76 - 78 | 76 - 77 | 
+задана цель	77
+найдено число	77
+цель (число): 123456
+введена строка	123456
+задана цель	123456
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 | 32768 | 65536 | 131072 | 
+65536 - 131072 | 98304 - 131072 | 114688 - 131072 | 122880 - 131072 | 122880 - 126976 | 122880 - 124928 | 122880 - 123904 | 123392 - 123904 | 123392 - 123648 | 123392 - 123520 | 123392 - 123456 | 
+задана цель	123456
+найдено число	123456
+цель (число): 1111111111111111111
+введена строка	1111111111111111111
+задана цель	1111111111111111111
+1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 | 32768 | 65536 | 131072 | 262144 | 524288 | 1048576 | 2097152 | 4194304 | 8388608 | 16777216 | 33554432 | 67108864 | 134217728 | 268435456 | 536870912 | 1073741824 | 2147483648 | 4294967296 | 8589934592 | 17179869184 | 34359738368 | 68719476736 | 137438953472 | 274877906944 | 549755813888 | 1099511627776 | 2199023255552 | 4398046511104 | 8796093022208 | 17592186044416 | 35184372088832 | 70368744177664 | 140737488355328 | 281474976710656 | 562949953421312 | 1125899906842624 | 2251799813685248 | 4503599627370496 | 9007199254740992 | 18014398509481984 | 36028797018963968 | 72057594037927936 | 144115188075855872 | 288230376151711744 | 576460752303423488 | 1152921504606846976 | 
+576460752303423488 - 1152921504606846976 | 864691128455135232 - 1152921504606846976 | 1008806316530991104 - 1152921504606846976 | 1080863910568919040 - 1152921504606846976 | 1080863910568919040 - 1116892707587883008 | 1098878309078401024 - 1116892707587883008 | 1107885508333142016 - 1116892707587883008 | 1107885508333142016 - 1112389107960512512 | 1110137308146827264 - 1112389107960512512 | 1110137308146827264 - 1111263208053669888 | 1110700258100248576 - 1111263208053669888 | 1110981733076959232 - 1111263208053669888 | 1110981733076959232 - 1111122470565314560 | 1111052101821136896 - 1111122470565314560 | 1111087286193225728 - 1111122470565314560 | 1111104878379270144 - 1111122470565314560 | 1111104878379270144 - 1111113674472292352 | 1111109276425781248 - 1111113674472292352 | 1111109276425781248 - 1111111475449036800 | 1111110375937409024 - 1111111475449036800 | 1111110925693222912 - 1111111475449036800 | 1111110925693222912 - 1111111200571129856 | 1111111063132176384 - 1111111200571129856 | 1111111063132176384 - 1111111131851653120 | 1111111097491914752 - 1111111131851653120 | 1111111097491914752 - 1111111114671783936 | 1111111106081849344 - 1111111114671783936 | 1111111110376816640 - 1111111114671783936 | 1111111110376816640 - 1111111112524300288 | 1111111110376816640 - 1111111111450558464 | 1111111110913687552 - 1111111111450558464 | 1111111110913687552 - 1111111111182123008 | 1111111111047905280 - 1111111111182123008 | 1111111111047905280 - 1111111111115014144 | 1111111111081459712 - 1111111111115014144 | 1111111111098236928 - 1111111111115014144 | 1111111111106625536 - 1111111111115014144 | 1111111111110819840 - 1111111111115014144 | 1111111111110819840 - 1111111111112916992 | 1111111111110819840 - 1111111111111868416 | 1111111111110819840 - 1111111111111344128 | 1111111111111081984 - 1111111111111344128 | 1111111111111081984 - 1111111111111213056 | 1111111111111081984 - 1111111111111147520 | 1111111111111081984 - 1111111111111114752 | 1111111111111098368 - 1111111111111114752 | 1111111111111106560 - 1111111111111114752 | 1111111111111110656 - 1111111111111114752 | 1111111111111110656 - 1111111111111112704 | 1111111111111110656 - 1111111111111111680 | 1111111111111110656 - 1111111111111111168 | 1111111111111110912 - 1111111111111111168 | 1111111111111111040 - 1111111111111111168 | 1111111111111111104 - 1111111111111111168 | 1111111111111111104 - 1111111111111111136 | 1111111111111111104 - 1111111111111111120 | 1111111111111111104 - 1111111111111111112 | 1111111111111111108 - 1111111111111111112 | 1111111111111111110 - 1111111111111111112 | 1111111111111111110 - 1111111111111111111 | 
+задана цель	1111111111111111111
+найдено число	1111111111111111111
+цель (число): 111111111111111111111111111111111
+превышение размерности!
+цель (число): ^C
+
+==========================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ free
+             total       used       free     shared    buffers     cached
+Mem:       2056752     633932    1422820      75028      44868     468600
+-/+ buffers/cache:     120464    1936288
+Swap:      2028540          0    2028540
+
+bash-4.2$ sudo insmod memmax.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n3
+[ 4548.011298] memmax: module verification failed: signature and/or  required key missing - tainting kernel
+[ 4548.011990] + mode=0 : kmalloc
+[ 4548.012369] + maximal allocation 4194312 bytes
+
+--------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod memmax.ko debug=1
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n25
+[ 5804.892099] + mode=0 : kmalloc
+[ 5804.892215] + kmalloc :	8388608 -> failed
+[ 5804.892218] + kmalloc :	4194304...8388608 -> failed
+[ 5804.892221] + kmalloc :	4194304...6291456 -> failed
+[ 5804.892224] + kmalloc :	4194304...5242880 -> failed
+[ 5804.892227] + kmalloc :	4194304...4718592 -> failed
+[ 5804.892230] + kmalloc :	4194304...4456448 -> failed
+[ 5804.892233] + kmalloc :	4194304...4325376 -> failed
+[ 5804.892236] + kmalloc :	4194304...4259840 -> failed
+[ 5804.892239] + kmalloc :	4194304...4227072 -> failed
+[ 5804.892242] + kmalloc :	4194304...4210688 -> failed
+[ 5804.892245] + kmalloc :	4194304...4202496 -> failed
+[ 5804.892248] + kmalloc :	4194304...4198400 -> failed
+[ 5804.892251] + kmalloc :	4194304...4196352 -> failed
+[ 5804.892254] + kmalloc :	4194304...4195328 -> failed
+[ 5804.892257] + kmalloc :	4194304...4194816 -> failed
+[ 5804.892260] + kmalloc :	4194304...4194560 -> failed
+[ 5804.892263] + kmalloc :	4194304...4194432 -> failed
+[ 5804.892266] + kmalloc :	4194304...4194368 -> failed
+[ 5804.892269] + kmalloc :	4194304...4194336 -> failed
+[ 5804.892272] + kmalloc :	4194304...4194320 -> failed
+[ 5804.892275] + kmalloc :	4194304...4194312 -> failed
+[ 5804.892278] + kmalloc :	4194304...4194308 -> failed
+[ 5804.892281] + kmalloc :	4194304...4194306 -> failed
+[ 5804.892283] + maximal allocation 4194304 bytes
+
+==========================================================================
+
+[olej@nvidia memmax]$ cat /proc/cpuinfo | grep 'model name'
+model name	: Pentium(R) Dual-Core  CPU      E6600  @ 3.06GHz
+model name	: Pentium(R) Dual-Core  CPU      E6600  @ 3.06GHz
+
+[olej@nvidia memmax]$ free
+             total       used       free     shared    buffers     cached
+Mem:       4127792    1199832    2927960          0     437016     474072
+-/+ buffers/cache:     288744    3839048
+Swap:      4606972          0    4606972
+
+[olej@nvidia memmax]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia memmax]$ sudo insmod memmax.ko 
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@nvidia memmax]$ dmesg | tail -n3
+[   48.548597] ppdev: user-space parallel port driver
+[12320.123404] + mode=0 : kmalloc
+[12320.123464] + maximal allocation 4194304 (400000) bytes
+
+--------------------------------------------------------------------------
+
+[olej@nvidia memmax]$ sudo insmod memmax.ko mode=1
+insmod: error inserting 'memmax.ko': -1 Operation not permitted
+
+[olej@nvidia memmax]$ dmesg | tail -n13
+[12320.123464] + maximal allocation 4194304 (400000) bytes
+[12372.003955] + mode=1 : vmalloc
+[12372.008477] vmap allocation for size 67112960 failed: use vmalloc=<size> to increase size.
+[12372.008481] vmap allocation for size 50335744 failed: use vmalloc=<size> to increase size.
+[12372.011303] vmap allocation for size 46141440 failed: use vmalloc=<size> to increase size.
+[12372.011306] vmap allocation for size 44044288 failed: use vmalloc=<size> to increase size.
+[12372.034567] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034570] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034572] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034574] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034576] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034578] vmap allocation for size 44040192 failed: use vmalloc=<size> to increase size.
+[12372.034585] + maximal allocation 44032000 (29FE000) bytes
+
+==========================================================================
+
+[olej@fedora memmax]$ cat /proc/cpuinfo | grep 'model name'
+model name	: Pentium(R) Dual-Core  CPU      E6600  @ 3.06GHz
+model name	: Pentium(R) Dual-Core  CPU      E6600  @ 3.06GHz
+
+[olej@fedora memmax]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     399044     369040          0      24336     173528
+-/+ buffers/cache:     201180     566904
+Swap:      1540092          0    1540092
+
+[olej@fedora memmax]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora memmax]$ make
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/memmax modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/memmax/memmax.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/memmax/memmax.mod.o
+  LD [M]  /home/olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/memmax/memmax.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+[olej@fedora memmax]$ sudo insmod memmax.ko
+Error: could not insert module memmax.ko: Operation not permitted
+
+[olej@fedora memmax]$ dmesg | tail -n3
+[   18.183263] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[  517.166080] TCP: lp registered
+[  779.043417] + maximal allocation 4194304 (400000) bytes
+
+[olej@fedora memmax]$ sudo insmod memmax.ko mode=1
+Error: could not insert module memmax.ko: Operation not permitted
+
+[olej@fedora memmax]$ dmesg | tail -n3
+[  811.032048] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  811.032053] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  811.032061] + maximal allocation 240967680 (E5CE000) bytes
+
+--------------------------------------------------------------------------
+
+http://avreg.net/manual_tuning_avreg-mon.html
+
+GRUB 2: /etc/default/grub
+...
+GRUB_CMDLINE_LINUX="vmalloc=256M"
+...
+
+для старых дистрибутивов с GRUB legacy 0.9x: /boot/grub/menu.lst
+...
+## Не удаляйте символ ‘**#**’ в начале строки.
+# defoptions=vmalloc=256M
+...
+
+Далее выполните команду
+update-grub
+
+--------------------------------------------------------------------------
+
+[olej@fedora memmax]$ cat /etc/default/grub
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="RFRemix"
+GRUB_DEFAULT=saved
+GRUB_CMDLINE_LINUX="LANG=ru_RU.UTF-8 rd.md=0 rd.lvm=0 rd.dm=0 SYSFONT=False rd.luks=0  KEYTABLE=ru rhgb quiet"
+#GRUB_THEME="/boot/grub2/themes/system/theme.txt"
+GRUB_CMDLINE_LINUX="vmalloc=512M"
+
+[olej@fedora memmax]$ sudo reboot
+
+Broadcast message from olej@fedora.17 on pts/5 (Wed, 18 Feb 2015 00:23:00 +0200):
+
+The system is going down for reboot NOW!
+
+[olej@fedora memmax]$ Connection to 192.168.1.23 closed by remote host.
+Connection to 192.168.1.23 closed.
+
+--------------------------------------------------------------------------
+
+[olej@fedora memmax]$ sudo insmod memmax.ko mode=1
+Error: could not insert module memmax.ko: Operation not permitted
+[olej@fedora memmax]$ dmesg | tail -n13
+[   10.759406] RPC: Registered tcp transport module.
+[   10.759407] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[  295.984065] vmap allocation for size 268439552 failed: use vmalloc=<size> to increase size.
+[  296.020070] vmap allocation for size 251662336 failed: use vmalloc=<size> to increase size.
+[  296.020076] vmap allocation for size 243273728 failed: use vmalloc=<size> to increase size.
+[  296.040303] vmap allocation for size 241176576 failed: use vmalloc=<size> to increase size.
+[  296.099043] vmap allocation for size 241045504 failed: use vmalloc=<size> to increase size.
+[  296.099047] vmap allocation for size 240979968 failed: use vmalloc=<size> to increase size.
+[  296.157519] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  296.157529] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  296.157531] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  296.157532] vmap allocation for size 240975872 failed: use vmalloc=<size> to increase size.
+[  296.157538] + maximal allocation 240967680 (E5CE000) bytes
+
+==========================================================================
+
+bash-4.2$ free
+             total       used       free     shared    buffers     cached
+Mem:       2056752     644676    1412076      75028      46488     472528
+-/+ buffers/cache:     125660    1931092
+Swap:      2028540          0    2028540
+
+bash-4.2$ sudo insmod memmax.ko mode=0
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n5
+[ 6011.484300] + kmalloc :	4194304...4194308 -> failed
+[ 6011.484303] + kmalloc :	4194304...4194306 -> failed
+[ 6011.484305] + maximal allocation 4194304 (400000) bytes
+[15290.876031] perf samples too long (2507 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[20215.509625] + maximal allocation 4194304 (400000) bytes
+
+bash-4.2$ sudo insmod memmax.ko mode=1
+insmod: ERROR: could not insert module memmax.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n5
+[20238.405632] vmap allocation for size 91148288 failed: use vmalloc=<size> to increase size.
+[20238.436092] vmap allocation for size 91148288 failed: use vmalloc=<size> to increase size.
+[20238.436099] vmap allocation for size 91148288 failed: use vmalloc=<size> to increase size.
+[20238.436103] vmap allocation for size 91148288 failed: use vmalloc=<size> to increase size.
+[20238.436119] + maximal allocation 91140096 (56EB000) bytes
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+==========================================================================

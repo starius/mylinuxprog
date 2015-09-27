@@ -1,0 +1,279 @@
+07.02.2015
+==========
+
+bash-4.2$ uname -r
+3.14.8-200.fc20.i686
+
+bash-4.2$ cat /proc/cpuinfo | grep 'model name' | wc -l
+2
+
+bash-4.2$ cat /proc/cpuinfo | grep 'model name' | head -n1
+model name	: Genuine Intel(R) CPU           T2300  @ 1.66GHz
+
+bash-4.2$ lspci
+00:00.0 Host bridge: Intel Corporation Mobile 945GM/PM/GMS, 943/940GML and 945GT Express Memory Controller Hub (rev 03)
+00:02.0 VGA compatible controller: Intel Corporation Mobile 945GM/GMS, 943/940GML Express Integrated Graphics Controller (rev 03)
+00:02.1 Display controller: Intel Corporation Mobile 945GM/GMS/GME, 943/940GML Express Integrated Graphics Controller (rev 03)
+00:1b.0 Audio device: Intel Corporation NM10/ICH7 Family High Definition Audio Controller (rev 01)
+00:1c.0 PCI bridge: Intel Corporation NM10/ICH7 Family PCI Express Port 1 (rev 01)
+00:1c.2 PCI bridge: Intel Corporation NM10/ICH7 Family PCI Express Port 3 (rev 01)
+00:1c.3 PCI bridge: Intel Corporation NM10/ICH7 Family PCI Express Port 4 (rev 01)
+00:1d.0 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI Controller #1 (rev 01)
+00:1d.1 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI Controller #2 (rev 01)
+00:1d.2 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI Controller #3 (rev 01)
+00:1d.3 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI Controller #4 (rev 01)
+00:1d.7 USB controller: Intel Corporation NM10/ICH7 Family USB2 EHCI Controller (rev 01)
+00:1e.0 PCI bridge: Intel Corporation 82801 Mobile PCI Bridge (rev e1)
+00:1f.0 ISA bridge: Intel Corporation 82801GBM (ICH7-M) LPC Interface Bridge (rev 01)
+00:1f.1 IDE interface: Intel Corporation 82801G (ICH7 Family) IDE Controller (rev 01)
+00:1f.2 SATA controller: Intel Corporation 82801GBM/GHM (ICH7-M Family) SATA Controller [AHCI mode] (rev 01)
+02:06.0 CardBus bridge: Texas Instruments PCIxx12 Cardbus Controller
+02:06.1 FireWire (IEEE 1394): Texas Instruments PCIxx12 OHCI Compliant IEEE 1394 Host Controller
+02:06.2 Mass storage controller: Texas Instruments 5-in-1 Multimedia Card Reader (SD/MMC/MS/MS PRO/xD)
+02:06.3 SD Host controller: Texas Instruments PCIxx12 SDA Standard Compliant SD Host Controller
+02:06.4 Communication controller: Texas Instruments PCIxx12 GemCore based SmartCard controller
+02:0e.0 Ethernet controller: Broadcom Corporation NetXtreme BCM5788 Gigabit Ethernet (rev 03)
+08:00.0 Network controller: Intel Corporation PRO/Wireless 3945ABG [Golan] Network Connection (rev 02)
+
+bash-4.2$ cat /proc/interrupts
+           CPU0       CPU1       
+  0:     193643          0   IO-APIC-edge      timer
+  1:         10          0   IO-APIC-edge      i8042
+  7:          1          0   IO-APIC-edge      parport0
+  8:          1          0   IO-APIC-edge      rtc0
+  9:        127          0   IO-APIC-fasteoi   acpi
+ 12:        182          0   IO-APIC-edge      i8042
+ 14:       3686          0   IO-APIC-edge      ata_piix
+ 15:          0          0   IO-APIC-edge      ata_piix
+ 16:      39650       2626   IO-APIC-fasteoi   i915, enp2s14
+ 18:         37          0   IO-APIC-fasteoi   uhci_hcd:usb4, yenta
+ 19:          2          0   IO-APIC-fasteoi   uhci_hcd:usb5, firewire_ohci, tifm_7xx1
+ 20:        278          0   IO-APIC-fasteoi   ehci_hcd:usb1, uhci_hcd:usb2
+ 21:         40          0   IO-APIC-fasteoi   uhci_hcd:usb3
+ 22:          0          0   IO-APIC-fasteoi   mmc0
+ 43:       2872      48808   PCI-MSI-edge      ahci
+ 44:        288          0   PCI-MSI-edge      snd_hda_intel
+ 45:         22          0   PCI-MSI-edge      iwl3945
+NMI:         31         96   Non-maskable interrupts
+LOC:      22966     183591   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:         31         96   Performance monitoring interrupts
+IWI:       4918      14504   IRQ work interrupts
+RTR:          0          0   APIC ICR read retries
+RES:      76292      55024   Rescheduling interrupts
+CAL:        205        338   Function call interrupts
+TLB:       6385        381   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+THR:          0          0   Threshold APIC interrupts
+MCE:          0          0   Machine check exceptions
+MCP:         13         13   Machine check polls
+ERR:          0
+MIS:          0
+
+bash-4.2$ cat /proc/stat 
+cpu  2394 625 2475 689160 30133 7 94 0 0 0
+cpu0 1019 102 924 352215 8208 7 9 0 0 0
+cpu1 1374 522 1550 336944 21924 0 85 0 0 0
+intr 652762 192147 10 0 0 0 0 0 1 1 127 0 0 182 0 3644 0 41792 0 37 2 278 40 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 51653 288 22 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ctxt 814866
+btime 1423301949
+processes 4669
+procs_running 1
+procs_blocked 0
+softirq 469890 49 224471 747 5999 53526 0 332 71328 1291 112147
+
+=========================================================================================================
+
+-bash-4.2$ cat /proc/interrupts | grep i915
+ 16:      75572     122105   IO-APIC-fasteoi   i915, enp2s14
+
+
+-bash-4.2$  watch 'cat /proc/interrupts | grep i915'
+Every 2,0s: cat /proc/interrupts | grep i915                              Sat Feb  7 13:43:11 2015
+
+ 16:	  75572     187050   IO-APIC-fasteoi   i915, enp2s14
+...
+
+
+bash-4.2$ sudo insmod irqs.ko irq=16
+[sudo] password for Olej: 
+
+bash-4.2$ sudo rmmod irqs.ko
+
+bash-4.2$ dmesg | tail -n24
+[ 8279.683921] === module installed
+[ 8280.690665] === 7980690 => 157
+[ 8281.696081] === 7981696 => 308
+[ 8282.701434] === 7982701 => 465
+[ 8283.706841] === 7983706 => 617
+[ 8284.712222] === 7984712 => 779
+[ 8285.717606] === 7985717 => 927
+[ 8286.718054] === 7986718 => 1091
+[ 8287.721147] === 7987721 => 1243
+[ 8288.726543] === 7988726 => 1401
+[ 8289.731915] === 7989731 => 1554
+[ 8290.737297] === 7990737 => 1713
+[ 8291.742701] === 7991742 => 1862
+[ 8292.748079] === 7992748 => 2011
+[ 8293.753464] === 7993753 => 2160
+[ 8294.758849] === 7994758 => 2314
+[ 8295.764237] === 7995764 => 2462
+[ 8296.769623] === 7996769 => 2613
+[ 8297.775026] === 7997775 => 2769
+[ 8298.780398] === 7998780 => 2926
+[ 8299.785786] === 7999785 => 3080
+[ 8300.791167] === 8000791 => 3234
+[ 8301.796557] === 8001796 => 3391
+[ 8302.032305] === module removed: registered 3429 events
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod irqs.ko irq=16 delay=5
+
+bash-4.2$ dmesg | tail -n4
+[ 9011.395974] === module removed: registered 2880 events
+[ 9029.636074] === module installed
+[ 9034.644118] === 8734644 => 754
+[ 9035.649525] === 8735649 => 903
+
+bash-4.2$ dmesg | tail -n6
+[ 9039.671103] === 8739671 => 1507
+[ 9040.676456] === 8740676 => 1659
+[ 9041.681842] === 8741681 => 1808
+[ 9042.687226] === 8742687 => 1960
+[ 9043.692617] === 8743692 => 2110
+[ 9044.697985] === 8744697 => 2260
+
+bash-4.2$ sudo rmmod irqs.ko 
+
+bash-4.2$ dmesg | tail -n3
+[ 9057.760786] === 8757760 => 4223
+[ 9058.766173] === 8758766 => 4371
+[ 9059.428192] === module removed: registered 4473 events
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ dmesg | tail -n1
+[ 9185.371191] === module removed: registered 8864 events
+
+bash-4.2$ sudo insmod irqs.ko irq=16 delay=5
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n3
+[ 9185.371191] === module removed: registered 8864 events
+[25756.938801] === module installed
+[25761.940308] === 25461940 => 751
+
+bash-4.2$ dmesg | tail -n5
+[ 9184.533577] === 8884533 => 8736
+[ 9185.371191] === module removed: registered 8864 events
+[25756.938801] === module installed
+[25761.940308] === 25461940 => 751
+[25766.945543] === 25466945 => 1507
+
+bash-4.2$ dmesg | tail -n7
+[ 9183.528192] === 8883528 => 8582
+[ 9184.533577] === 8884533 => 8736
+[ 9185.371191] === module removed: registered 8864 events
+[25756.938801] === module installed
+[25761.940308] === 25461940 => 751
+[25766.945543] === 25466945 => 1507
+[25771.950789] === 25471950 => 2273
+
+bash-4.2$ dmesg | tail -n10
+[ 9182.522817] === 8882522 => 8430
+[ 9183.528192] === 8883528 => 8582
+[ 9184.533577] === 8884533 => 8736
+[ 9185.371191] === module removed: registered 8864 events
+[25756.938801] === module installed
+[25761.940308] === 25461940 => 751
+[25766.945543] === 25466945 => 1507
+[25771.950789] === 25471950 => 2273
+[25776.956032] === 25476956 => 3027
+[25781.961263] === 25481961 => 3777
+
+bash-4.2$ sudo rmmod irqs.ko 
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod irqs.ko irq=0 delay=5
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module irqs.ko: Device or resource busy
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod irqs.ko irq=14 
+
+bash-4.2$ dmesg | tail -n5
+[26285.535602]  [<c09f910d>] sysenter_do_call+0x12/0x28
+[26285.535605] === can't install handler for IRQ=0
+[26353.311372] === module installed
+[26354.657354] === 26054657 => 1
+[26356.705465] === 26056705 => 3
+
+bash-4.2$ dmesg | tail -n5
+[26353.311372] === module installed
+[26354.657354] === 26054657 => 1
+[26356.705465] === 26056705 => 3
+[26358.753337] === 26058753 => 5
+[26360.801471] === 26060801 => 7
+
+bash-4.2$ dmesg | tail -n10
+[26285.535602]  [<c09f910d>] sysenter_do_call+0x12/0x28
+[26285.535605] === can't install handler for IRQ=0
+[26353.311372] === module installed
+[26354.657354] === 26054657 => 1
+[26356.705465] === 26056705 => 3
+[26358.753337] === 26058753 => 5
+[26360.801471] === 26060801 => 7
+[26362.849345] === 26062849 => 9
+[26364.897465] === 26064897 => 11
+[26366.945352] === 26066945 => 13
+
+bash-4.2$ sudo rmmod irqs.ko 
+
+bash-4.2$ cat /proc/interrupts | grep 14:
+ 14:      25964          0   IO-APIC-edge      ata_piix
+
+---------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod irqs.ko irq=43 
+
+bash-4.2$ dmesg | tail -n5
+[26366.945352] === 26066945 => 13
+[26368.993494] === 26068993 => 15
+[26371.041343] === 26071041 => 17
+[26371.647578] === module removed: registered 19 events
+[26540.938927] === module installed
+
+bash-4.2$ dmesg | tail -n5
+[26371.647578] === module removed: registered 19 events
+[26540.938927] === module installed
+[26546.016530] === 26246016 => 1
+[26547.104519] === 26247104 => 5
+[26552.016493] === 26252016 => 20
+
+bash-4.2$ dmesg | tail -n7
+[26371.041343] === 26071041 => 17
+[26371.647578] === module removed: registered 19 events
+[26540.938927] === module installed
+[26546.016530] === 26246016 => 1
+[26547.104519] === 26247104 => 5
+[26552.016493] === 26252016 => 20
+[26558.016484] === 26258016 => 24
+
+bash-4.2$ sudo rmmod irqs.ko 
+
+bash-4.2$ cat /proc/interrupts | grep 43:
+ 43:       2872      62959   PCI-MSI-edge      ahci
+
+=========================================================================================================
+
+bash-4.2$ sudo insmod irqcntp.ko irq=43 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module irqcntp.ko: Operation canceled
+
+bash-4.2$ dmesg | tail -n1
+[30094.317892] === it's work only for kernel LE 3.9
+
+=========================================================================================================

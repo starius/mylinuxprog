@@ -1,0 +1,33 @@
+30.01.2015
+==========
+
+[Olej@modules dev]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules dev]$ make
+=============== making all in ioctl =================
+...
+=============== making all in poll =================
+make[1]: Вход в каталог `/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll'
+gcc pcat.c -o pcat
+gcc pecho.c -o pecho
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll modules
+make[2]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.o
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c: В функции «read»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c:27:7: ошибка: неявная декларация функции «interruptible_sleep_on» [-Werror=implicit-function-declaration]
+       else interruptible_sleep_on( &qwait );
+       ^
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c: В функции «poll»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c:55:4: ошибка: неявная декларация функции «sleep_on_timeout» [-Werror=implicit-function-declaration]
+    sleep_on_timeout( &qwait, pause );
+    ^
+cc1: some warnings being treated as errors
+make[3]: *** [/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.o] Ошибка 1
+make[2]: *** [_module_/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll] Ошибка 2
+make[2]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+make[1]: *** [module] Ошибка 2
+make[1]: Выход из каталога `/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll'
+make: *** [all] Ошибка 2
+
+==========================================================================================================

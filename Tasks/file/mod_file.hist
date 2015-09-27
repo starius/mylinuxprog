@@ -1,0 +1,321 @@
+28.07.2012 
+==========
+
+[olej@notebook modules-done_draft]$ lsmod | grep file
+[olej@notebook modules-done_draft]$ 
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook etc]$ pwd
+/etc
+[olej@notebook etc]$ ls *.conf
+ant.conf               host.conf       mtools.conf                   readahead.conf        updatedb.conf
+asound.conf            idmapd.conf     multipath.conf                reader.conf           urlview.conf
+autofs_ldap_auth.conf  irman.conf      named.conf                    report.conf           usb_modeswitch.conf
+dhclient-wlan0.conf    jwhois.conf     nfsmount.conf                 report-sendfile.conf  ushare.conf
+dnsmasq.conf           krb5.conf       nilfs_cleanerd.conf           resolv.conf           warnquota.conf
+dracut.conf            ksmtuned.conf   nscd.conf                     rinetd.conf           wvdial.conf
+elinks.conf            ldap.conf       nsswitch.conf                 rsyslog.conf          xinetd.conf
+etter.conf             ld.so.conf      ntp.conf                      sensors3.conf         yp.conf
+fprintd.conf           lftp.conf       pam_smb.conf                  sestatus.conf         ypserv.conf
+GeoIP.conf             libaudit.conf   pbm2ppa.conf                  slim.conf             yum.conf
+gpm-root.conf          libuser.conf    pear.conf                     slp.conf              yumex.conf
+gpm-syn.conf           logrotate.conf  pm-utils-hd-apm-restore.conf  smartd.conf           yumex.profiles.conf
+gpm-twiddler.conf      ltrace.conf     pnm2ppa.conf                  sos.conf
+grub.conf              mke2fs.conf     prelink.conf                  sysctl.conf
+gssapi_mech.conf       modprobe.conf   proftpd.conf                  Trolltech.conf
+
+---------------------------------------------------------------------------------------------
+
+<fs.h>
+
+extern struct file *filp_open(const char *, int, int);
+extern struct file * dentry_open(struct dentry *, struct vfsmount *, int,
+                                 const struct cred *);
+extern int filp_close(struct file *, fl_owner_t id);
+
+---------------------------------------------------------------------------------------------
+=============================================================================================
+
+[olej@notebook file]$ sudo insmod mod_file.ko
+insmod: error inserting 'mod_file.ko': -1 Operation not permitted
+
+
+
+[olej@notebook file]$ cat /etc/yumex.profiles.conf
+[main]
+lastprofile = yum-enabled[olej@notebook file]$ 
+
+
+
+[olej@notebook file]$ dmesg | tail -n 40
+...
+**** openning file: /etc/yumex.profiles.conf
+**** read first 32 bytes:
+[main]
+lastprofile = yum-enabled
+**** close file: /etc/yumex.profiles.conf
+...
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook file]$ make 
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2011_WORK/LINUX-books/examples.DRAFT/file modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_file.o
+  CC [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_vfs.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_file.mod.o
+  LD [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_file.ko
+  CC      /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_vfs.mod.o
+  LD [M]  /home/olej/2011_WORK/LINUX-books/examples.DRAFT/file/mod_vfs.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+[olej@notebook file]$ 
+[olej@notebook file]$ sudo insmod mod_vfs.ko
+insmod: error inserting 'mod_vfs.ko': -1 Operation not permitted
+[olej@notebook file]$ dmesg | tail -n 25
+audit(:0): major=252 name_count=0: freeing multiple contexts (1)
+audit(:0): major=340 name_count=0: freeing multiple contexts (2)
+audit(:0): major=340 name_count=0: freeing multiple contexts (3)
+**** openning file: /etc/yumex.profiles.conf
+**** file size = 32 bytes
+[main]
+lastprofile = yum-enabled
+**** close file: /etc/yumex.profiles.conf
+audit(:0): major=252 name_count=0: freeing multiple contexts (1)
+audit(:0): major=340 name_count=0: freeing multiple contexts (2)
+audit(:0): major=340 name_count=0: freeing multiple contexts (3)
+audit(:0): major=340 name_count=0: freeing multiple contexts (4)
+audit(:0): major=340 name_count=0: freeing multiple contexts (5)
+audit(:0): major=340 name_count=0: freeing multiple contexts (6)
+audit(:0): major=340 name_count=0: freeing multiple contexts (7)
+audit(:0): major=340 name_count=0: freeing multiple contexts (8)
+audit(:0): major=340 name_count=0: freeing multiple contexts (9)
+audit(:0): major=340 name_count=0: freeing multiple contexts (10)
+audit(:0): major=340 name_count=0: freeing multiple contexts (11)
+audit(:0): major=340 name_count=0: freeing multiple contexts (12)
+audit(:0): major=340 name_count=0: freeing multiple contexts (13)
+audit(:0): major=340 name_count=0: freeing multiple contexts (14)
+audit(:0): major=340 name_count=0: freeing multiple contexts (15)
+audit(:0): major=340 name_count=0: freeing multiple contexts (16)
+audit: freed 16 contexts
+
+---------------------------------------------------------------------------------------------
+
+31.12.2011
+=========
+
+[olej@notebook file]$ sudo insmod mod_file.ko file=./xxx
+insmod: error inserting 'mod_file1.ko': -1 Operation not permitted
+
+[olej@notebook file]$ dmesg | tail -n100 | grep '^\*'
+*** openning file: ./xxx
+*** read first 39 bytes:
+*1 .........
+*2 .........
+*3 .........
+*** close file
+
+
+[olej@notebook file]$ sudo insmod mod_file1.ko
+insmod: error inserting 'mod_file1.ko': -1 Operation not permitted
+
+[olej@notebook file]$ dmesg | tail -n30 | grep '^\*'
+*** openning file: /etc/yumex.profiles.conf
+*** read first 32 bytes:
+*** close file
+
+
+[olej@notebook file]$ sudo insmod mod_file1.ko file=./yyy
+insmod: error inserting 'mod_file1.ko': -1 Unknown symbol in module
+
+[olej@notebook file]$ dmesg | tail -n20 | grep '^\*'
+*** openning file: ./yyy
+*** file open failed: ./yyy
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook file]$ sudo insmod mod_vfs.ko file=./xxx
+insmod: error inserting 'mod_vfs.ko': -1 Operation not permitted
+
+[olej@notebook file]$ dmesg | tail -n30 | grep '^\*'
+*** openning file: ./xxx
+*** file size = 39 bytes
+*1 .........
+*2 .........
+*3 .........
+**** close file
+
+
+
+[olej@notebook file]$ sudo insmod mod_vfs.ko file=./yyy
+insmod: error inserting 'mod_vfs.ko': -1 Unknown symbol in module
+
+[olej@notebook file]$ dmesg | tail -n20 | grep '^\*'
+*** openning file: ./yyy
+*** file open failed: ./yyy
+
+
+
+[olej@notebook file]$ sudo insmod mod_vfs.ko
+insmod: error inserting 'mod_vfs.ko': -1 Operation not permitted
+
+[olej@notebook file]$ dmesg | tail -n30 | grep '^\*'
+*** openning file: /etc/yumex.profiles.conf
+*** file size = 32 bytes
+**** close file
+
+--------------------------------------------------------------------------------------------
+
+[olej@notebook file]$ sudo insmod mdw.ko
+insmod: error inserting 'mdw.ko': -1 Operation not permitted
+
+[olej@notebook file]$ dmesg | tail -n40 | grep !
+! file open ./module.log
+! write 16 bytes
+! ...............
+! file close
+
+[olej@notebook file]$ ls -l *.log
+-rw------- 1 root root 16 Дек 31 21:23 module.log
+
+[olej@notebook file]$ sudo cat module.log 
+...............
+
+
+=============================================================================================
+
+28.07.2012 
+==========
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mod_file.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mdw.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mdw.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mdw.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mod_file.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/file/mod_file.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+
+=============================================================================================
+
+09.03.2015
+==========
+
+[Olej@modules file]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules file]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.o
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.c: В функции «kread_init»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.c:26:9: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «size_t» [-Wformat=]
+         printk( "*** read first %d bytes:\n", n );
+         ^
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.o
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.c: В функции «init»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.c:33:9: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «ssize_t» [-Wformat=]
+         printk( "! failed to write: %d\n", n );
+         ^
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.c:36:4: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «ssize_t» [-Wformat=]
+    printk( "! write %d bytes\n", n );
+    ^
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+---------------------------------------------------------------------------------------------
+
+[Olej@modules file]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+
+[Olej@modules file]$ sudo insmod mod_file.ko file=./xxx
+[sudo] пароль для Olej: 
+insmod: ERROR: could not insert module mod_file.ko: Operation not permitted
+
+[Olej@modules file]$ dmesg | tail -n10
+[   38.747758] SELinux: initialized (dev fuse, type fuse), uses genfs_contexts
+[   38.754510] SELinux: initialized (dev fusectl, type fusectl), uses genfs_contexts
+[ 1733.221454] mod_file: module verification failed: signature and/or  required key missing - tainting kernel
+[ 1733.221895] *** openning file: ./xxx
+[ 1733.221908] *** read first 39 bytes:
+[ 1733.221910] *1 .........
+*2 .........
+*3 .........
+
+
+[Olej@modules file]$ sudo insmod mod_vfs.ko file=./xxx
+insmod: ERROR: could not load module mod_vfs.ko: No such file or directory
+
+---------------------------------------------------------------------------------------------
+
+[Olej@modules file]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_vfs.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mdw.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_file.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_vfs.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/file/mod_vfs.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+
+[Olej@modules file]$ sudo insmod mod_vfs.ko file=./xxx
+insmod: ERROR: could not insert module mod_vfs.ko: Operation not permitted
+
+[Olej@modules file]$ dmesg | tail -n8
+[ 1733.221915] *** close file
+[ 1955.514933] *** openning file: ./xxx
+[ 1955.514942] *** file size = 39 bytes
+[ 1955.514945] *1 .........
+*2 .........
+*3 .........
+
+[ 1955.514948] **** close file
+
+
+
+[Olej@modules file]$ sudo insmod mdw.ko
+insmod: ERROR: could not insert module mdw.ko: Operation not permitted
+
+[Olej@modules file]$ dmesg | tail -n4
+[ 2021.390975] ! file open ./module.log
+[ 2021.390999] ! write 16 bytes
+[ 2021.391001] ! ...............
+[ 2021.391003] ! file close
+
+[Olej@modules file]$ ls -l *.log
+-rw-------. 1 Olej Olej 16 мар  9 14:22 module.log
+
+[Olej@modules file]$ cat module.log
+...............
+
+=============================================================================================

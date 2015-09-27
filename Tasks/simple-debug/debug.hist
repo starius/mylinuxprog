@@ -1,0 +1,139 @@
+28.07.2012
+==========
+
+[olej@notebook simple-debug]$ sudo insmod md.ko 
+insmod: error inserting 'md.ko': -1 Operation not permitted
+
+[olej@notebook simple-debug]$ dmesg | tail -n1
+sys_close address: c04dea99
+
+-------------------------------------------------------------------
+
+[olej@notebook simple-debug]$ sudo insmod md1.ko 
+
+[olej@notebook simple-debug]$ sudo insmod mt1.ko 
+insmod: error inserting 'mt1.ko': -1 Operation not permitted
+
+[olej@notebook simple-debug]$ dmesg | tail -n2
+this string returned fron test_01
+this string returned fron test_02
+
+[olej@notebook simple-debug]$ sudo rmmod md1
+
+[olej@notebook simple-debug]$ ./test2.sh
+insmod: error inserting 'mt1.ko': -1 Operation not permitted
+this string returned from test_01
+this string returned from test_02
+
+=====================================================================
+
+[olej@notebook ~]$ cat /proc/interrupts | grep eth
+  16:      34985          0   IO-APIC-fasteoi   i915, eth0
+
+[olej@notebook ~]$ cat /proc/interrupts | grep timer
+   0:    1049186          0   IO-APIC-edge      timer
+ LOC:    1062941    1263008   Local timer interrupts
+[olej@notebook ~]$ cat /proc/interrupts | grep timer
+   0:    1063447          0   IO-APIC-edge      timer
+ LOC:    1077254    1279631   Local timer interrupts
+
+
+[olej@notebook simple-debug]$ sudo insmod mdsys.ko irq=16
+
+[olej@notebook simple-debug]$ cat /sys/class/mds-class/mds
+280
+[olej@notebook simple-debug]$ cat /sys/class/mds-class/mds
+301
+[olej@notebook simple-debug]$ cat /sys/class/mds-class/mds
+353
+
+[olej@notebook simple-debug]$ echo 10 > /sys/class/mds-class/mds
+[olej@notebook simple-debug]$ cat /sys/class/mds-class/mds
+29
+
+[olej@notebook simple-debug]$ echo 1asdf > /sys/class/mds-class/mds
+[olej@notebook simple-debug]$ cat /sys/class/mds-class/mds
+13
+
+[olej@notebook simple-debug]$ sudo rmmod mdsys
+
+=====================================================================
+
+[olej@notebook simple-debug]$ sudo insmod mdsys2.ko 
+
+[olej@notebook simple-debug]$ sudo insmod mdsysc.ko 
+
+[olej@notebook simple-debug]$ lsmod | head -n3
+Module                  Size  Used by
+mdsysc                   934  0 
+mdsys2                   844  1 mdsysc
+
+[olej@notebook class]$ cat /sys/class/mds-class/mds
+784
+[olej@notebook class]$ cat /sys/class/mds-class/mds
+825
+
+[olej@notebook class]$ echo 0 > /sys/class/mds-class/mds
+[olej@notebook class]$ cat /sys/class/mds-class/mds
+21
+
+
+[olej@notebook simple-debug]$ sudo rmmod mdsysc
+
+[olej@notebook simple-debug]$ lsmod | head -n3
+Module                  Size  Used by
+mdsys2                   844  0 
+lp                      6794  0 
+
+[olej@notebook ACCOUNTS]$ cat /sys/class/mds-class/mds
+cat: /sys/class/mds-class/mds: Нет такого файла или каталога
+
+[olej@notebook simple-debug]$ sudo rmmod mdsys2
+
+=====================================================================
+
+21.04.2014
+==========
+
+[Olej@modules simple-debug]$ make 
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md1.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mt1.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys2.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsysc.o
+  Building modules, stage 2.
+  MODPOST 6 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md1.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/md1.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys2.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsys2.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsysc.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mdsysc.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mt1.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/tools/simple-debug/mt1.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+-------------------------------------------------------------------
+
+[Olej@modules simple-debug]$ ./test2.sh 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module mt1.ko: Operation not permitted
+[20969.492634] this string returned from test_01
+[20969.492637] this string returned from test_02
+
+
+[Olej@modules simple-debug]$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   86889  3 
+ip6t_rpfilter          12546  1 
+
+=====================================================================
+
+

@@ -1,0 +1,472 @@
+===============================================================================================================
+
+05.07.2011
+==========
+
+[olej@notebook mopen]$ sudo insmod ./mmopen.ko mode=0
+
+[olej@notebook mopen]$ cat /dev/mopen
+static: not initialized!
+
+[olej@notebook mopen]$ echo 777777777 > /dev/mopen
+
+[olej@notebook mopen]$ cat /dev/mopen
+777777777
+
+[olej@notebook mopen]$ ./pmopen 
+prepared 7 bytes: 1111111
+prepared 5 bytes: 22222
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+
+[olej@notebook mopen]$ sudo rmmod mmopen
+
+===============================================================================================================
+
+[olej@notebook mopen]$ sudo insmod ./mmopen.ko mode=1
+
+[olej@notebook mopen]$ cat /dev/mopen
+static: not initialized!
+
+[olej@notebook mopen]$ echo 777777777 > /dev/mopen
+
+[olej@notebook mopen]$ cat /dev/mopen
+777777777
+
+[olej@notebook mopen]$ ./pmopen 
+prepared 7 bytes: 1111111
+open device error: Device or resource busy
+write device error: Bad file descriptor
+------------------------------------
+read 8 bytes: 1111111
+
+read end of stream
+------------------------------------
+------------------------------------
+read device error: Bad file descriptor
+------------------------------------
+[olej@notebook mopen]$ sudo rmmod mmopen
+
+===============================================================================================================
+
+[olej@notebook mopen]$ ./pmopen
+prepared 7 bytes: 1111111
+prepared 5 bytes: 22222
+------------------------------------
+read 8 bytes: 1111111
+
+read end of stream
+------------------------------------
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+open - node: f2e85950, file: f2f35300, refcount: 1
+write - file: f2f35300, write to f2ff9600 bytes 7; refcount: 1
+put bytes : 7
+open - node: f2e85950, file: f2f35900, refcount: 2
+write - file: f2f35900, write to f2ff9200 bytes 5; refcount: 2
+put bytes : 5
+read - file: f2f35300, read from f2ff9600 bytes 256; refcount: 2
+return bytes :  8
+read - file: f2f35300, read from f2ff9600 bytes 256; refcount: 2
+return : EOF
+read - file: f2f35900, read from f2ff9200 bytes 256; refcount: 2
+return bytes :  6
+read - file: f2f35900, read from f2ff9200 bytes 256; refcount: 2
+return : EOF
+close - node: f2e85950, file: f2f35300, refcount: 2
+close - node: f2e85950, file: f2f35900, refcount: 1
+
+[olej@notebook mopen]$ sudo rmmod mmopen
+
+---------------------------------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ sudo insmod ./mmopen.ko mode=2 debug=1
+
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+
+[olej@notebook mopen]$ cat /dev/mopen
+dynamic: not initialized!
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+open - node: f2e855c0, file: f4878380, refcount: 1
+read - file: f4878380, read from f1846000 bytes 32768; refcount: 1
+return bytes :  26
+read - file: f4878380, read from f1846000 bytes 32768; refcount: 1
+return : EOF
+close - node: f2e855c0, file: f4878380, refcount: 1
+
+[olej@notebook mopen]$ lsmod | grep mmopen
+mmopen                  2459  0 
+
+[olej@notebook mopen]$ echo 9876543210 > /dev/mopen
+
+[olej@notebook mopen]$ cat /dev/mopen
+dynamic: not initialized!
+
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+open - node: f2e855c0, file: f2feaa80, refcount: 1
+write - file: f2feaa80, write to f2c5f000 bytes 11; refcount: 1
+put bytes : 11
+close - node: f2e855c0, file: f2feaa80, refcount: 1
+open - node: f2e855c0, file: f2de2d80, refcount: 1
+read - file: f2de2d80, read from f2ff9600 bytes 32768; refcount: 1
+return bytes :  26
+read - file: f2de2d80, read from f2ff9600 bytes 32768; refcount: 1
+return : EOF
+close - node: f2e855c0, file: f2de2d80, refcount: 1
+
+[olej@notebook mopen]$ sudo rmmod mmopen
+
+===============================================================================================================
+
+[olej@notebook mopen]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2011_WORK/my_KERNEL/my.EXAMPLES/examples.DRAFT/dev/mopen modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  Building modules, stage 2.
+  MODPOST 1 modules
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+``gcc simple.c -o simple
+/tmp/ccfJzj86.o: In function `main':
+simple.c:(.text+0x9c): warning: the `gets' function is dangerous and should not be used.
+
+[olej@notebook mopen]$ sudo insmod ./mmopen.ko mode=2 debug=1
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+[olej@notebook mopen]$ 
+
+
+[olej@notebook mopen]$ ./simple 
+> 12345
+read 6 bytes: 12345
+12345
+
+[olej@notebook mopen]$ ./simple 
+> 987
+read 4 bytes: 987
+987
+
+[olej@notebook mopen]$ ./simple 
+> ^C
+
+[olej@notebook mopen]$ lsmod | grep mmopen
+mmopen                  2455  3 
+
+[olej@notebook mopen]$ dmesg | tail -n50 | grep -v ^audit
+CE: hpet increasing min_delta_ns to 33750 nsec
+open - node: f1899ce0, file: f2e5ff00, refcount: 1
+open - node: f1899ce0, file: f2f35880, refcount: 2
+open - node: f1899ce0, file: f2de2500, refcount: 3
+write - file: f2e5ff00, write to f2ff9200 bytes 5; refcount: 3
+put bytes : 5
+read - file: f2e5ff00, read from f2ff9200 bytes 160; refcount: 3
+return bytes :  6
+read - file: f2e5ff00, read from f2ff9200 bytes 160; refcount: 3
+return : EOF
+close - node: f1899ce0, file: f2e5ff00, refcount: 3
+write - file: f2f35880, write to f1847800 bytes 3; refcount: 2
+put bytes : 3
+read - file: f2f35880, read from f1847800 bytes 160; refcount: 2
+return bytes :  4
+read - file: f2f35880, read from f1847800 bytes 160; refcount: 2
+return : EOF
+close - node: f1899ce0, file: f2f35880, refcount: 2
+close - node: f1899ce0, file: f2de2500, refcount: 1
+
+[olej@notebook mopen]$ lsmod | grep mmopen
+mmopen                  2455  0 
+
+[olej@notebook mopen]$ sudo rmmod ./mmopen
+
+==================================================================================
+
+26.01.2012
+==========
+
+[olej@notebook kernel]$ cat /proc/sys/kernel/printk
+3       4       1       7
+
+[olej@notebook kernel]$ sudo echo 8 > /proc/sys/kernel/printk
+bash: /proc/sys/kernel/printk: Отказано в доступе
+
+[olej@notebook kernel]$ su -
+Пароль: 
+
+[root@notebook ~]# echo 8 > /proc/sys/kernel/printk
+
+[root@notebook ~]# cat /proc/sys/kernel/printk
+8	4	1	7
+
+[root@notebook ~]# exit
+logout
+
+-------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ sudo insmod mmopen.ko debug=1
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep -v ^audit
+installed device /dev/mopen
+
+[olej@notebook mopen]$ sudo rmmod mmopen 
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep -v ^audit
+released device /dev/mopen
+
+-------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ cat mmopen.c > /dev/mopen 
+
+[olej@notebook mopen]$ cat /dev/mopen | wc -c
+79
+
+[olej@notebook mopen]$ dd if=/dev/mopen of=/dev/null
+0+1 записей считано
+0+1 записей написано
+ скопировано 79 байт (79 B), 5,4826e-05 c, 1,4 MB/c
+
+==================================================================================
+
+05.03.2012
+==========
+
+[olej@notebook mopen]$ sudo insmod ./mmopen.ko mode=0
+
+
+-------------------------------------------------------------------------------------
+
+==================================================================================
+
+
+[olej@notebook mopen]$ sudo insmod mmopen.ko debug=1
+
+
+[olej@notebook mopen]$ lsmod | head -n4
+Module                  Size  Used by
+mmopen                  2609  0 
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+[olej@notebook mopen]$ ls -l /dev/mo*
+crw-rw---- 1 root root 10, 54 Мар  5 17:16 /dev/mopen
+
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! installed device /dev/mopen in mode 0
+
+[olej@notebook mopen]$ cat /dev/mopen
+static: not initialized!
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! installed device /dev/mopen in mode 0
+! open - node: c4700cd8, file: f6371480, refcount: 1
+! read - file: f6371480, read from f82995cc bytes 32768; refcount: 1
+! return bytes :  25
+! read - file: f6371480, read from f82995cc bytes 32768; refcount: 1
+! return : EOF
+! close - node: c4700cd8, file: f6371480, refcount: 1
+
+[olej@notebook mopen]$ echo new string > /dev/mopen
+
+[olej@notebook mopen]$ dmesg | tail -n4 | grep !
+! open - node: c4700cd8, file: c46fb080, refcount: 1
+! write - file: c46fb080, write to f82995cc bytes 11; refcount: 1
+! put bytes : 11
+! close - node: c4700cd8, file: c46fb080, refcount: 1
+
+[olej@notebook mopen]$ cat /dev/mopen
+new string
+
+[olej@notebook mopen]$ dmesg | tail -n6 | grep !
+! open - node: c4700cd8, file: f6a35380, refcount: 1
+! read - file: f6a35380, read from f82995cc bytes 32768; refcount: 1
+! return bytes :  11
+! read - file: f6a35380, read from f82995cc bytes 32768; refcount: 1
+! return : EOF
+! close - node: c4700cd8, file: f6a35380, refcount: 1
+
+-------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ cat /dev/mopen
+static: not initialized!
+
+[olej@notebook mopen]$ echo new string > /dev/mopen
+
+[olej@notebook mopen]$ cat /dev/mopen
+new string
+
+[olej@notebook mopen]$ cat /dev/mopen
+new string
+
+[olej@notebook mopen]$ cat /dev/mopen
+new string
+
+[olej@notebook mopen]$ cat /dev/mopen
+new string
+
+
+
+[olej@notebook mopen]$  ./pmopen
+prepared 7 bytes: 1111111
+prepared 5 bytes: 22222
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+
+
+[olej@notebook mopen]$ ./simple
+> 111
+read 4 bytes: 111
+111
+
+[olej@notebook mopen]$ ./simple
+> 2222
+read 5 bytes: 2222
+2222
+
+
+
+[olej@notebook mopen]$ sudo rmmod mmopen
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! released device /dev/mopen
+
+
+-------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ sudo insmod mmopen.ko debug=1 mode=1
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! installed device /dev/mopen in mode 1
+
+
+
+[olej@notebook mopen]$ ./pmopen 
+prepared 7 bytes: 1111111
+open device error: Device or resource busy
+write device error: Bad file descriptor
+------------------------------------
+read 8 bytes: 1111111
+
+read end of stream
+------------------------------------
+------------------------------------
+read device error: Bad file descriptor
+------------------------------------
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! installed device /dev/mopen in mode 1
+! open - node: dbbf43f0, file: c4719a80, refcount: 1
+! write - file: c4719a80, write to f7ed160c bytes 7; refcount: 1
+! put bytes : 7
+! open - node: dbbf43f0, file: c4719b80, refcount: 2
+! device /dev/mopen is busy
+! read - file: c4719a80, read from f7ed160c bytes 256; refcount: 1
+! return bytes :  8
+! read - file: c4719a80, read from f7ed160c bytes 256; refcount: 1
+! return : EOF
+! close - node: dbbf43f0, file: c4719a80, refcount: 1
+
+
+
+
+[olej@notebook mopen]$ ./simple 
+> 
+
+[olej@notebook mopen]$ ./simple
+open device error: Device or resource busy
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! open - node: dbbf43f0, file: dbbc8480, refcount: 1
+! open - node: dbbf43f0, file: c4763580, refcount: 2
+! device /dev/mopen is busy
+! close - node: dbbf43f0, file: dbbc8480, refcount: 1
+
+
+-------------------------------------------------------------------------------------
+
+[olej@notebook mopen]$ sudo insmod mmopen.ko debug=1 mode=2
+
+[olej@notebook mopen]$ dmesg | tail -n30 | grep !
+! installed device /dev/mopen in mode 2
+
+
+
+
+[olej@notebook mopen]$ ./simple 
+> 1-й
+read 5 bytes: 1-й
+1-й
+
+[olej@notebook mopen]$ ./simple
+> 2-й
+read 5 bytes: 2-й
+2-й
+
+
+[olej@notebook mopen]$ ./pmopen 
+prepared 7 bytes: 1111111
+prepared 5 bytes: 22222
+------------------------------------
+read 8 bytes: 1111111
+
+read end of stream
+------------------------------------
+------------------------------------
+read 6 bytes: 22222
+
+read end of stream
+------------------------------------
+
+
+
+[olej@notebook mopen]$ cat /dev/mopen
+dynamic: not initialized!
+
+[olej@notebook mopen]$ echo new string > /dev/mopen
+
+[olej@notebook mopen]$ cat /dev/mopen
+dynamic: not initialized!
+
+
+==================================================================================
+
+05.07.2011
+==========
+
+[Olej@modules mopen]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/mopen modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/mopen/mmopen.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/mopen/mmopen.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/mopen/mmopen.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+gcc pmopen.c -o pmopen
+gcc simple.c -o simple
+simple.c: В функции «main»:
+simple.c:16:4: предупреждение: «gets» is deprecated (declared at /usr/include/stdio.h:638) [-Wdeprecated-declarations]
+    gets( msg ); // gets() - опасная функция!
+    ^
+
+-------------------------------------------------------------------------------------
+
+
+==================================================================================

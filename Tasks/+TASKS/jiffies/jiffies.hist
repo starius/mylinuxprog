@@ -1,0 +1,180 @@
+31.01.2015
+==========
+
+Напишите модуль, который должен зафиксировать в системный журнал значение счётчика системного таймера
+ядра jiffies, и сразу же завершается.
+
+(*) Напишите модуль подобный предыдущему, но чтобы он выводил значение jiffies не в системный журнал,
+а на терминал. Почему в API ядра отсутствует функция вывода на терминал?
+
+======================================================================================================
+
+01.02.2015
+==========
+
+[Olej@modules jiffies]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules jiffies]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules jiffies]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+[Olej@modules jiffies]$ 
+
+[Olej@modules jiffies]$ sudo insmod jiff.ko
+insmod: ERROR: could not insert module jiff.ko: Operation not permitted
+
+[Olej@modules jiffies]$ dmesg | tail -n5
+[ 3163.150240] perf interrupt took too long (2502 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[ 6009.047249] jiff: module license 'unspecified' taints kernel.
+[ 6009.047252] Disabling lock debugging due to kernel taint
+[ 6009.047287] jiff: module verification failed: signature and/or  required key missing - tainting kernel
+[ 6009.047475] module: jiffies on start = 100570DA4
+
+
+======================================================================================================
+
+/include/linux/jiffies.h 3.18
+
+65 /* some arch's have a small-data section that can be accessed register-relative
+ 66  * but that can only take up to, say, 4-byte variables. jiffies being part of
+ 67  * an 8-byte variable may not be correctly accessed unless we force the issue
+ 68  */
+ 69 #define __jiffy_data  __attribute__((section(".data")))
+ 70 
+ 71 /*
+ 72  * The 64-bit value is not atomic - you MUST NOT read it
+ 73  * without sampling the sequence number in jiffies_lock.
+ 74  * get_jiffies_64() will do this for you as appropriate.
+ 75  */
+ 76 extern u64 __jiffy_data jiffies_64;
+ 77 extern unsigned long volatile __jiffy_data jiffies;
+ 78 
+ 79 #if (BITS_PER_LONG < 64)
+ 80 u64 get_jiffies_64(void);
+ 81 #else
+ 82 static inline u64 get_jiffies_64(void)
+ 83 {
+ 84         return (u64)jiffies;
+ 85 }
+ 86 #endif
+
+======================================================================================================
+
+[Olej@modules jiffies]$ sudo insmod jiff.ko
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module jiff.ko: Operation not permitted
+[Olej@modules jiffies]$ dmesg | tail -n5
+[ 6009.047249] jiff: module license 'unspecified' taints kernel.
+[ 6009.047252] Disabling lock debugging due to kernel taint
+[ 6009.047287] jiff: module verification failed: signature and/or  required key missing - tainting kernel
+[ 6009.047475] module: jiffies on start = 100570DA4
+[10200.223335] module: jiffies on start = 10096F722
+
+------------------------------------------------------------------------------------------------------
+
+[Olej@modules jiffies]$ sudo insmod jiff.ko 2>/dev/null 
+[Olej@modules jiffies]$ 
+
+======================================================================================================
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ sudo insmod jiff.ko
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module jiff.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n6
+[   52.260243] Ebtables v2.0 registered
+[   52.296217] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[  596.226671] jiff: module license 'unspecified' taints kernel.
+[  596.226678] Disabling lock debugging due to kernel taint
+[  596.226729] jiff: module verification failed: signature and/or  required key missing - tainting kernel
+[  596.227332] module: jiffies on start = 48523
+
+======================================================================================================
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies$ make
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.o
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.ko
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies$ sudo insmod jifft.ko 2>/dev/null
+module: jiffies on start = 1F1060
+
+======================================================================================================
+
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.14.8-200.fc20.i686 #1 SMP Mon Jun 16 22:36:56 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.14.8-200.fc20.i686/build M=/home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.i686'
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.o
+  CC [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.ko
+  CC      /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.mod.o
+  LD [M]  /home/Olej/2015_WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.i686'
+
+bash-4.2$ sudo insmod jifft.ko
+[sudo] password for Olej: 
+module: jiffies on start = 757C99
+insmod: ERROR: could not insert module jifft.ko: Operation not permitted
+
+======================================================================================================
+
+
+[Olej@modules jiffies]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules jiffies]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jiff.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/jiffies/jifft.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+[Olej@modules jiffies]$ sudo insmod jifft.ko 2>/dev/null
+[sudo] password for Olej: 
+module: jiffies on start = 1018A2FF7
+
+======================================================================================================
+
+03.02.2015
+==========
+
+[Olej@modules jiffies]$ sudo insmod jifft.ko 2>/dev/null
+[sudo] password for Olej: 
+module: jiffies on start = 1014B687A
+
+======================================================================================================

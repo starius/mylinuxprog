@@ -1,0 +1,123 @@
+18.06.2011
+==========
+
+[olej@notebook exec]$ sudo insmod mod_exec.ko
+
+this is wall messageom root@notebook.localdomain (Tue May  3 22:32:00 2011):
+insmod: error inserting 'mod_exec.ko': -1 Operation not permitted
+
+
+
+[olej@notebook exec]$ dmesg | tail -n1
+execute : wall this is wall message
+
+-------------------------------------------------------------
+
+[olej@notebook ~]$ wall this is wall message
+Broadcast message from olej@notebook.localdomain (pts/2) (Tue May  3 22:33:57this is wall message
+
+=============================================================
+
+30.01.2012
+==========
+
+[olej@notebook exec]$ which wall
+/usr/bin/wall
+
+
+[olej@notebook exec]$ sudo insmod mod_exec.ko
+
+Broadcast message from root@notebook.localdomain (Mon Jan 30 18:13:10 2012):
+this is wall message 
+insmod: error inserting 'mod_exec.ko': -1 Operation not permitted
+
+-------------------------------------------------------------
+
+[olej@notebook exec]$ sudo insmod mod_exec.ko str="new_string"
+
+Broadcast message from root@notebook.localdomain (Mon Jan 30 18:22:59 2012):
+new_string
+insmod: error inserting 'mod_exec.ko': -1 Operation not permitted
+
+[olej@notebook exec]$ dmesg | tail -n30 | grep -v ^audit
+execute : wall 
+new_string
+
+-------------------------------------------------------------
+
+// rc = call_usermodehelper( "/bin/wall", argv, envp, 0 ); 
+
+[olej@notebook exec]$ sudo insmod mod_exec.ko
+insmod: error inserting 'mod_exec.ko': -1 Unknown symbol in module
+
+[olej@notebook exec]$ dmesg | tail -n30 | grep -v ^audit
+failed to execute : wall
+
+-------------------------------------------------------------
+
+[olej@notebook exec]$ which echo
+/bin/echo
+[olej@notebook exec]$ /bin/echo --help
+Usage: /bin/echo [SHORT-OPTION]... [STRING]...
+  or:  /bin/echo LONG-OPTION
+Печатает СТРОКУ(СТРОКИ) на стандартный вывод.
+
+  -n             не печатать завершающий перевод строки
+  -e             enable interpretation of backslash escapes
+  -E             disable interpretation of backslash escapes (default)
+      --help     показать эту справку и выйти
+      --version  показать информацию о версии и выйти
+
+
+Если действует ключ -e, распознаются следующие последовательности:
+
+  \0ННН  знак с восьмеричным ASCII-кодом ННН
+  \\     обратная косая черта
+  \a     звуковой сигнал (BEL)
+  \b     забой
+  \c     produce no further output
+  \f     form feed
+  \n     new line
+  \r     carriage return
+  \t     horizontal tab
+  \v     vertical tab
+
+ЗАМЕЧАНИЕ: ваша оболочка может предоставлять свою версию echo, которая
+обычно перекрывает версию, описанную здесь.  Пожалуйста, обращайтесь к
+документации по вашей оболочке, чтобы узнать, какие ключи она
+поддерживает.
+
+[olej@notebook exec]$ sudo insmod mod_execho.ko 
+insmod: error inserting 'mod_execho.ko': -1 Operation not permitted
+
+[olej@notebook exec]$ dmesg | tail -n30 | grep -v ^audit
+execute : /bin/echo echo message
+
+
+=============================================================
+
+18.06.2011
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec/mod_exec.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec/mod_exec.c: В функции «exec_init»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec/mod_exec.c:21:4: ошибка: неявная декларация функции «msleep» [-Werror=implicit-function-declaration]
+    msleep( 100 ); 
+    ^
+cc1: some warnings being treated as errors
+make[2]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec/mod_exec.o] Ошибка 1
+make[1]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/exec] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make: *** [all] Ошибка 2
+
+=============================================================

@@ -1,0 +1,114 @@
+02.05.2011 :
+============
+
+[olej@notebook dma]$ ls *.ko
+lab1_dma.ko  lab1_dma_PCI_API.ko
+
+[olej@notebook dma]$ sudo insmod lab1_dma_PCI_API.ko
+
+[olej@notebook dma]$ lsmod | grep lab
+lab1_dma_PCI_API        1085  0 
+
+[olej@notebook dma]$ dmesg | tail -n13
+Loading DMA allocation test module
+
+Testing pci_alloc_consistent()..........
+
+kbuf=    c0c10000, handle=      c10000, size = 40960
+diff=    c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+string written was, This is the pci_alloc_consistent() string
+
+Testing pci_map_single()................
+
+kbuf=    e1b30000, handle=    21b30000, size = 40960
+diff=    c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+string written was, This is the pci_map_single() string
+
+[olej@notebook dma]$ sudo rmmod lab1_dma_PCI_API
+
+[olej@notebook dma]$ lsmod | grep lab
+
+[olej@notebook dma]$ dmesg | tail -n1
+Module Unloading
+
+
+======================================================================
+
+[olej@notebook dma]$ sudo insmod lab1_dma.ko
+
+[olej@notebook dma]$ lsmod | grep lab
+lab1_dma                1370  0 
+
+[olej@notebook dma]$ dmesg | tail -n19
+Loading DMA allocation test module
+
+Testing dma_alloc_coherent()..........
+
+kbuf=    c0c10000, handle=      c10000, size = 40960
+(kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+string written was, This is the dma_alloc_coherent() string
+
+Testing dma_map_single()................
+
+kbuf=    e1b30000, handle=    21b30000, size = 40960
+(kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+string written was, This is the dma_map_single() string
+
+Testing dma_pool_alloc()..........
+
+kbuf=    c0c02000, handle=      c02000, size = 40960
+(kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+string written was, This is the dma_pool_alloc() string
+
+======================================================================
+
+27.08.2011 :
+============
+
+[olej@notebook dma]$ sudo insmod lab1_dma.ko
+insmod: error inserting 'lab1_dma.ko': -1 Operation not permitted
+
+[olej@notebook dma]$ dmesg | tail -n200 | grep '=>'
+=> kbuf=    c0c10000, handle=      c10000, size = 40960
+=> (kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+=> string written was, This is the dma_alloc_coherent() string
+=> kbuf=    d4370000, handle=    14370000, size = 40960
+=> (kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+=> string written was, This is the dma_map_single() string
+=> kbuf=    c0c02000, handle=      c02000, size = 40960
+=> (kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+=> string written was, This is the dma_pool_alloc() string
+
+----------------------------------------------------------------------
+
+[olej@notebook dma]$ sudo insmod lab1_dma_PCI_API.ko 
+insmod: error inserting 'lab1_dma.ko': -1 Operation not permitted
+
+[olej@notebook dma]$ dmesg | tail -n50 | grep '=>'
+=> kbuf=    c0c10000, handle=      c10000, size = 40960
+=> (kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+=> string written was, This is the pci_alloc_consistent() string
+=> kbuf=    d4370000, handle=    14370000, size = 40960
+=> (kbuf-handle)=     c0000000,   3221225472, PAGE_OFFSET=  3221225472, compare=0
+=> string written was, This is the pci_map_single() string
+
+======================================================================
+
+02.05.2011 :
+============
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma_PCI_API.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma_PCI_API.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dma/lab1_dma_PCI_API.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+
+======================================================================

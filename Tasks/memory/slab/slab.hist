@@ -1,0 +1,202 @@
+==========================================================================================
+
+28.07.2012
+==========
+
+[olej@home slab]$ uname -r
+2.6.18-92.el5
+
+[olej@home slab]$ sudo /sbin/insmod ./slab.ko
+
+[olej@home slab]$ /sbin/lsmod | grep slab
+slab                    7052  0 
+
+[olej@home slab]$ dmesg | tail -n3
+allocate 31 objects into slab: my_cache
+object size 7 bytes, full size 217 bytes
+constructor called 339 times
+
+[olej@home slab]$ cat /proc/slabinfo | grep my_
+my_cache              31    339      8  339    1 : tunables  120   60    8 : slabdata      1      1      0
+
+[olej@home slab]$ sudo /sbin/rmmod slab
+
+------------------------------------------------------------------------------------------
+
+[olej@home slab]$ sudo /sbin/insmod ./slab.ko size=1111 number=300
+
+[olej@home slab]$ dmesg | tail -n3
+allocate 300 objects into slab: my_cache
+object size 1111 bytes, full size 333300 bytes
+constructor called 301 times
+
+[olej@home slab]$ sudo /sbin/rmmod slab
+
+==========================================================================================
+
+[olej@notebook slab]$ sudo insmod ./slab.ko
+
+[olej@notebook slab]$ dmesg | tail -n300 | grep -v audit
+allocate 31 objects into slab: my_cache
+object size 7 bytes, full size 217 bytes
+constructor called 257 times
+
+[olej@notebook slab]$ cat /proc/slabinfo | grep my_
+my_cache             256    256     16  256    1 : tunables    0    0    0 : slabdata      1      1      0
+
+[olej@notebook slab]$ sudo rmmod slab
+
+------------------------------------------------------------------------------------------
+
+[olej@notebook slab]$ sudo insmod ./slab.ko size=1111 number=300
+
+[olej@notebook slab]$ dmesg | tail -n30 | grep -v audit
+allocate 300 objects into slab: my_cache
+object size 1111 bytes, full size 333300 bytes
+constructor called 330 times
+
+[olej@notebook slab]$ sudo rmmod slab
+
+------------------------------------------------------------------------------------------
+
+[olej@notebook slab]$ sudo insmod ./slab.ko size=1111 number=3000
+
+[olej@notebook slab]$ dmesg | tail -n30 | grep -v audit
+allocate 3000 objects into slab: my_cache
+object size 1111 bytes, full size 3333000 bytes
+constructor called 3225 times
+
+[olej@notebook slab]$ sudo rmmod slab
+
+==========================================================================================
+
+03.06.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+bash-4.2$ sudo insmod ./slab.ko size=1111 number=3000
+[sudo] password for Olej: 
+
+bash-4.2$ lsmod | head -n4
+Module                  Size  Used by
+slab                   12641  0 
+fuse                   80271  2 
+ip6table_filter        12711  0 
+
+bash-4.2$ dmesg | tail -n 5
+[ 5929.252043] perf samples too long (2502 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[ 8230.793839] slab: module verification failed: signature and/or  required key missing - tainting kernel
+[ 8230.795390] allocate 3000 objects into slab: my_cache
+[ 8230.795398] object size 1111 bytes, full size 3333000 bytes
+[ 8230.795402] constructor called 3225 times
+
+
+bash-4.2$ sudo cat /proc/slabinfo | grep my_
+my_cache            3010   3010   1152   14    4 : tunables    0    0    0 : slabdata    215    215      0
+
+
+bash-4.2$ sudo rmmod slab
+
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   80271  2 
+ip6table_filter        12711  0 
+
+
+
+bash-4.2$ sudo insmod ./slab.ko 
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n3
+[11648.079727] allocate 31 objects into slab: my_cache
+[11648.079735] object size 7 bytes, full size 217 bytes
+[11648.079737] constructor called 257 times
+
+bash-4.2$ sudo cat /proc/slabinfo | grep my_
+my_cache             256    256     16  256    1 : tunables    0    0    0 : slabdata      1      1      0
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ uname -r
+3.13.6-200.fc20.i686
+
+------------------------------------------------------------------------------------------
+
+[Olej@modules slab]$ uname -a
+Linux modules.localdomain 3.14.4-200.fc20.x86_64 #1 SMP Tue May 13 13:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules slab]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+[Olej@modules slab]$ make
+make -C /lib/modules/3.14.4-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/slab.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/pool.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/pool.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/pool.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/slab.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/memory/slab/slab.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+
+[Olej@modules slab]$ sudo insmod ./slab.ko size=1111 number=3000
+[sudo] password for Olej: 
+
+[Olej@modules slab]$ lsmod | head -n4
+Module                  Size  Used by
+slab                   12756  0 
+fuse                   86935  3 
+option                 42468  0 
+
+[Olej@modules slab]$ dmesg | tail -n 5
+[   20.054073] SELinux: initialized (dev fusectl, type fusectl), uses genfs_contexts
+[   22.607806] SELinux: initialized (dev proc, type proc), uses genfs_contexts
+[ 8917.618713] allocate 3000 objects into slab: my_cache
+[ 8917.618722] object size 1111 bytes, full size 3333000 bytes
+[ 8917.618725] constructor called 3132 times
+
+[Olej@modules slab]$ sudo cat /proc/slabinfo | grep my_
+my_cache            3024   3024   1152   28    8 : tunables    0    0    0 : slabdata    108    108      0
+
+[Olej@modules slab]$ sudo rmmod slab
+
+[Olej@modules slab]$ lsmod | head -n2
+Module                  Size  Used by
+fuse                   86935  3 
+
+
+
+
+[Olej@modules slab]$ sudo insmod ./slab.ko
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module ./slab.ko: Invalid parameters
+
+[Olej@modules slab]$ dmesg | tail -n3
+[10513.299604] 0 pages hwpoisoned
+[10513.299605] order=21, pages=2097152, size=8589934592 - vmalloc failed
+[11711.174207] invalid argument
+
+
+
+[Olej@modules slab]$ sudo insmod ./slab.ko size=11
+
+[Olej@modules slab]$ dmesg | tail -n3
+[11835.972001] allocate 31 objects into slab: my_cache
+[11835.972007] object size 11 bytes, full size 341 bytes
+[11835.972009] constructor called 129 times
+
+[Olej@modules slab]$ sudo cat /proc/slabinfo | grep my_
+my_cache             128    128     32  128    1 : tunables    0    0    0 : slabdata      1      1      0
+
+[Olej@modules slab]$ sudo rmmod slab
+
+==========================================================================================

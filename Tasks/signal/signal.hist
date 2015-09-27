@@ -1,0 +1,109 @@
+18.06.2011
+==========
+
+[olej@notebook signal]$ ./sigreq 10
+my own PID is 10737
+---> signal 10
+
+[olej@notebook signal]$ kill -n 10 10737
+
+
+[olej@notebook signal]$ ls
+ioctl    ioctl.h              ioctl_signal.ko  Makefile     sigreq
+ioctl.c  ioctl_signal.c       miscdev.h         signal.hist  sigreq.c
+
+
+[olej@notebook signal]$ sudo insmod ioctl_signal.ko
+[olej@notebook signal]$ lsmod | head -n2
+Module                  Size  Used by
+ioctl_signal            2053  0 
+[olej@notebook signal]$ dmesg | tail -n2
+
+Succeeded in registering character device mycdrv
+[olej@notebook signal]$ cat /sys/devices/virtual/misc/mycdrv/dev
+10:56
+[olej@notebook signal]$ ls -l /dev | grep my
+crw-rw----  1 root root     10,  56 Май  6 17:15 mycdrv
+
+
+[olej@notebook signal]$ ./ioctl 10 11684
+I opened the device node, file descriptor = 3
+rc from ioctl setting pid is = 0
+rc from ioctl setting signal is = 0
+rc from ioctl sending signal is = 0
+FINISHED, TERMINATING NORMALLY
+
+
+
+[olej@notebook signal]$ dmesg | tail -n14
+
+Succeeded in registering character device mycdrv
+ attempting to open device: mycdrv:
+  MAJOR number = 10, MINOR number = 56
+   successfully open  device: mycdrv:
+
+I have been opened  1 times since being loaded
+ref=1
+Setting pid to send signals to, sigpid = 11684
+Setting signal to send as: 10 
+Sending signal 10 to process ID 11684
+retval = 0
+closing character device: mycdrv:
+
+
+[olej@notebook signal]$ ./sigreq 10
+my own PID is 11684
+---> signal 10
+^C
+
+[olej@notebook signal]$ sudo rmmod ioctl_signal
+
+[olej@notebook signal]$ ls -l /dev | grep my
+
+==============================================================================
+
+30.01.2012
+
+[olej@notebook signal]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/signal modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/signal/ioctl_signal.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/signal/ioctl_signal.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/signal/ioctl_signal.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+gcc ioctl.c -o ioctl
+gcc sigreq.c -o sigreq
+
+==============================================================================
+
+26.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/ioctl_signal.o
+In file included from /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/ioctl_signal.c:17:0:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/miscdev.h: В функции «mycdrv_generic_open»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/miscdev.h:53:2: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «long unsigned int» [-Wformat=]
+  printk(KERN_INFO "ref=%d\n", module_refcount(THIS_MODULE));
+  ^
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/ioctl_signal.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/signal/ioctl_signal.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+gcc ioctl.c -o ioctl
+gcc sigreq.c -o sigreq
+
+
+==============================================================================

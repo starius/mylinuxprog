@@ -1,0 +1,294 @@
+28.07.2012
+==========
+
+[olej@notebook pci]$ sudo insmod lab2_pci.ko
+
+[olej@notebook pci]$ lsmod | grep lab
+lab2_pci                 822  0
+
+[olej@notebook pci]$ dmesg | tail -n221 | head -n30
+LOADING THE PCI_DEVICE_FINDER
+
+FOUND PCI DEVICE # j = 0,
+READING CONFIGURATION REGISTER:
+Bus,Device,Function=0000:00:00.0
+ PCI_VENDOR_ID=8086
+ PCI_DEVICE_ID=27a0
+ PCI_REVISION_ID=3
+ PCI_INTERRUPT_LINE=0
+ PCI_LATENCY_TIMER=0
+ PCI_COMMAND=6
+
+FOUND PCI DEVICE # j = 1,
+ READING CONFIGURATION REGISTER:
+ Bus,Device,Function=0000:00:02.0
+ PCI_VENDOR_ID=8086
+ PCI_DEVICE_ID=27a2
+ PCI_REVISION_ID=3
+ PCI_INTERRUPT_LINE=10
+ PCI_LATENCY_TIMER=0
+ PCI_COMMAND=7
+
+[olej@notebook pci]$ sudo rmmod lab2_pci
+
+[olej@notebook pci]$ lsmod | grep lab2
+
+=================================================================
+
+28.07.2012
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+
+=================================================================
+
+04.07.2014
+==========
+
+[Olej@modules pci]$ uname -a
+Linux modules.localdomain 3.14.8-200.fc20.x86_64 #1 SMP Mon Jun 16 21:57:53 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules pci]$ make
+make -C /lib/modules/3.14.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/pci/lab2_pci.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.8-200.fc20.x86_64'
+
+[Olej@modules pci]$ sudo insmod lab2_pci.ko 
+[sudo] password for Olej: 
+
+-----------------------------------------------------------------
+
+[Olej@modules pci]$ lsmod | head -n3
+Module                  Size  Used by
+lab2_pci               12422  0 
+option                 46608  0 
+
+
+
+[Olej@modules pci]$ dmesg | tail -n200
+...
+[ 4352.570592] LOADING THE PCI_DEVICE_FINDER
+[ 4352.570597] 
+FOUND PCI DEVICE # j = 0, 
+[ 4352.570598] READING CONFIGURATION REGISTER:
+[ 4352.570600] Bus,Device,Function=0000:00:00.0
+[ 4352.570602]  PCI_VENDOR_ID=8086
+[ 4352.570604]  PCI_DEVICE_ID=154
+[ 4352.570605]  PCI_REVISION_ID=9
+[ 4352.570607]  PCI_INTERRUPT_LINE=0
+[ 4352.570607]  PCI_LATENCY_TIMER=0
+[ 4352.570609]  PCI_COMMAND=6
+[ 4352.570610] 
+FOUND PCI DEVICE # j = 1, 
+[ 4352.570610] READING CONFIGURATION REGISTER:
+[ 4352.570612] Bus,Device,Function=0000:00:02.0
+[ 4352.570613]  PCI_VENDOR_ID=8086
+[ 4352.570613]  PCI_DEVICE_ID=166
+[ 4352.570614]  PCI_REVISION_ID=9
+[ 4352.570615]  PCI_INTERRUPT_LINE=10
+[ 4352.570616]  PCI_LATENCY_TIMER=0
+[ 4352.570617]  PCI_COMMAND=1031
+[ 4352.570618] 
+FOUND PCI DEVICE # j = 2, 
+[ 4352.570618] READING CONFIGURATION REGISTER:
+[ 4352.570619] Bus,Device,Function=0000:00:14.0
+[ 4352.570621]  PCI_VENDOR_ID=8086
+[ 4352.570623]  PCI_DEVICE_ID=1e31
+[ 4352.570624]  PCI_REVISION_ID=4
+[ 4352.570626]  PCI_INTERRUPT_LINE=10
+[ 4352.570628]  PCI_LATENCY_TIMER=0
+[ 4352.570630]  PCI_COMMAND=1030
+[ 4352.570631] 
+FOUND PCI DEVICE # j = 3, 
+[ 4352.570631] READING CONFIGURATION REGISTER:
+[ 4352.570632] Bus,Device,Function=0000:00:16.0
+[ 4352.570634]  PCI_VENDOR_ID=8086
+[ 4352.570636]  PCI_DEVICE_ID=1e3a
+[ 4352.570638]  PCI_REVISION_ID=4
+[ 4352.570640]  PCI_INTERRUPT_LINE=10
+[ 4352.570641]  PCI_LATENCY_TIMER=0
+[ 4352.570643]  PCI_COMMAND=1030
+[ 4352.570644] 
+FOUND PCI DEVICE # j = 4, 
+[ 4352.570644] READING CONFIGURATION REGISTER:
+[ 4352.570645] Bus,Device,Function=0000:00:19.0
+[ 4352.570647]  PCI_VENDOR_ID=8086
+[ 4352.570649]  PCI_DEVICE_ID=1503
+[ 4352.570650]  PCI_REVISION_ID=4
+[ 4352.570652]  PCI_INTERRUPT_LINE=5
+[ 4352.570653]  PCI_LATENCY_TIMER=0
+[ 4352.570655]  PCI_COMMAND=1031
+[ 4352.570656] 
+FOUND PCI DEVICE # j = 5, 
+[ 4352.570657] READING CONFIGURATION REGISTER:
+[ 4352.570657] Bus,Device,Function=0000:00:1a.0
+[ 4352.570659]  PCI_VENDOR_ID=8086
+[ 4352.570661]  PCI_DEVICE_ID=1e2d
+[ 4352.570663]  PCI_REVISION_ID=4
+[ 4352.570665]  PCI_INTERRUPT_LINE=10
+[ 4352.570666]  PCI_LATENCY_TIMER=0
+[ 4352.570668]  PCI_COMMAND=6
+[ 4352.570669] 
+FOUND PCI DEVICE # j = 6, 
+[ 4352.570670] READING CONFIGURATION REGISTER:
+[ 4352.570671] Bus,Device,Function=0000:00:1b.0
+[ 4352.570673]  PCI_VENDOR_ID=8086
+[ 4352.570675]  PCI_DEVICE_ID=1e20
+[ 4352.570676]  PCI_REVISION_ID=4
+[ 4352.570678]  PCI_INTERRUPT_LINE=10
+[ 4352.570679]  PCI_LATENCY_TIMER=0
+[ 4352.570682]  PCI_COMMAND=1030
+[ 4352.570683] 
+FOUND PCI DEVICE # j = 7, 
+[ 4352.570683] READING CONFIGURATION REGISTER:
+[ 4352.570684] Bus,Device,Function=0000:00:1c.0
+[ 4352.570685]  PCI_VENDOR_ID=8086
+[ 4352.570687]  PCI_DEVICE_ID=1e10
+[ 4352.570689]  PCI_REVISION_ID=-60
+[ 4352.570691]  PCI_INTERRUPT_LINE=5
+[ 4352.570692]  PCI_LATENCY_TIMER=0
+[ 4352.570694]  PCI_COMMAND=1031
+[ 4352.570696] 
+FOUND PCI DEVICE # j = 8, 
+[ 4352.570696] READING CONFIGURATION REGISTER:
+[ 4352.570697] Bus,Device,Function=0000:00:1c.1
+[ 4352.570699]  PCI_VENDOR_ID=8086
+[ 4352.570701]  PCI_DEVICE_ID=1e12
+[ 4352.570702]  PCI_REVISION_ID=-60
+[ 4352.570704]  PCI_INTERRUPT_LINE=10
+[ 4352.570706]  PCI_LATENCY_TIMER=0
+[ 4352.570708]  PCI_COMMAND=1031
+[ 4352.570709] 
+FOUND PCI DEVICE # j = 9, 
+[ 4352.570709] READING CONFIGURATION REGISTER:
+[ 4352.570710] Bus,Device,Function=0000:00:1c.2
+[ 4352.570712]  PCI_VENDOR_ID=8086
+[ 4352.570714]  PCI_DEVICE_ID=1e14
+[ 4352.570715]  PCI_REVISION_ID=-60
+[ 4352.570717]  PCI_INTERRUPT_LINE=10
+[ 4352.570719]  PCI_LATENCY_TIMER=0
+[ 4352.570721]  PCI_COMMAND=1031
+[ 4352.570722] 
+FOUND PCI DEVICE # j = 10, 
+[ 4352.570723] READING CONFIGURATION REGISTER:
+[ 4352.570723] Bus,Device,Function=0000:00:1c.3
+[ 4352.570725]  PCI_VENDOR_ID=8086
+[ 4352.570728]  PCI_DEVICE_ID=1e16
+[ 4352.570730]  PCI_REVISION_ID=-60
+[ 4352.570732]  PCI_INTERRUPT_LINE=10
+[ 4352.570734]  PCI_LATENCY_TIMER=0
+[ 4352.570736]  PCI_COMMAND=1031
+[ 4352.570737] 
+FOUND PCI DEVICE # j = 11, 
+[ 4352.570737] READING CONFIGURATION REGISTER:
+[ 4352.570738] Bus,Device,Function=0000:00:1d.0
+[ 4352.570740]  PCI_VENDOR_ID=8086
+[ 4352.570742]  PCI_DEVICE_ID=1e26
+[ 4352.570744]  PCI_REVISION_ID=4
+[ 4352.570746]  PCI_INTERRUPT_LINE=10
+[ 4352.570747]  PCI_LATENCY_TIMER=0
+[ 4352.570749]  PCI_COMMAND=6
+[ 4352.570750] 
+FOUND PCI DEVICE # j = 12, 
+[ 4352.570751] READING CONFIGURATION REGISTER:
+[ 4352.570751] Bus,Device,Function=0000:00:1f.0
+[ 4352.570753]  PCI_VENDOR_ID=8086
+[ 4352.570756]  PCI_DEVICE_ID=1e59
+[ 4352.570758]  PCI_REVISION_ID=4
+[ 4352.570760]  PCI_INTERRUPT_LINE=0
+[ 4352.570762]  PCI_LATENCY_TIMER=0
+[ 4352.570764]  PCI_COMMAND=7
+[ 4352.570765] 
+FOUND PCI DEVICE # j = 13, 
+[ 4352.570766] READING CONFIGURATION REGISTER:
+[ 4352.570766] Bus,Device,Function=0000:00:1f.2
+[ 4352.570768]  PCI_VENDOR_ID=8086
+[ 4352.570770]  PCI_DEVICE_ID=1e03
+[ 4352.570771]  PCI_REVISION_ID=4
+[ 4352.570773]  PCI_INTERRUPT_LINE=10
+[ 4352.570774]  PCI_LATENCY_TIMER=0
+[ 4352.570776]  PCI_COMMAND=1031
+[ 4352.570777] 
+FOUND PCI DEVICE # j = 14, 
+[ 4352.570777] READING CONFIGURATION REGISTER:
+[ 4352.570778] Bus,Device,Function=0000:23:00.0
+[ 4352.570782]  PCI_VENDOR_ID=197b
+[ 4352.570785]  PCI_DEVICE_ID=2380
+[ 4352.570788]  PCI_REVISION_ID=48
+[ 4352.570791]  PCI_INTERRUPT_LINE=10
+[ 4352.570794]  PCI_LATENCY_TIMER=0
+[ 4352.570797]  PCI_COMMAND=7
+[ 4352.570798] 
+FOUND PCI DEVICE # j = 15, 
+[ 4352.570799] READING CONFIGURATION REGISTER:
+[ 4352.570800] Bus,Device,Function=0000:23:00.1
+[ 4352.570802]  PCI_VENDOR_ID=197b
+[ 4352.570806]  PCI_DEVICE_ID=2392
+[ 4352.570808]  PCI_REVISION_ID=48
+[ 4352.570811]  PCI_INTERRUPT_LINE=10
+[ 4352.570813]  PCI_LATENCY_TIMER=0
+[ 4352.570816]  PCI_COMMAND=7
+[ 4352.570817] 
+FOUND PCI DEVICE # j = 16, 
+[ 4352.570817] READING CONFIGURATION REGISTER:
+[ 4352.570818] Bus,Device,Function=0000:23:00.2
+[ 4352.570821]  PCI_VENDOR_ID=197b
+[ 4352.570824]  PCI_DEVICE_ID=2391
+[ 4352.570826]  PCI_REVISION_ID=48
+[ 4352.570829]  PCI_INTERRUPT_LINE=10
+[ 4352.570832]  PCI_LATENCY_TIMER=0
+[ 4352.570835]  PCI_COMMAND=3
+[ 4352.570836] 
+FOUND PCI DEVICE # j = 17, 
+[ 4352.570836] READING CONFIGURATION REGISTER:
+[ 4352.570837] Bus,Device,Function=0000:24:00.0
+[ 4352.570839]  PCI_VENDOR_ID=14e4
+[ 4352.570842]  PCI_DEVICE_ID=4359
+[ 4352.570845]  PCI_REVISION_ID=0
+[ 4352.570847]  PCI_INTERRUPT_LINE=10
+[ 4352.570850]  PCI_LATENCY_TIMER=0
+[ 4352.570853]  PCI_COMMAND=6
+
+
+[Olej@modules ~]$ lspci
+00:00.0 Host bridge: Intel Corporation 3rd Gen Core processor DRAM Controller (rev 09)
+00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor Graphics Controller (rev 09)
+00:14.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller (rev 04)
+00:16.0 Communication controller: Intel Corporation 7 Series/C210 Series Chipset Family MEI Controller #1 (rev 04)
+00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 04)
+00:1a.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #2 (rev 04)
+00:1b.0 Audio device: Intel Corporation 7 Series/C210 Series Chipset Family High Definition Audio Controller (rev 04)
+00:1c.0 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 1 (rev c4)
+00:1c.1 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 2 (rev c4)
+00:1c.2 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 3 (rev c4)
+00:1c.3 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 4 (rev c4)
+00:1d.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #1 (rev 04)
+00:1f.0 ISA bridge: Intel Corporation HM76 Express Chipset LPC Controller (rev 04)
+00:1f.2 SATA controller: Intel Corporation 7 Series Chipset Family 6-port SATA Controller [AHCI mode] (rev 04)
+23:00.0 FireWire (IEEE 1394): JMicron Technology Corp. IEEE 1394 Host Controller (rev 30)
+23:00.1 System peripheral: JMicron Technology Corp. SD/MMC Host Controller (rev 30)
+23:00.2 SD Host controller: JMicron Technology Corp. Standard SD Host Controller (rev 30)
+24:00.0 Network controller: Broadcom Corporation BCM43228 802.11a/b/g/n
+
+-----------------------------------------------------------------

@@ -1,0 +1,5 @@
+sudo rmmod mod_proc_0.ko
+sudo rmmod mod_proc_1.ko
+sudo rmmod mod_proc_2.ko
+sudo rmmod mod_proc_3.ko
+lsmod | head -n3

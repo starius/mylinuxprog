@@ -1,0 +1,363 @@
+==============================================================================================
+
+06.06.2011
+==========
+
+[olej@notebook hello_printk]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2011_WORK/Linux-kernel/examples/modules-done_1/hello_printk modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2011_WORK/Linux-kernel/examples/modules-done_1/hello_printk/hello_printk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2011_WORK/Linux-kernel/examples/modules-done_1/hello_printk/hello_printk.mod.o
+  LD [M]  /home/olej/2011_WORK/Linux-kernel/examples/modules-done_1/hello_printk/hello_printk.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+
+
+[olej@notebook hello_printk]$ make clean
+
+
+
+[olej@notebook hello_printk]$ modinfo ./hello_printk.ko 
+filename:       ./hello_printk.ko
+author:         Oleg Tsiliuric <olej@front.ru>
+license:        GPL
+srcversion:     83915F228EC39FFCBAF99FD
+depends:        
+vermagic:       2.6.32.9-70.fc12.i686.PAE SMP mod_unload 686 
+
+
+
+[olej@notebook hello_printk]$ sudo insmod ./hello_printk.ko
+
+[olej@notebook hello_printk]$ lsmod | head -n2
+Module                  Size  Used by
+hello_printk             557  0 
+
+----------------------------------------------------------------------------------
+
+[olej@notebook hello_printk]$ sudo rmmod hello_printk 
+
+[olej@notebook hello_printk]$ lsmod | head -n2
+Module                  Size  Used by
+vfat                    6740  2 
+
+----------------------------------------------------------------------------------
+
+
+$ file hello_printk.ko 
+hello_printk.ko: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), not stripped
+
+
+
+
+[olej@notebook hello_printk]$ objdump -t hello_printk.ko
+
+hello_printk.ko:     file format elf32-i386
+
+SYMBOL TABLE:
+00000000 l    d  .note.gnu.build-id	00000000 .note.gnu.build-id
+00000000 l    d  .text	00000000 .text
+00000000 l    d  .exit.text	00000000 .exit.text
+00000000 l    d  .init.text	00000000 .init.text
+00000000 l    d  .rodata.str1.1	00000000 .rodata.str1.1
+00000000 l    d  .modinfo	00000000 .modinfo
+00000000 l    d  .data	00000000 .data
+00000000 l    d  .gnu.linkonce.this_module	00000000 .gnu.linkonce.this_module
+00000000 l    d  .bss	00000000 .bss
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .debug_pubnames	00000000 .debug_pubnames
+00000000 l    d  .debug_pubtypes	00000000 .debug_pubtypes
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .comment	00000000 .comment
+00000000 l    d  .note.GNU-stack	00000000 .note.GNU-stack
+00000000 l    df *ABS*	00000000 hello_printk.c
+00000000 l     F .exit.text	00000015 hello_exit
+00000000 l     F .init.text	00000011 hello_init
+00000000 l     O .modinfo	00000026 __mod_author5
+00000028 l     O .modinfo	0000000c __mod_license4
+00000000 l    df *ABS*	00000000 hello_printk.mod.c
+00000034 l     O .modinfo	00000023 __mod_srcversion23
+00000058 l     O .modinfo	00000009 __module_depends
+00000064 l     O .modinfo	00000037 __mod_vermagic5
+00000000 g     O .gnu.linkonce.this_module	00000168 __this_module
+00000000 g     F .exit.text	00000015 cleanup_module
+00000000 g     F .init.text	00000011 init_module
+00000000         *UND*	00000000 mcount
+00000000         *UND*	00000000 printk
+
+
+
+
+[olej@notebook hello_printk]$ readelf -s hello_printk.ko
+
+Symbol table '.symtab' contains 35 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00000000     0 SECTION LOCAL  DEFAULT    1 
+     2: 00000000     0 SECTION LOCAL  DEFAULT    2 
+     3: 00000000     0 SECTION LOCAL  DEFAULT    3 
+     4: 00000000     0 SECTION LOCAL  DEFAULT    5 
+     5: 00000000     0 SECTION LOCAL  DEFAULT    7 
+     6: 00000000     0 SECTION LOCAL  DEFAULT    8 
+     7: 00000000     0 SECTION LOCAL  DEFAULT    9 
+     8: 00000000     0 SECTION LOCAL  DEFAULT   10 
+     9: 00000000     0 SECTION LOCAL  DEFAULT   12 
+    10: 00000000     0 SECTION LOCAL  DEFAULT   13 
+    11: 00000000     0 SECTION LOCAL  DEFAULT   14 
+    12: 00000000     0 SECTION LOCAL  DEFAULT   16 
+    13: 00000000     0 SECTION LOCAL  DEFAULT   18 
+    14: 00000000     0 SECTION LOCAL  DEFAULT   20 
+    15: 00000000     0 SECTION LOCAL  DEFAULT   22 
+    16: 00000000     0 SECTION LOCAL  DEFAULT   24 
+    17: 00000000     0 SECTION LOCAL  DEFAULT   26 
+    18: 00000000     0 SECTION LOCAL  DEFAULT   28 
+    19: 00000000     0 SECTION LOCAL  DEFAULT   29 
+    20: 00000000     0 SECTION LOCAL  DEFAULT   30 
+    21: 00000000     0 FILE    LOCAL  DEFAULT  ABS hello_printk.c
+    22: 00000000    21 FUNC    LOCAL  DEFAULT    3 hello_exit
+    23: 00000000    17 FUNC    LOCAL  DEFAULT    5 hello_init
+    24: 00000000    38 OBJECT  LOCAL  DEFAULT    8 __mod_author5
+    25: 00000028    12 OBJECT  LOCAL  DEFAULT    8 __mod_license4
+    26: 00000000     0 FILE    LOCAL  DEFAULT  ABS hello_printk.mod.c
+    27: 00000034    35 OBJECT  LOCAL  DEFAULT    8 __mod_srcversion23
+    28: 00000058     9 OBJECT  LOCAL  DEFAULT    8 __module_depends
+    29: 00000064    55 OBJECT  LOCAL  DEFAULT    8 __mod_vermagic5
+    30: 00000000   360 OBJECT  GLOBAL DEFAULT   10 __this_module
+    31: 00000000    21 FUNC    GLOBAL DEFAULT    3 cleanup_module
+    32: 00000000    17 FUNC    GLOBAL DEFAULT    5 init_module
+    33: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND mcount
+    34: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND printk
+
+
+==============================================================================================
+
+[olej@notebook first_hello]$ sudo insmod hello_printk.ko
+
+[olej@notebook first_hello]$ sudo rmmod hello_printk
+
+[olej@notebook first_hello]$ dmesg | tail -n50 | grep -v ^audit
+Hello, world!
+Goodbye, world!
+
+==============================================================================================
+
+[olej@notebook first_hello]$ sudo insmod ./hello_printk.ko
+[olej@notebook first_hello]$ lsmod | grep hello
+hello_printk             557  0
+
+[olej@notebook first_hello]$ sudo rmmod hello_printk
+[olej@notebook first_hello]$ lsmod | grep hello
+[olej@notebook first_hello]$
+
+[olej@notebook first_hello]$ sudo insmod hello_printk.ko
+[olej@notebook first_hello]$ lsmod | grep hello
+hello_printk             557  0
+[olej@notebook first_hello]$ sudo rmmod hello_printk
+
+==============================================================================================
+
+06.06.2011
+==========
+
+
+[olej@notebook first_hello]$ cp hello_printk.ko hello_printk_0.ko 
+
+[olej@notebook first_hello]$ sudo insmod hello_printk_0.ko 
+
+[olej@notebook first_hello]$ sudo rmmod hello_printk_0 
+ERROR: Module hello_printk_0 does not exist in /proc/modules
+
+[olej@notebook first_hello]$ lsmod | head -n3
+Module                  Size  Used by
+hello_printk             557  0 
+fuse                   48375  2 
+
+[olej@notebook first_hello]$ sudo rmmod hello_printk
+
+==============================================================================================
+
+25.03.2014
+==========
+
+
+[Olej@modules etc]$ cat /etc/system-release 
+Fedora release 20 (Heisenbug)
+
+[Olej@modules etc]$ uname -a
+Linux modules.localdomain 3.13.6-200.fc20.x86_64 #1 SMP Fri Mar 7 17:02:28 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[Olej@modules first_hello]$ make
+make -C /lib/modules/3.13.6-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/first_hello modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/first_hello/hello_printk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/first_hello/hello_printk.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/first_hello/hello_printk.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.x86_64'
+
+
+[root@modules first_hello]# insmod hello_printk.ko
+
+
+[root@modules first_hello]# lsmod | head -n2
+Module                  Size  Used by
+hello_printk           12425  0 
+
+
+[root@modules first_hello]# dmesg | tail -n1
+[29439.310252] Hello, world!
+
+
+[root@modules first_hello]# tail -n1 /var/log/messages
+Mar 25 16:43:15 modules kernel: Hello, world!
+
+
+[root@modules first_hello]# rmmod hello_printk 
+
+
+[root@modules first_hello]# tail -n4 /var/log/messages
+Mar 25 16:43:15 modules kernel: [29439.310252] Hello, world!
+Mar 25 16:43:15 modules kernel: Hello, world!
+Mar 25 16:47:14 modules kernel: [29678.204746] Goodbye, world!
+Mar 25 16:47:14 modules kernel: Goodbye, world!
+
+[root@modules first_hello]# dmesg | tail -n2
+[29439.310252] Hello, world!
+[29678.204746] Goodbye, world!
+
+
+[Olej@modules first_hello]$ make disclean
+
+
+[Olej@modules first_hello]$ ls
+hello_printk.c  Makefile  printk.hist
+
+==============================================================================================
+
+30.01.2015
+==========
+
+[Olej@modules first_hello]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules first_hello]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/first_hello/hello_printk.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+[Olej@modules first_hello]$ sudo insmod hello_printk.ko 
+[sudo] password for Olej: 
+
+
+
+[Olej@modules first_hello]$ sudo insmod hello_printk.ko 
+[sudo] password for Olej: 
+
+[Olej@modules first_hello]$ lsmod | head -n3
+Module                  Size  Used by
+hello_printk           12425  0 
+fuse                   91410  3 
+
+[Olej@modules first_hello]$ dmesg | tail -n3
+[ 6938.232452] perf interrupt took too long (5077 > 5000), lowering kernel.perf_event_max_sample_rate to 25000
+[32743.562371] hello_printk: module verification failed: signature and/or  required key missing - tainting kernel
+[32743.562677] Hello, world!
+
+
+[Olej@modules ~]$ udevadm monitor --property
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[32723.115045] add      /module/hello_printk (module)
+ACTION=add
+DEVPATH=/module/hello_printk
+SEQNUM=2720
+SUBSYSTEM=module
+
+UDEV  [32723.123963] add      /module/hello_printk (module)
+ACTION=add
+DEVPATH=/module/hello_printk
+SEQNUM=2720
+SUBSYSTEM=module
+USEC_INITIALIZED=723120621
+
+----------------------------------------------------------------------------------------------
+
+[Olej@modules first_hello]$ sudo rmmod hello_printk 
+[sudo] password for Olej: 
+
+[Olej@modules first_hello]$ dmesg | tail -n3
+[32743.562371] hello_printk: module verification failed: signature and/or  required key missing - tainting kernel
+[32743.562677] Hello, world!
+[33073.566067] Goodbye, world!
+
+[Olej@modules ~]$ udevadm monitor --property
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[32723.115045] add      /module/hello_printk (module)
+ACTION=add
+DEVPATH=/module/hello_printk
+SEQNUM=2720
+SUBSYSTEM=module
+
+UDEV  [32723.123963] add      /module/hello_printk (module)
+ACTION=add
+DEVPATH=/module/hello_printk
+SEQNUM=2720
+SUBSYSTEM=module
+USEC_INITIALIZED=723120621
+
+KERNEL[33052.912712] remove   /module/hello_printk (module)
+ACTION=remove
+DEVPATH=/module/hello_printk
+SEQNUM=2721
+SUBSYSTEM=module
+
+UDEV  [33052.921212] remove   /module/hello_printk (module)
+ACTION=remove
+DEVPATH=/module/hello_printk
+SEQNUM=2721
+SUBSYSTEM=module
+USEC_INITIALIZED=52914780
+
+----------------------------------------------------------------------------------------------
+
+[Olej@modules first_hello]$ sudo insmod hello_printk.ko 
+
+[Olej@modules first_hello]$ sudo rmmod hello_printk 
+
+[Olej@modules ~]$ udevadm monitor --property --kernel 
+monitor will print the received events for:
+KERNEL - the kernel uevent
+
+KERNEL[33133.354593] add      /module/hello_printk (module)
+ACTION=add
+DEVPATH=/module/hello_printk
+SEQNUM=2722
+SUBSYSTEM=module
+
+KERNEL[33136.096702] remove   /module/hello_printk (module)
+ACTION=remove
+DEVPATH=/module/hello_printk
+SEQNUM=2723
+SUBSYSTEM=module
+
+^C
+
+==============================================================================================

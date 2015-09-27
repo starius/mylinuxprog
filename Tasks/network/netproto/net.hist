@@ -1,0 +1,141 @@
+[olej@notebook netproto]$ sudo insmod net_proto.ko
+
+[olej@notebook netproto]$ dmesg | tail -n6
+module loaded
+packet received with length: 74
+packet received with length: 60
+packet received with length: 66
+packet received with length: 241
+packet received with length: 52
+
+[olej@notebook netproto]$ sudo rmmod net_proto
+
+----------------------------------------------------------------------------------
+
+[olej@notebook netproto]$ sudo insmod net_protox.ko
+
+[olej@notebook netproto]$ dmesg | tail -n1
+module loaded
+
+[olej@notebook netproto]$ sudo ifconfig xxx0
+xxx0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+
+[olej@notebook netproto]$ sudo ifconfig xxx0 up 192.168.1.199
+
+[olej@notebook netproto]$ sudo ifconfig xxx0
+xxx0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.199  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+-------------------------------------------------------------------------------------
+
+<linux.in.h>
+
+/* Standard well-defined IP protocols.  */
+enum {
+  IPPROTO_IP = 0,<-----><------>/* Dummy protocol for TCP<-----><------>*/
+  IPPROTO_ICMP = 1,<---><------>/* Internet Control Message Protocol<-->*/
+  IPPROTO_IGMP = 2,<---><------>/* Internet Group Management Protocol<->*/
+  IPPROTO_IPIP = 4,<---><------>/* IPIP tunnels (older KA9Q tunnels use 94) */
+  IPPROTO_TCP = 6,<----><------>/* Transmission Control Protocol<------>*/
+  IPPROTO_EGP = 8,<----><------>/* Exterior Gateway Protocol<--><------>*/
+  IPPROTO_PUP = 12,<---><------>/* PUP protocol><------><------><------>*/
+  IPPROTO_UDP = 17,<---><------>/* User Datagram Protocol<-----><------>*/
+...
+  IPPROTO_SCTP   = 132,><------>/* Stream Control Transport Protocol<-->*/
+...
+  IPPROTO_RAW<-> = 255,><------>/* Raw IP packets<-----><------><------>*/
+}
+
+<net/protocol.h>
+
+extern int<---->inet_add_protocol(const struct net_protocol *prot, unsigned char num);
+extern int<---->inet_del_protocol(const struct net_protocol *prot, unsigned char num);
+extern void<--->inet_register_protosw(struct inet_protosw *p);
+extern void<--->inet_unregister_protosw(struct inet_protosw *p);
+
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko
+
+[olej@notebook netproto]$ lsmod | head  -n2
+Module                  Size  Used by
+trn_proto                780  0 
+
+
+[olej@notebook netproto]$ dmesg
+...
+proto init: can't add protocol
+proto init: can't add protocol
+proto init: can't add protocol
+proto module loaded
+
+[olej@notebook netproto]$ lsmod | head  -n2
+Module                  Size  Used by
+trn_proto                780  0 
+
+
+
+
+[root@notebook proc]# cat /proc/modules | grep proto
+trn_proto 780 0 - Live 0xf9a26000
+
+[root@notebook module]# ls -R /sys/module/trn_proto 
+/sys/module/trn_proto:
+holders  initstate  notes  refcnt  sections  srcversion
+
+/sys/module/trn_proto/holders:
+
+/sys/module/trn_proto/notes:
+
+/sys/module/trn_proto/sections:
+__mcount_loc
+
+===================================================================================
+
+29.01.2012
+==========
+
+
+#define PROTO IPPROTO_UDP
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko 
+insmod: error inserting 'trn_proto.ko': -1 Operation not permitted
+
+[olej@notebook netproto]$ dmesg | tail -n60 | grep -v ^audit
+proto init: can't add protocol
+
+[olej@notebook netproto]$ lsmod | grep proto
+
+-----------------------------------------------------------------------------------
+
+
+#define PROTO IPPROTO_RAW
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko 
+
+[olej@notebook netproto]$ dmesg | tail -n30 | grep -v ^audit
+proto module loaded
+
+[olej@notebook netproto]$ sudo rmmod trn_proto 
+
+[olej@notebook netproto]$ dmesg | tail -n60 | grep -v ^audit
+proto module loaded
+proto module unloaded
+
+
+===================================================================================
+
+
+
+

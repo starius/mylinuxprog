@@ -1,0 +1,177 @@
+07.02.2015
+==========
+
+[Olej@modules irq]$ uname -r
+3.17.8-200.fc20.x86_64
+
+[Olej@modules irq]$ make
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/lab1_interrupt.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_tasklet.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_workqueue.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_ser.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/lab1_interrupt.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/lab1_interrupt.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_ser.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_ser.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_tasklet.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_tasklet.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_workqueue.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+
+[Olej@modules irq]$ cat /proc/cpuinfo | grep 'model name' | wc -l
+4
+
+[Olej@modules irq]$ cat /proc/cpuinfo | grep 'model name' | head -n1
+model name	: Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz
+
+[Olej@modules ~]$ lspci
+00:00.0 Host bridge: Intel Corporation 3rd Gen Core processor DRAM Controller (rev 09)
+00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor Graphics Controller (rev 09)
+00:14.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller (rev 04)
+00:16.0 Communication controller: Intel Corporation 7 Series/C210 Series Chipset Family MEI Controller #1 (rev 04)
+00:19.0 Ethernet controller: Intel Corporation 82579V Gigabit Network Connection (rev 04)
+00:1a.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #2 (rev 04)
+00:1b.0 Audio device: Intel Corporation 7 Series/C210 Series Chipset Family High Definition Audio Controller (rev 04)
+00:1c.0 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 1 (rev c4)
+00:1c.1 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 2 (rev c4)
+00:1c.2 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 3 (rev c4)
+00:1c.3 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 4 (rev c4)
+00:1d.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB Enhanced Host Controller #1 (rev 04)
+00:1f.0 ISA bridge: Intel Corporation HM76 Express Chipset LPC Controller (rev 04)
+00:1f.2 SATA controller: Intel Corporation 7 Series Chipset Family 6-port SATA Controller [AHCI mode] (rev 04)
+23:00.0 FireWire (IEEE 1394): JMicron Technology Corp. IEEE 1394 Host Controller (rev 30)
+23:00.1 System peripheral: JMicron Technology Corp. SD/MMC Host Controller (rev 30)
+23:00.2 SD Host controller: JMicron Technology Corp. Standard SD Host Controller (rev 30)
+24:00.0 Network controller: Broadcom Corporation BCM43228 802.11a/b/g/n
+
+
+[Olej@modules irq]$ cat /proc/interrupts 
+           CPU0       CPU1       CPU2       CPU3       
+  0:         34          0          0          0   IO-APIC-edge      timer
+  1:          4          6          0          0   IO-APIC-edge      i8042
+  5:          1          0          0          0   IO-APIC-edge      parport0
+  8:          0          1          0          0   IO-APIC-edge      rtc0
+  9:         28        148          3          6   IO-APIC-fasteoi   acpi
+ 12:          7        200          0          1   IO-APIC-edge      i8042
+ 16:        218        148         31         11   IO-APIC  16-fasteoi   ehci_hcd:usb1, ehci_hcd:usb2
+ 18:          2          0          0          0   IO-APIC  18-fasteoi   firewire_ohci, mmc0
+ 23:          0          0          0          0   IO-APIC  23-edge      lis3lv02d
+ 24:          0          0          0          0   PCI-MSI-edge      PCIe PME
+ 25:          0          0          0          0   PCI-MSI-edge      PCIe PME, pciehp
+ 26:          0          0          0          0   PCI-MSI-edge      PCIe PME
+ 27:          0          0          0          0   PCI-MSI-edge      PCIe PME
+ 28:       5419       2587        640      23588   PCI-MSI-edge      ahci
+ 29:       2498       4274       1816       1517   PCI-MSI-edge      xhci_hcd
+ 30:         15          1      29299          0   PCI-MSI-edge      em1
+ 31:        232      15383         21         19   PCI-MSI-edge      i915
+ 32:          2          0          1         12   PCI-MSI-edge      mei_me
+ 33:        758         29          8         23   PCI-MSI-edge      snd_hda_intel
+NMI:         31         16         25         29   Non-maskable interrupts
+LOC:     370067     400842     331640     320163   Local timer interrupts
+SPU:          0          0          0          0   Spurious interrupts
+PMI:         31         16         25         29   Performance monitoring interrupts
+IWI:          2          0          0          0   IRQ work interrupts
+RTR:          0          0          0          0   APIC ICR read retries
+RES:      17436      20593      21108      17456   Rescheduling interrupts
+CAL:        941        673        836        747   Function call interrupts
+TLB:       7201       7761       6768       7805   TLB shootdowns
+TRM:          0          0          0          0   Thermal event interrupts
+THR:          0          0          0          0   Threshold APIC interrupts
+MCE:          0          0          0          0   Machine check exceptions
+MCP:          5          5          5          5   Machine check polls
+THR:          0          0          0          0   Hypervisor callback interrupts
+ERR:          0
+MIS:          0
+
+=========================================================================================================
+
+09.02.2015
+==========
+
+[Olej@modules sys]$ cat /proc/interrupts | grep 28:
+ 28:       3854       2131        702     452434   PCI-MSI-edge      0000:00:1f.2
+[Olej@modules sys]$ cat /proc/interrupts | grep 30:
+ 30:         34          9    2560285          5   PCI-MSI-edge      em1
+[Olej@modules sys]$ cat /proc/interrupts | grep 31:
+ 31:        190     244345         53         33   PCI-MSI-edge      i915
+
+
+[Olej@modules irq]$ sudo insmod irqcnts.ko irq=31
+[sudo] password for Olej: 
+
+
+[Olej@modules class]$ tree /sys/class/irq_counter 
+/sys/class/irq_counter
+└── counter
+
+0 directories, 1 file
+
+[Olej@modules irq]$ dmesg | tail -n3
+[42659.561313] write 9
+[42659.561316] write 1
+[45136.141843] === register node /sys/irq_counter/counter
+
+[Olej@modules irq]$ sudo insmod irqcnts.ko irq=31
+[sudo] password for Olej: 
+
+[Olej@modules irq]$ dmesg | tail -n3
+[42659.561313] write 9
+[42659.561316] write 1
+[45136.141843] === register node /sys/irq_counter/counter
+
+[Olej@modules irq]$ ls -l /sys/class/irq_counter/counter 
+-r--r--r--. 1 root root 4096 фев  9 22:05 /sys/class/irq_counter/counter
+
+[Olej@modules irq]$ cat /sys/class/irq_counter/counter 
+1026
+
+[Olej@modules irq]$ cat /sys/class/irq_counter/counter 
+1042
+
+[Olej@modules irq]$ cat /sys/class/irq_counter/counter 
+1053
+
+[Olej@modules irq]$ cat /sys/class/irq_counter/counter 
+1073
+
+[Olej@modules irq]$ sudo rmmod irqcnts.ko 
+
+[Olej@modules irq]$ dmesg | tail -n7
+[42659.561316] write 1
+[45136.141843] === register node /sys/irq_counter/counter
+[45263.315607] read 5
+[45265.661246] read 5
+[45267.550385] read 5
+[45269.407494] read 5
+[45283.303995] === module removed: registered 1142 events
+
+
+[Olej@modules irq]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules irq]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntpv.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcnts.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntp.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntpv.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcntpv.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcnts.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqcnts.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/irq/irqs.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+
+=========================================================================================================
+

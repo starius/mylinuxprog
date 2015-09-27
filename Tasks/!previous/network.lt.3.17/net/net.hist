@@ -1,0 +1,139 @@
+===================================================================================
+
+29.01.2012
+==========
+
+[olej@notebook net]$ sudo insmod network.ko 
+
+[olej@notebook net]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN qlen 1000
+    link/ether 00:15:60:c4:ee:02 brd ff:ff:ff:ff:ff:ff
+3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000
+    link/ether 00:13:02:69:70:9b brd ff:ff:ff:ff:ff:ff
+4: vboxnet0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 0a:00:27:00:00:00 brd ff:ff:ff:ff:ff:ff
+5: cipsec0: <NOARP> mtu 1356 qdisc noop state DOWN qlen 1000
+    link/ether 00:0b:fc:f8:01:8f brd ff:ff:ff:ff:ff:ff
+10: mynet0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+[olej@notebook net]$ ifconfig mynet0
+mynet0    Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[olej@notebook net]$ sudo ifconfig mynet0 up 192.168.1.4
+
+[olej@notebook net]$ ifconfig mynet0
+mynet0    Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.4  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[olej@notebook net]$ ping 192.168.1.4
+PING 192.168.1.4 (192.168.1.4) 56(84) bytes of data.
+64 bytes from 192.168.1.4: icmp_seq=1 ttl=64 time=0.076 ms
+64 bytes from 192.168.1.4: icmp_seq=2 ttl=64 time=0.069 ms
+64 bytes from 192.168.1.4: icmp_seq=3 ttl=64 time=0.069 ms
+^C
+--- 192.168.1.4 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2682ms
+rtt min/avg/max/mdev = 0.069/0.071/0.076/0.007 ms
+
+
+
+
+[olej@notebook net]$ sudo rmmod network
+
+
+[olej@notebook net]$ dmesg | tail -n250 | grep -v ^audit
+Loading stub network module:....
+my_setup()
+Succeeded in loading mynet0!
+
+Hit: my_open(mynet0)
+mynet0: no IPv6 routers present
+Unloading stub network module
+
+Hit: my_close(mynet0)
+
+
+-----------------------------------------------------------------------------------
+
+===================================================================================
+
+[olej@notebook net]$ sudo insmod network.ko 
+
+[olej@notebook net]$ sudo insmod devices.ko 
+insmod: error inserting 'devices.ko': -1 Operation not permitted
+
+[olej@notebook net]$ dmesg | tail -n30 | grep -v ^audit
+Hello: module loaded at 0xf99c3000
+Hello: dev_base address=0xf714fc00
+name =     lo irq=   0 trans_start=           0 last_rx=           0
+name =   eth0 irq=  16 trans_start=           0 last_rx=           0
+name =  wlan0 irq=   0 trans_start=    48159421 last_rx=           0
+name = vboxnet0 irq=   0 trans_start=           0 last_rx=           0
+name = cipsec0 irq=   0 trans_start=           0 last_rx=           0
+
+
+===================================================================================
+
+09.04.2012
+==========
+
+[olej@fedora16vm net]$ sudo insmod ./network.ko
+
+[olej@fedora16vm net]$ dmesg | tail -n4
+[ 7355.005588] Loading stub network module:....
+[ 7355.005597] my_setup()
+[ 7355.006703] Succeeded in loading fict0!
+[ 7355.006704] 
+
+[olej@fedora16vm net]$ ip link show dev fict0
+5: fict0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+[olej@fedora16vm net]$ sudo ifconfig fict0 192.168.56.50
+
+[olej@fedora16vm net]$ dmesg | tail -n6
+[ 7355.005588] Loading stub network module:....
+[ 7355.005597] my_setup()
+[ 7355.006703] Succeeded in loading fict0!
+[ 7355.006704] 
+[ 7562.604588] Hit: my_open(fict0)
+[ 7573.442094] fict0: no IPv6 routers present
+
+
+[olej@fedora16vm net]$ ping 192.168.56.50
+PING 192.168.56.50 (192.168.56.50) 56(84) bytes of data.
+64 bytes from 192.168.56.50: icmp_req=1 ttl=64 time=0.253 ms
+64 bytes from 192.168.56.50: icmp_req=2 ttl=64 time=0.056 ms
+64 bytes from 192.168.56.50: icmp_req=3 ttl=64 time=0.057 ms
+64 bytes from 192.168.56.50: icmp_req=4 ttl=64 time=0.056 ms
+^C
+--- 192.168.56.50 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3000ms
+rtt min/avg/max/mdev = 0.056/0.105/0.253/0.085 ms
+
+[olej@fedora16vm net]$ ifconfig fict0
+fict0     Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.56.50  Bcast:192.168.56.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+-----------------------------------------------------------------------------------
+===================================================================================

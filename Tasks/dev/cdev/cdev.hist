@@ -1,0 +1,776 @@
+22.01.2012
+==========
+
+[olej@notebook cdev]$ sudo insmod fixdev.ko 
+
+[olej@notebook cdev]$ dmesg | grep ===
+=========== module installed 249:0 ==============
+
+[olej@notebook cdev]$ lsmod | grep fix
+fixdev                  1384  0 
+
+[olej@notebook cdev]$ cat /proc/devices | grep my_
+249 my_cdev_dev
+
+[olej@notebook cdev]$ sudo mknod -m0666 /dev/z0 c 249 0
+
+[olej@notebook cdev]$ ls -l /dev | grep 249
+crw-rw-rw-  1 root root      249,   0 Янв 22 13:29 z0
+
+[olej@notebook cdev]$ cat /dev/z0
+Hello, world!
+
+[olej@notebook cdev]$ sudo rm /dev/z0
+
+[olej@notebook cdev]$ cat /dev/z0
+cat: /dev/z0: Нет такого файла или каталога
+
+[olej@notebook cdev]$ lsmod | grep fix
+fixdev                  1384  0 
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo mknod -m0666 ./z0 c 249 0
+
+[olej@notebook cdev]$ cat ./z0
+Hello, world!
+
+[olej@notebook cdev]$ sudo rm ./z0
+
+[olej@notebook cdev]$ sudo rmmod fixdev
+
+[olej@notebook cdev]$ lsmod | grep fix
+
+[olej@notebook cdev]$ cat /dev/abc
+cat: /dev/abc: Нет такого устройства или адреса
+
+[olej@notebook cdev]$ ls -l /dev/abc
+crw-rw-rw- 1 root root 255, 0 Янв 22 14:13 /dev/abc
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo insmod fixdev.ko major=250
+insmod: error inserting 'fixdev.ko': -1 Device or resource busy
+
+[olej@notebook cdev]$ dmesg | grep ===
+=== Can not register char device region
+
+[olej@notebook cdev]$ ls -l /dev | grep 250
+crw-rw----  1 root root      250,   0 Янв 22 11:49 hidraw0
+crw-rw----  1 root root      250,   1 Янв 22 11:49 hidraw1
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo insmod fixdev.ko major=255
+
+[olej@notebook cdev]$ ls -l /dev | grep 255
+
+[olej@notebook cdev]$ dmesg | grep ===
+=========== module installed 255:0 ==============
+
+[olej@notebook cdev]$ sudo mknod -m0666 /dev/abc c 255 0
+
+[olej@notebook cdev]$ cat /dev/abc
+Hello, world!
+
+[olej@notebook cdev]$ dmesg | tail -n20 | grep ===
+=== read : 32768
+=== read return : 14
+=== read : 32768
+=== read return : 0
+
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo insmod fixdev.ko major=255
+
+[olej@notebook cdev]$ sudo mknod -m0666 /dev/abc2 c 255 2
+
+[olej@notebook cdev]$ sudo mknod -m0666 /dev/abc3 c 255 3
+
+[olej@notebook cdev]$ ls -l /dev | grep 255
+crw-rw-rw-  1 root root      255,   2 Янв 22 14:37 abc2
+crw-rw-rw-  1 root root      255,   3 Янв 22 14:37 abc3
+
+[olej@notebook cdev]$ cat /dev/abc2
+Hello, world!
+
+[olej@notebook cdev]$ cat /dev/abc3
+cat: /dev/abc3: Нет такого устройства или адреса
+
+=========================================================================
+
+[olej@notebook cdev]$ ls -l /dev/dyn* 
+ls: невозможно получить доступ к /dev/dyn*: Нет такого файла или каталога
+
+[olej@notebook cdev]$ sudo insmod dyndev.ko
+
+[olej@notebook cdev]$ ls -l /dev/dyn* 
+crw-rw---- 1 root root 249, 0 Янв 22 18:09 /dev/dyn_0
+crw-rw---- 1 root root 249, 1 Янв 22 18:09 /dev/dyn_1
+crw-rw---- 1 root root 249, 2 Янв 22 18:09 /dev/dyn_2
+
+[olej@notebook cdev]$ cat /dev/dyn_2
+Hello, world!
+
+
+
+
+[olej@notebook class]$ ls /sys/class/d*
+/sys/class/dma:
+
+/sys/class/dmi:
+id
+
+/sys/class/drm:
+card0  card0-LVDS-1  card0-SVIDEO-1  card0-VGA-1  controlD64  version
+
+/sys/class/dyn_class:
+dyn_0  dyn_1  dyn_2
+
+
+
+
+
+[olej@notebook class]$ tree /sys/class/dyn_class/dyn_0
+/sys/class/dyn_class/dyn_0
+├── dev
+├── power
+│   └── wakeup
+├── subsystem -> ../../../../class/dyn_class
+└── uevent
+
+
+
+
+[olej@notebook class]$ ls -l /dev/dyn* 
+crw-rw---- 1 root root 249, 0 Янв 22 18:09 /dev/dyn_0
+crw-rw---- 1 root root 249, 1 Янв 22 18:09 /dev/dyn_1
+crw-rw---- 1 root root 249, 2 Янв 22 18:09 /dev/dyn_2
+
+[olej@notebook class]$ sudo rmmod dyndev
+
+[olej@notebook class]$ ls -l /dev/dyn* 
+ls: невозможно получить доступ к /dev/dyn*: Нет такого файла или каталога
+
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ ls -l /dev/dyn* 
+ls: невозможно получить доступ к /dev/dyn*: Нет такого файла или каталога
+
+[olej@notebook cdev]$ sudo insmod dyndev.ko
+
+[olej@notebook cdev]$ dmesg | tail -n30 | grep ==
+======== module installed 249:[0-2] ===========
+
+[olej@notebook cdev]$ ls -l /dev | grep 249
+crw-rw----  1 root root      249,   0 Янв 22 18:21 dyn_0
+crw-rw----  1 root root      249,   1 Янв 22 18:21 dyn_1
+crw-rw----  1 root root      249,   2 Янв 22 18:21 dyn_2
+
+[olej@notebook proc]$ cat /proc/modules | grep dyn
+dyndev 1480 0 - Live 0xf88de000
+
+[olej@notebook proc]$ cat /proc/devices | grep dyn
+249 my_dyndev_mod
+
+[olej@notebook cdev]$ cat /dev/dyn_1
+Hello, world!
+
+[olej@notebook cdev]$ sudo rmmod dyndev
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo insmod dyndev.ko major=260
+
+[olej@notebook cdev]$ ls -l /dev | grep 260
+crw-rw----  1 root root      260,   0 Янв 22 18:57 dyn_0
+crw-rw----  1 root root      260,   1 Янв 22 18:57 dyn_1
+crw-rw----  1 root root      260,   2 Янв 22 18:57 dyn_2
+
+[olej@notebook cdev]$ cat /dev/dyn_1
+Hello, world!
+
+[olej@notebook cdev]$ sudo rmmod dyndev
+
+[olej@notebook cdev]$ ls -l /dev | grep 260
+[olej@notebook cdev]$ 
+
+=========================================================================
+
+22.01.2012
+==========
+
+[olej@notebook cdev]$ sudo insmod fixdev.ko
+
+[olej@notebook cdev]$  dmesg | grep ===
+=========== module installed 249:0 ==============
+
+[olej@notebook cdev]$ sudo mknod -m0666 /dev/z0 c 249 0
+
+[olej@notebook cdev]$ cat /dev/z0
+Hello, world!
+
+[olej@notebook cdev]$ sudo rm /dev/z0
+
+[olej@notebook cdev]$ sudo rmmod fixdev
+
+[olej@notebook cdev]$ dmesg | grep ===
+=========== module installed 249:0 ==============
+=== read : 32768
+=== read return : 14
+=== read : 32768
+=== read return : 0
+=============== module removed ==================
+
+-------------------------------------------------------------------------
+
+[olej@notebook cdev]$ sudo insmod dyndev.ko
+
+[olej@notebook cdev]$ cat /dev/dyn_2
+Hello, world!
+
+[olej@notebook cdev]$ sudo rmmod dyndev
+
+[olej@notebook cdev]$ dmesg | tail -n 40 | grep ===
+======== module installed 249:[0-2] ===========
+=== read : 32768
+=== read return : 14
+=== read : 32768
+=== read return : 0
+=============== module removed ==================
+
+
+=========================================================================
+
+05.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+-------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod fixdev.ko
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | grep ===
+[20922.027281] =========== module installed 246:0 ==============
+
+bash-4.2$ sudo rmmod fixdev
+
+bash-4.2$ dmesg | grep ===
+[20922.027281] =========== module installed 246:0 ==============
+[21033.223832] =============== module removed ==================
+
+
+bash-4.2$ udevadm monitor --property --kernel
+monitor will print the received events for:
+KERNEL - the kernel uevent
+
+KERNEL[20922.026051] add      /module/fixdev (module)
+ACTION=add
+DEVPATH=/module/fixdev
+SEQNUM=2322
+SUBSYSTEM=module
+
+KERNEL[21033.224061] remove   /module/fixdev (module)
+ACTION=remove
+DEVPATH=/module/fixdev
+SEQNUM=2323
+SUBSYSTEM=module
+
+-------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod fixdev.ko
+[sudo] password for Olej: 
+
+
+bash-4.2$ lsmod | head -n2
+Module                  Size  Used by
+fixdev                 12630  0 
+
+
+bash-4.2$ dmesg | tail -n1 | grep ===
+[21383.789733] =========== module installed 246:0 ==============
+
+
+bash-4.2$ udevadm monitor --property
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[21383.789383] add      /module/fixdev (module)
+ACTION=add
+DEVPATH=/module/fixdev
+SEQNUM=2324
+SUBSYSTEM=module
+
+UDEV  [21383.790971] add      /module/fixdev (module)
+ACTION=add
+DEVPATH=/module/fixdev
+SEQNUM=2324
+SUBSYSTEM=module
+USEC_INITIALIZED=383789737
+
+... ...
+
+
+bash-4.2$ cat /proc/devices | grep my_cdev_dev
+246 my_cdev_dev
+
+
+bash-4.2$ ls -l /sys/module/fixdev
+итого 0
+-r--r--r-- 1 root root 4096 апр 10 12:29 coresize
+drwxr-xr-x 2 root root    0 апр 10 12:29 holders
+-r--r--r-- 1 root root 4096 апр 10 12:56 initsize
+-r--r--r-- 1 root root 4096 апр 10 12:54 initstate
+drwxr-xr-x 2 root root    0 апр 10 12:54 notes
+drwxr-xr-x 2 root root    0 апр 10 12:54 parameters
+-r--r--r-- 1 root root 4096 апр 10 12:29 refcnt
+drwxr-xr-x 2 root root    0 апр 10 12:54 sections
+-r--r--r-- 1 root root 4096 апр 10 12:54 srcversion
+-r--r--r-- 1 root root 4096 апр 10 12:54 taint
+--w------- 1 root root 4096 апр 10 12:28 uevent
+-r--r--r-- 1 root root 4096 апр 10 12:54 version
+
+bash-4.2$ cat /sys/module/fixdev/parameters/major
+246
+
+
+=========================================================================
+
+10.04.2014
+==========
+
+bash-4.2$ sudo insmod fixdev.ko
+[sudo] password for Olej:
+
+bash-4.2$ lsmod | head -n2
+Module                  Size  Used by
+fixdev                 12630  0
+
+bash-4.2$ dmesg | tail -n1 | grep ===
+[21383.789733] =========== module installed 246:0 ==============
+
+
+
+bash-4.2$ udevadm monitor --property
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[21383.789383] add      /module/fixdev (module)
+ACTION=add
+DEVPATH=/module/fixdev
+SEQNUM=2324
+SUBSYSTEM=module
+
+UDEV  [21383.790971] add      /module/fixdev (module)
+ACTION=add
+DEVPATH=/module/fixdev
+SEQNUM=2324
+SUBSYSTEM=module
+USEC_INITIALIZED=383789737
+
+... ...
+
+
+
+bash-4.2$ cat /proc/devices | grep my_cdev_dev
+246 my_cdev_dev
+
+
+
+bash-4.2$ ls -l /sys/module/fixdev
+итого 0
+-r--r--r-- 1 root root 4096 апр 10 12:29 coresize
+drwxr-xr-x 2 root root    0 апр 10 12:29 holders
+-r--r--r-- 1 root root 4096 апр 10 12:56 initsize
+-r--r--r-- 1 root root 4096 апр 10 12:54 initstate
+drwxr-xr-x 2 root root    0 апр 10 12:54 notes
+drwxr-xr-x 2 root root    0 апр 10 12:54 parameters
+-r--r--r-- 1 root root 4096 апр 10 12:29 refcnt
+drwxr-xr-x 2 root root    0 апр 10 12:54 sections
+-r--r--r-- 1 root root 4096 апр 10 12:54 srcversion
+-r--r--r-- 1 root root 4096 апр 10 12:54 taint
+--w------- 1 root root 4096 апр 10 12:28 uevent
+-r--r--r-- 1 root root 4096 апр 10 12:54 version
+
+
+bash-4.2$ cat /sys/module/fixdev/parameters/major
+246
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+[root@notebook etc]# cat /etc/system-release 
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+
+bash-4.2$ systemctl status systemd-udevd.service
+systemd-udevd.service - udev Kernel Device Manager
+   Loaded: loaded (/usr/lib/systemd/system/systemd-udevd.service; static)
+   Active: active (running) since Чт 2014-04-10 06:31:46 EEST; 13h ago
+     Docs: man:systemd-udevd.service(8)
+           man:udev(7)
+ Main PID: 306 (systemd-udevd)
+   CGroup: /system.slice/systemd-udevd.service
+           └─306 /usr/lib/systemd/systemd-udevd
+
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain systemd-udevd[322]: Error calling EVIOCSKEYCODE: Invalid argument
+апр 10 06:31:48 notebook.localdomain mtp-probe[344]: checking bus 1, device 7: "/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-1/1-1.2"
+апр 10 06:31:48 notebook.localdomain systemd-udevd[320]: error opening ATTR{/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-1/1-1...ctory
+Hint: Some lines were ellipsized, use -l to show in full.
+
+-------------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ udevadm info --path=/module/fixdev --export
+P: /module/fixdev
+E: DEVPATH=/module/fixdev
+E: SUBSYSTEM=module
+
+
+=========================================================================
+
+22.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ sudo insmod dyndev.ko major=260
+[sudo] password for Olej: 
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+dyndev                 12602  0 
+fuse                   80271  2 
+
+bash-4.2$ ls -l /dev | grep 260
+crw-------  1 root root    260,   0 апр 22 12:56 dyn_0
+crw-------  1 root root    260,   1 апр 22 12:56 dyn_1
+crw-------  1 root root    260,   2 апр 22 12:56 dyn_2
+
+bash-4.2$ cat /dev/dyn_2
+cat: /dev/dyn_2: Отказано в доступе
+
+bash-4.2$ sudo cat /dev/dyn_2
+Hello, world!
+
+-------------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod dyndev.ko
+[sudo] password for Olej: 
+
+bash-4.2$ ls -l /dev/dyn*
+crw------- 1 root root 246, 0 апр 22 13:45 /dev/dyn_0
+crw------- 1 root root 246, 1 апр 22 13:45 /dev/dyn_1
+crw------- 1 root root 246, 2 апр 22 13:45 /dev/dyn_2
+
+bash-4.2$ sudo chmod 0444 /dev/dyn*
+
+bash-4.2$ ls -l /dev/dyn*
+cr--r--r-- 1 root root 246, 0 апр 22 13:45 /dev/dyn_0
+cr--r--r-- 1 root root 246, 1 апр 22 13:45 /dev/dyn_1
+cr--r--r-- 1 root root 246, 2 апр 22 13:45 /dev/dyn_2
+
+bash-4.2$ cat /dev/dyn_2
+Hello, world!
+
+bash-4.2$ sudo rmmod dyndev
+
+bash-4.2$ ls -l /dev/dyn*
+ls: невозможно получить доступ к /dev/dyn*: Нет такого файла или каталога
+
+-------------------------------------------------------------------------------------------------------------------
+
+=========================================================================
+
+23.04.2014
+==========
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/dyndev.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/cdev/fixdev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+bash-4.2$ sudo insmod dyndev.ko  major=260
+[sudo] password for Olej: 
+
+bash-4.2$ dmesg | tail -n1
+[31892.194355] ======== module installed 260:[0-2] ===========
+
+bash-4.2$ ls -l /dev/dyn*
+crw------- 1 root root 260, 0 апр 23 13:22 /dev/dyn_0
+crw------- 1 root root 260, 1 апр 23 13:22 /dev/dyn_1
+crw------- 1 root root 260, 2 апр 23 13:22 /dev/dyn_2
+
+bash-4.2$ sudo rmmod dyndev
+
+bash-4.2$ ls -l /dev/dyn*
+ls: невозможно получить доступ к /dev/dyn*: Нет такого файла или каталога
+
+-------------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ sudo insmod dyndev.ko  major=260
+
+bash-4.2$ udevadm info /sys/class/dyn_class/dyn_0
+P: /devices/virtual/dyn_class/dyn_0
+N: dyn_0
+E: DEVNAME=/dev/dyn_0
+E: DEVPATH=/devices/virtual/dyn_class/dyn_0
+E: MAJOR=260
+E: MINOR=0
+E: SUBSYSTEM=dyn_class
+
+
+bash-4.2$ udevadm info  -a -p /sys/class/dyn_class/dyn_0
+
+Udevadm info starts with the device specified by the devpath and then
+walks up the chain of parent devices. It prints for every device
+found, all possible attributes in the udev rules key format.
+A rule to match, can be composed by the attributes of the device
+and the attributes from one single parent device.
+
+  looking at device '/devices/virtual/dyn_class/dyn_0':
+    KERNEL=="dyn_0"
+    SUBSYSTEM=="dyn_class"
+    DRIVER==""
+
+
+bash-4.2$ udevadm info -q path -n /dev/dyn_1
+/devices/virtual/dyn_class/dyn_1
+
+
+bash-4.2$ udevadm test `udevadm info -q path -n /dev/dyn_1`
+calling: test
+version 208
+This program is for debugging only, it does not run any program
+specified by a RUN key. It may show incorrect results, because
+some values may be different, or not available at a simulation run.
+
+=== trie on-disk ===
+tool version:          208
+file size:         5913667 bytes
+header size             80 bytes
+strings            1299963 bytes
+nodes              4613624 bytes
+load module index
+read rules file: /usr/lib/udev/rules.d/10-dm.rules
+read rules file: /usr/lib/udev/rules.d/11-dm-lvm.rules
+read rules file: /usr/lib/udev/rules.d/13-dm-disk.rules
+read rules file: /usr/lib/udev/rules.d/40-libgphoto2.rules
+IMPORT found builtin 'usb_id --export %%p', replacing /usr/lib/udev/rules.d/40-libgphoto2.rules:11
+read rules file: /usr/lib/udev/rules.d/40-usb-media-players.rules
+read rules file: /usr/lib/udev/rules.d/40-usb_modeswitch.rules
+read rules file: /usr/lib/udev/rules.d/42-usb-hid-pm.rules
+read rules file: /usr/lib/udev/rules.d/50-udev-default.rules
+read rules file: /usr/lib/udev/rules.d/56-hpmud.rules
+read rules file: /usr/lib/udev/rules.d/60-cdrom_id.rules
+read rules file: /usr/lib/udev/rules.d/60-drm.rules
+read rules file: /usr/lib/udev/rules.d/60-fprint-autosuspend.rules
+read rules file: /usr/lib/udev/rules.d/60-keyboard.rules
+read rules file: /usr/lib/udev/rules.d/60-net.rules
+read rules file: /usr/lib/udev/rules.d/60-pcmcia.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-alsa.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-input.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-serial.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-storage-tape.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-storage.rules
+read rules file: /usr/lib/udev/rules.d/60-persistent-v4l.rules
+read rules file: /usr/lib/udev/rules.d/60-raw.rules
+read rules file: /usr/lib/udev/rules.d/61-accelerometer.rules
+read rules file: /usr/lib/udev/rules.d/61-gnome-bluetooth-rfkill.rules
+read rules file: /usr/lib/udev/rules.d/62-multipath.rules
+read rules file: /usr/lib/udev/rules.d/63-md-raid-arrays.rules
+read rules file: /usr/lib/udev/rules.d/64-btrfs.rules
+read rules file: /usr/lib/udev/rules.d/64-md-raid-assembly.rules
+read rules file: /usr/lib/udev/rules.d/65-libwacom.rules
+read rules file: /usr/lib/udev/rules.d/65-md-incremental.rules
+read rules file: /usr/lib/udev/rules.d/65-sane-backends.rules
+read rules file: /usr/lib/udev/rules.d/69-cd-sensors.rules
+read rules file: /usr/lib/udev/rules.d/69-dm-lvm-metad.rules
+read rules file: /usr/lib/udev/rules.d/69-libmtp.rules
+read rules file: /usr/lib/udev/rules.d/69-pilot-link.rules
+read rules file: /usr/lib/udev/rules.d/69-xorg-vmmouse.rules
+read rules file: /usr/lib/udev/rules.d/70-power-switch.rules
+read rules file: /usr/lib/udev/rules.d/70-printers.rules
+read rules file: /usr/lib/udev/rules.d/70-spice-vdagentd.rules
+read rules file: /usr/lib/udev/rules.d/70-touchpad-quirks.rules
+read rules file: /usr/lib/udev/rules.d/70-uaccess.rules
+read rules file: /usr/lib/udev/rules.d/70-wacom.rules
+read rules file: /usr/lib/udev/rules.d/71-biosdevname.rules
+read rules file: /usr/lib/udev/rules.d/71-seat.rules
+read rules file: /usr/lib/udev/rules.d/73-seat-late.rules
+read rules file: /usr/lib/udev/rules.d/75-net-description.rules
+read rules file: /usr/lib/udev/rules.d/75-probe_mtd.rules
+read rules file: /usr/lib/udev/rules.d/75-tty-description.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-ericsson-mbm.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-huawei-net-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-longcheer-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-nokia-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-pcmcia-device-blacklist.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-platform-serial-whitelist.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-simtech-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-telit-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-usb-device-blacklist.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-usb-serial-adapters-greylist.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-x22x-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-mm-zte-port-types.rules
+read rules file: /usr/lib/udev/rules.d/77-nm-olpc-mesh.rules
+read rules file: /usr/lib/udev/rules.d/78-sound-card.rules
+read rules file: /usr/lib/udev/rules.d/80-drivers.rules
+read rules file: /usr/lib/udev/rules.d/80-kvm.rules
+read rules file: /usr/lib/udev/rules.d/80-mm-candidate.rules
+read rules file: /usr/lib/udev/rules.d/80-net-name-slot.rules
+read rules file: /usr/lib/udev/rules.d/80-udisks.rules
+read rules file: /usr/lib/udev/rules.d/80-udisks2.rules
+read rules file: /usr/lib/udev/rules.d/85-regulatory.rules
+read rules file: /usr/lib/udev/rules.d/85-usbmuxd.rules
+read rules file: /usr/lib/udev/rules.d/90-alsa-restore.rules
+read rules file: /usr/lib/udev/rules.d/90-alsa-tools-firmware.rules
+read rules file: /usr/lib/udev/rules.d/90-libgpod.rules
+read rules file: /usr/lib/udev/rules.d/90-pulseaudio.rules
+read rules file: /usr/lib/udev/rules.d/91-drm-modeset.rules
+read rules file: /usr/lib/udev/rules.d/95-cd-devices.rules
+read rules file: /usr/lib/udev/rules.d/95-dm-notify.rules
+read rules file: /usr/lib/udev/rules.d/95-udev-late.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-dell.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-fujitsu.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-gateway.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-ibm.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-lenovo.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-battery-recall-toshiba.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-csr.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-hid.rules
+read rules file: /usr/lib/udev/rules.d/95-upower-wup.rules
+read rules file: /etc/udev/rules.d/98-kexec.rules
+read rules file: /usr/lib/udev/rules.d/99-qemu-guest-agent.rules
+read rules file: /usr/lib/udev/rules.d/99-systemd.rules
+rules contain 393216 bytes tokens (32768 * 12 bytes), 38543 bytes strings
+30788 strings (258865 bytes), 27323 de-duplicated (223788 bytes), 3466 trie nodes used
+handling device node '/dev/dyn_1', devnum=c260:1, mode=0600, uid=0, gid=0
+preserve permissions /dev/dyn_1, 020600, uid=0, gid=0
+preserve already existing symlink '/dev/char/260:1' to '../dyn_1'
+unable to create temporary db file '/run/udev/data/c260:1.tmp': Permission denied
+ACTION=add
+DEVNAME=/dev/dyn_1
+DEVPATH=/devices/virtual/dyn_class/dyn_1
+MAJOR=260
+MINOR=1
+SUBSYSTEM=dyn_class
+USEC_INITIALIZED=61839397113
+unload module index
+
+-------------------------------------------------------------------------------------------------------------------
+
+http://rus-linux.net/lib.php?name=MyLDP/sys-conf/udev.html :
+
+KERNEL=="inotify", NAME="misc/%k", SYMLINK+="%k", MODE="0666"
+
+-------------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ pwd
+/usr/lib/udev/rules.d
+
+bash-4.2$ ls
+10-dm.rules			  65-sane-backends.rules		    77-nm-olpc-mesh.rules
+11-dm-lvm.rules			  69-cd-sensors.rules			    78-sound-card.rules
+13-dm-disk.rules		  69-dm-lvm-metad.rules			    80-drivers.rules
+40-libgphoto2.rules		  69-libmtp.rules			    80-kvm.rules
+40-usb-media-players.rules	  69-pilot-link.rules			    80-mm-candidate.rules
+40-usb_modeswitch.rules		  69-xorg-vmmouse.rules			    80-net-name-slot.rules
+42-usb-hid-pm.rules		  70-power-switch.rules			    80-udisks2.rules
+50-udev-default.rules		  70-printers.rules			    80-udisks.rules
+56-hpmud.rules			  70-spice-vdagentd.rules		    85-regulatory.rules
+60-cdrom_id.rules		  70-touchpad-quirks.rules		    85-usbmuxd.rules
+60-drm.rules			  70-uaccess.rules			    90-alsa-restore.rules
+60-fprint-autosuspend.rules	  70-wacom.rules			    90-alsa-tools-firmware.rules
+60-keyboard.rules		  71-biosdevname.rules			    90-libgpod.rules
+60-net.rules			  71-seat.rules				    90-pulseaudio.rules
+60-pcmcia.rules			  73-seat-late.rules			    91-drm-modeset.rules
+60-persistent-alsa.rules	  75-net-description.rules		    95-cd-devices.rules
+60-persistent-input.rules	  75-probe_mtd.rules			    95-dm-notify.rules
+60-persistent-serial.rules	  75-tty-description.rules		    95-udev-late.rules
+60-persistent-storage.rules	  77-mm-ericsson-mbm.rules		    95-upower-battery-recall-dell.rules
+60-persistent-storage-tape.rules  77-mm-huawei-net-port-types.rules	    95-upower-battery-recall-fujitsu.rules
+60-persistent-v4l.rules		  77-mm-longcheer-port-types.rules	    95-upower-battery-recall-gateway.rules
+60-raw.rules			  77-mm-nokia-port-types.rules		    95-upower-battery-recall-ibm.rules
+61-accelerometer.rules		  77-mm-pcmcia-device-blacklist.rules	    95-upower-battery-recall-lenovo.rules
+61-gnome-bluetooth-rfkill.rules   77-mm-platform-serial-whitelist.rules     95-upower-battery-recall-toshiba.rules
+62-multipath.rules		  77-mm-simtech-port-types.rules	    95-upower-csr.rules
+63-md-raid-arrays.rules		  77-mm-telit-port-types.rules		    95-upower-hid.rules
+64-btrfs.rules			  77-mm-usb-device-blacklist.rules	    95-upower-wup.rules
+64-md-raid-assembly.rules	  77-mm-usb-serial-adapters-greylist.rules  99-qemu-guest-agent.rules
+65-libwacom.rules		  77-mm-x22x-port-types.rules		    99-systemd.rules
+65-md-incremental.rules		  77-mm-zte-port-types.rules
+
+
+
+bash-4.2$ cat 60-cdrom_id.rules 
+# do not edit this file, it will be overwritten on update
+
+ACTION=="remove", GOTO="cdrom_end"
+SUBSYSTEM!="block", GOTO="cdrom_end"
+KERNEL!="sr[0-9]*|xvd*", GOTO="cdrom_end"
+ENV{DEVTYPE}!="disk", GOTO="cdrom_end"
+
+# unconditionally tag device as CDROM
+KERNEL=="sr[0-9]*", ENV{ID_CDROM}="1"
+
+# media eject button pressed
+ENV{DISK_EJECT_REQUEST}=="?*", RUN+="cdrom_id --eject-media $devnode", GOTO="cdrom_end"
+
+# import device and media properties and lock tray to
+# enable the receiving of media eject button events
+IMPORT{program}="cdrom_id --lock-media $devnode"
+
+KERNEL=="sr0", SYMLINK+="cdrom", OPTIONS+="link_priority=-100"
+
+LABEL="cdrom_end"
+
+
+
+bash-4.2$ pwd
+/usr/lib/udev
+
+bash-4.2$ file cdrom_id 
+cdrom_id: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=08525e301e6493d1e835914249e88ab549431b99, stripped
+
+
+=========================================================================

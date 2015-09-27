@@ -1,0 +1,463 @@
+=======================================================================
+
+21.12.2011
+==========
+
+[olej@notebook int80]$ ./mp
+getpid return : 14180
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : -1
+
+[olej@notebook int80]$ sudo ./mp
+getpid return : 14182
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+
+[olej@notebook int80]$ ls -l ZZZ
+crw------- 1 root root 247, 0 Дек 20 22:00 ZZZ
+
+[olej@notebook int80]$ rm ZZZ
+rm: удалить защищенный от записи знаковый специальный файл `ZZZ'? y
+
+-----------------------------------------------------------------------
+
+[olej@notebook int80]$ sudo insmod mdu.ko 
+insmod: error inserting 'mdu.ko': -1 Operation not permitted
+
+[olej@notebook int80]$ dmesg | tail -n30 | grep === 
+=== string for write length = 58
+=== write return : -14
+=== mknod return : -14
+=== getpid return : 14217
+
+[olej@notebook int80]$ ps -A | grep 14217
+[olej@notebook int80]$
+
+-----------------------------------------------------------------------
+
+[olej@notebook int80]$ sudo insmod mdc.ko 
+=== эталонная строка для вывода!
+insmod: error inserting 'mdc.ko': -1 Operation not permitted
+
+[olej@notebook int80]$ dmesg | tail -n30 | grep === 
+=== string for write length = 58
+=== write return : 58
+=== mknod return : 0
+=== getpid return : 14248
+
+[olej@notebook int80]$ ls -l ZZZ
+cr--r--r-- 1 root root 0, 63232 Дек 20 22:04 ZZZ
+
+=======================================================================
+
+10.02.2012
+==========
+
+[olej@notebook int80]$ sudo ./mp
+getpid return : 6156
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+[olej@notebook int80]$ ls -l ZZZ
+crw------- 1 root root 247, 0 Фев 10 15:12 ZZZ
+
+
+[olej@notebook int80]$ sudo ./mpsys
+getpid return : 6489
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+[olej@notebook int80]$ ls -l ZZZ
+crw------- 1 root root 247, 0 Фев 10 15:15 ZZZ
+
+
+[olej@notebook int80]$ sudo ./mplib
+getpid return : 8209
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod error : File exists
+
+[olej@notebook int80]$ rm ZZZ
+rm: удалить защищенный от записи знаковый специальный файл `ZZZ'? y
+
+[olej@notebook int80]$ sudo ./mplib
+getpid return : 8212
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+
+[olej@notebook int80]$ ls -l ZZZ
+crw------- 1 root root 247, 0 Фев 10 15:32 ZZZ
+
+-----------------------------------------------------------------------
+
+=======================================================================
+
+25.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+gcc     mp.c   -o mp
+gcc     mpsys.c   -o mpsys
+gcc     mplib.c   -o mplib
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80 modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdu.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdc.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdc.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdc.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdu.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/int80/mdu.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+
+-----------------------------------------------------------------------
+
+bash-4.2$ sudo insmod mdu.ko
+[sudo] password for Olej: 
+Sorry, try again.
+[sudo] password for Olej: 
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] CPU: 1 PID: 11997 Comm: insmod Tainted: PF          O 3.13.6-200.fc20.i686 #1
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] Hardware name: Hewlett-Packard HP Compaq nc6320 (ES527EA#ACB)/30AA, BIOS 68YDU Ver. F.0E 02/21/2008
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] task: da2c5200 ti: f6b2e000 task.ti: f6b2e000
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] Stack:
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] Call Trace:
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] Code: 1c 5b 5e 5f 5d c3 90 8d 74 26 00 c7 43 34 00 00 00 00 b9 f0 53 c3 c0 89 da c7 43 38 00 00 00 00 89 f0 e8 bc f6 ff ff 89 c7 eb 9f <0f> 0b 8d b6 00 00 00 00 55 89 e5 57 56 53 83 ec 08 3e 8d 74 26
+
+Message from syslogd@notebook at Apr 25 13:38:35 ...
+ kernel:[20666.633016] EIP: [<c04c5ed8>] __audit_syscall_entry+0xd8/0xe0 SS:ESP 0068:f6b2fd5c
+
+
+bash-4.2$ dmesg | tail -n40
+[20127.431625] check_update[11054]: segfault at 0 ip 08079206 sp bfc1f7a0 error 4 in check_update[8048000+1f0000]
+[20127.777327] check_update[11065]: segfault at 0 ip 08079206 sp bfcd68c0 error 4 in check_update[8048000+1f0000]
+[20127.851021] check_update[11073]: segfault at 0 ip 08079206 sp bfaed7d0 error 4 in check_update[8048000+1f0000]
+[20666.632148] mdu: module license 'unspecified' taints kernel.
+[20666.632157] Disabling lock debugging due to kernel taint
+[20666.632207] mdu: module verification failed: signature and/or  required key missing - tainting kernel
+[20666.632699] === string for write length = 58
+[20666.632718] ------------[ cut here ]------------
+[20666.633016] kernel BUG at kernel/auditsc.c:1454!
+[20666.633016] invalid opcode: 0000 [#1] SMP 
+[20666.633016] Modules linked in: mdu(POF+) fuse ip6table_filter ip6_tables ebtable_nat ebtables bnep coretemp kvm_intel kvm mmc_block iTCO_wdt snd_hda_codec_si3054 ppdev snd_hda_codec_analog microcode hp_wmi snd_hda_intel tifm_sd snd_hda_codec snd_hwdep arc4 sparse_keymap serio_raw iwl3945 snd_seq iTCO_vendor_support iwlegacy tg3 option ptp snd_seq_device mac80211 snd_pcm parport_pc cfg80211 snd_page_alloc btusb bluetooth usb_wwan rfkill snd_timer pps_core sdhci_pci sdhci mmc_core tifm_7xx1 tifm_core lpc_ich parport wmi firewire_ohci snd firewire_core crc_itu_t joydev soundcore acpi_cpufreq nfsd auth_rpcgss nfs_acl lockd sunrpc binfmt_misc i915 i2c_algo_bit drm_kms_helper ata_generic drm i2c_core pata_acpi yenta_socket video
+[20666.633016] CPU: 1 PID: 11997 Comm: insmod Tainted: PF          O 3.13.6-200.fc20.i686 #1
+[20666.633016] Hardware name: Hewlett-Packard HP Compaq nc6320 (ES527EA#ACB)/30AA, BIOS 68YDU Ver. F.0E 02/21/2008
+[20666.633016] task: da2c5200 ti: f6b2e000 task.ti: f6b2e000
+[20666.633016] EIP: 0060:[<c04c5ed8>] EFLAGS: 00010202 CPU: 1
+[20666.633016] EIP is at __audit_syscall_entry+0xd8/0xe0
+[20666.633016] EAX: 40000003 EBX: da868400 ECX: 00000001 EDX: 00000004
+[20666.633016] ESI: da2c5200 EDI: 00000001 EBP: f6b2fd68 ESP: f6b2fd5c
+[20666.633016]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+[20666.633016] CR0: 8005003b CR2: 080646a8 CR3: 15dc6000 CR4: 000007d0
+[20666.633016] Stack:
+[20666.633016]  f6b2fd9c 00000004 00000000 f6b2fd94 c040d385 f9c8d024 0000003a 0000003a
+[20666.633016]  00000000 f9c8d024 0000003a 00000001 0000003a f9c8e000 f6b2e000 c09acb73
+[20666.633016]  00000001 f9c8d024 0000003a 0000003a f9c8e000 f6b2fde8 ffffffda 0000007b
+[20666.633016] Call Trace:
+[20666.633016]  [<c040d385>] syscall_trace_enter+0x145/0x1b0
+[20666.633016]  [<c09acb73>] syscall_trace_entry+0xf/0x20
+[20666.633016]  [<f9c8c05d>] ? do_write+0x3d/0x60 [mdu]
+[20666.633016]  [<f9c91000>] ? 0xf9c90fff
+[20666.633016]  [<f9c91011>] ? x80_init+0x11/0x1000 [mdu]
+[20666.633016]  [<f9c91000>] ? 0xf9c90fff
+[20666.633016]  [<c0400482>] ? do_one_initcall+0xd2/0x190
+[20666.633016]  [<f9c91000>] ? 0xf9c90fff
+[20666.633016]  [<c043d3d7>] ? set_memory_ro+0x37/0x40
+[20666.633016]  [<c04b0763>] ? load_module+0x1a23/0x2360
+[20666.633016]  [<c04b1205>] ? SyS_finit_module+0x75/0xc0
+[20666.633016]  [<c09b3a8d>] ? sysenter_do_call+0x12/0x28
+[20666.633016] Code: 1c 5b 5e 5f 5d c3 90 8d 74 26 00 c7 43 34 00 00 00 00 b9 f0 53 c3 c0 89 da c7 43 38 00 00 00 00 89 f0 e8 bc f6 ff ff 89 c7 eb 9f <0f> 0b 8d b6 00 00 00 00 55 89 e5 57 56 53 83 ec 08 3e 8d 74 26
+[20666.633016] EIP: [<c04c5ed8>] __audit_syscall_entry+0xd8/0xe0 SS:ESP 0068:f6b2fd5c
+[20666.817048] ---[ end trace 0a4c28816b5423b6 ]---
+
+-----------------------------------------------------------------------
+
+
+=======================================================================
+
+26.04.2014
+==========
+
+[olej@nvidia int80]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+[olej@nvidia int80]$ cat /etc/system-release
+RFRemix release 15.1 (Lovelock)
+
+
+[olej@nvidia int80]$ make
+gcc     mp.c   -o mp
+gcc     mpsys.c   -o mpsys
+gcc     mplib.c   -o mplib
+make -C /lib/modules/2.6.42.12-1.fc15.i686.PAE/build M=/home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80 modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+  CC [M]  /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdu.o
+  CC [M]  /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdc.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdc.mod.o
+  LD [M]  /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdc.ko
+  CC      /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdu.mod.o
+  LD [M]  /home/olej/2014_WORK/GlobalLogic/Kexamples.BOOK/int80/mdu.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.42.12-1.fc15.i686.PAE'
+
+
+[olej@nvidia int80]$ sudo insmod mdu.ko
+insmod: error inserting 'mdu.ko': -1 Operation not permitted
+
+[olej@nvidia int80]$ dmesg | tail -n4
+[31124.928579] === string for write length = 58
+[31124.928583] === write return : -14
+[31124.928585] === mknod return : -14
+[31124.928586] === getpid return : 3979
+
+
+[olej@nvidia int80]$ sudo insmod mdc.ko
+=== эталонная строка для вывода!
+insmod: error inserting 'mdc.ko': -1 Operation not permitted
+
+[olej@nvidia int80]$ dmesg | tail -n4
+[31214.916211] === string for write length = 58
+[31214.916267] === write return : 58
+[31214.916694] === mknod return : 0
+[31214.916697] === getpid return : 4002
+
+
+=======================================================================
+
+[olej@fedora int80]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+[olej@fedora int80]$ cat /etc/system-release
+RFRemix release 17 (Beefy Miracle)
+
+
+[olej@fedora int80]$ make
+gcc     mp.c   -o mp
+gcc     mpsys.c   -o mpsys
+gcc     mplib.c   -o mplib
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/2014-WORK/int80 modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/2014-WORK/int80/mdu.o
+  CC [M]  /home/olej/2014-WORK/int80/mdc.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2014-WORK/int80/mdc.mod.o
+  LD [M]  /home/olej/2014-WORK/int80/mdc.ko
+  CC      /home/olej/2014-WORK/int80/mdu.mod.o
+  LD [M]  /home/olej/2014-WORK/int80/mdu.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+[olej@fedora int80]$ ls *.ko
+mdc.ko  mdu.ko
+
+
+[olej@fedora int80]$ sudo insmod mdu.ko
+Error: could not insert module mdu.ko: Operation not permitted
+
+[olej@fedora int80]$ dmesg | tail -n4
+[11435.014499] === string for write length = 58
+[11435.014503] === write return : -14
+[11435.014505] === mknod return : -14
+[11435.014507] === getpid return : 2468
+
+
+[olej@fedora int80]$ sudo insmod mdc.ko
+=== эталонная строка для вывода!
+Error: could not insert module mdc.ko: Operation not permitted
+
+[olej@fedora int80]$ dmesg | tail -n4
+[11522.071586] === string for write length = 58
+[11522.071633] === write return : 58
+[11522.072766] === mknod return : 0
+[11522.072769] === getpid return : 2475
+
+=======================================================================
+
+29.01.2015
+==========
+
+olej@atom:~$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+olej@atom:~$ df
+Файловая система           1K-блоков      Исп  Доступно  Исп% смонтирована на
+/dev/sda1             27616124  21158240   5055056  81% /
+none                   1021624       256   1021368   1% /dev
+none                   1025872      2908   1022964   1% /dev/shm
+none                   1025872      1240   1024632   1% /var/run
+none                   1025872         0   1025872   0% /var/lock
+none                   1025872         0   1025872   0% /lib/init/rw
+
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ make 
+gcc -Wall     mp.c   -o mp
+gcc -Wall     mpsys.c   -o mpsys
+mpsys.c: In function ‘do_write’:
+mpsys.c:7: warning: implicit declaration of function ‘syscall’
+gcc -Wall     mplib.c   -o mplib
+mplib.c: In function ‘do_write’:
+mplib.c:7: warning: implicit declaration of function ‘write’
+mplib.c: In function ‘do_getpid’:
+mplib.c:20: warning: implicit declaration of function ‘getpid’
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80 modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.o
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.ko
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+
+-----------------------------------------------------------------------
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ make
+gcc -Wall     mp.c   -o mp
+gcc -Wall     mpsys.c   -o mpsys
+gcc -Wall     mplib.c   -o mplib
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80 modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.o
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdc.ko
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80/mdu.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ ./mp
+getpid return : 2236
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : -1
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ sudo ./mp
+[sudo] password for olej: 
+getpid return : 2237
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+
+-----------------------------------------------------------------------
+
+[Olej@modules int80]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules int80]$ make mpsys 
+gcc -Wall     mpsys.c   -o mpsys
+mpsys.c: В функции «do_write»:
+mpsys.c:7:4: предупреждение: неявная декларация функции «syscall» [-Wimplicit-function-declaration]
+    n = syscall( __NR_write, 1, str, len );  
+    ^
+[Olej@modules int80]$ ./mpsys 
+getpid return : 13896
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : -1
+
+[Olej@modules int80]$ sudo ./mpsys 
+[sudo] password for Olej: 
+getpid return : 13904
+string for write length = 54
+эталонная строка для вывода!
+write return : 54
+mknod return : 0
+
+[Olej@modules int80]$ ls Z*
+ZZZ
+
+
+=======================================================================
+
+01.02.2015
+==========
+
+[Olej@modules ~]$ ping atom
+PING atom (192.168.1.7) 56(84) bytes of data.
+64 bytes from atom (192.168.1.7): icmp_seq=1 ttl=64 time=5.34 ms
+64 bytes from atom (192.168.1.7): icmp_seq=2 ttl=64 time=12.9 ms
+64 bytes from atom (192.168.1.7): icmp_seq=3 ttl=64 time=2.28 ms
+^C
+--- atom ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 2.288/6.852/12.927/4.473 ms
+
+
+olej@atom:~$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ sudo insmod mdu.ko
+[sudo] password for olej: 
+insmod: error inserting 'mdu.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ dmesg | tail -n5
+[   13.888024] eth0: no IPv6 routers present
+[ 1290.282942] === string for write length = 58
+[ 1290.282953] === write return : -14
+[ 1290.282962] === mknod return : -14
+[ 1290.282970] === getpid return : 25395
+
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ sudo insmod mdc.ko
+=== эталонная строка для вывода!
+insmod: error inserting 'mdc.ko': -1 Operation not permitted
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ dmesg | tail -n4
+[ 1364.260638] === string for write length = 58
+[ 1364.260681] === write return : 58
+[ 1364.260785] === mknod return : 0
+[ 1364.260793] === getpid return : 26490
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/int80$ cat /proc/kallsyms | grep 'T sys_write'
+c020b2b0 T sys_write
+c020b860 T sys_writev
+
+=======================================================================
+
+[Olej@modules ~]$ cat /proc/kallsyms | grep 'T sys_write'
+ffffffff812010a0 T sys_write
+ffffffff81201810 T sys_writev
+
+[Olej@modules int80]$ sudo insmod mds.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module mds.ko: Unknown symbol in module
+
+=======================================================================

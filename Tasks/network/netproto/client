@@ -1,0 +1,8 @@
+LIMIT=1000000
+for ((a=1; a <= LIMIT ; a++))
+do
+   rm z.txt
+   nc 192.168.56.1 12345 > z.txt
+   sleep 1
+done
+

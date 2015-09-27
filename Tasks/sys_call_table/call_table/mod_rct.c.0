@@ -1,0 +1,55 @@
+#include <linux/module.h>
+#include <linux/fs.h>
+#include <linux/sched.h>
+#include <linux/moduleparam.h>
+
+static char* file = "/proc/kallsyms";
+module_param( file, charp, 0 ); 
+
+#define BUF_LEN 255
+static char buff[ BUF_LEN + 1 ] = "";
+
+
+static int __init stread_init( void ) {
+    struct file *f;
+    size_t n = 0;
+    int i;
+
+    f = filp_open( file, O_RDONLY, 0 );
+    if( IS_ERR( f ) ) {
+        printk( "+ failed to open: %s\n", file );
+        return -ENOENT;
+    }
+    printk( "+ openning file: %s\n", file );
+
+    while( 1 ) {
+       char *p = buff;
+       int k;
+       *p = '\0';
+       do {
+           if( ( k = kernel_read( f, n, p++, 1 ) ) < 0 ) {
+               printk( "+ failed to read\n" );
+               return -EIO;
+           };
+           *p = '\0';
+           if( 0 == k ) break;
+           n += k;
+           if( '\n' == *( p - 1 ) ) break;
+       } while( 1 );
+       if( strlen( buff ) > 0 ) {
+           if( '\n' == buff[ strlen( buff ) - 1 ] ) printk( "+ %s", buff );
+           else printk( "+ %s|\n", buff );
+       }
+       if( 0 == k ) break;
+    }
+
+    printk( "+ close file: %s\n", file );
+    filp_close( f, NULL );
+    return -EPERM;
+}
+
+module_init( stread_init );
+MODULE_LICENSE( "GPL" );
+MODULE_AUTHOR( "Oleg Tsiliuric <olej@front.ru>" ); 
+
+

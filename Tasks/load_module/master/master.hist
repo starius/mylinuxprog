@@ -1,0 +1,170 @@
+08.02.2012
+==========
+
+[olej@notebook user_module]$ ./insmd 
+init_module: Operation not permitted
+[olej@notebook user_module]$ sudo ./insmd 
+init_module: Cannot allocate memory
+
+============================================================================
+
+09.02.2012
+==========
+
+[olej@notebook user_module]$ sudo insmod usmod.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ module loaded: parm1=, parm2=,
+
+[olej@notebook user_module]$ sudo rmmod usmod
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ module unloaded
+
+----------------------------------------------------------------------------
+
+[olej@notebook user_module]$ sudo insmod slave.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ module slave.ko loaded: parm1=, parm2=
+
+[olej@notebook user_module]$ sudo rmmod slave
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ module slave.ko unloaded
+
+----------------------------------------------------------------------------
+
+[olej@notebook examples.DRAFT]$ cat /proc/kallsyms | grep sys_init_module
+c0470f50 T sys_init_module
+
+----------------------------------------------------------------------------
+
+[olej@notebook user_module]$ sudo insmod master.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko загружен: file=./slave.ko
++ адрес sys_init_module = c0470f50
++ длина файла модуля = 94692 байт
++ считано из файла 94692 байт
+
+[olej@notebook user_module]$ sudo rmmod master
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko выгружен
+
+----------------------------------------------------------------------------
+
+[olej@notebook user_module]$ sudo insmod master.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko загружен: file=./slave.ko
++ адрес sys_init_module = c0470f50
++ длина файла модуля = 94692 байт
++ адрес буфера чтения = fa8c2000
++ считано из файла ./slave.ko 94692 байт
+
+[olej@notebook user_module]$ sudo rmmod master
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko выгружен
+
+----------------------------------------------------------------------------
+
+[olej@notebook user_module]$ sudo insmod master.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko загружен: file=./slave.ko
++ адрес sys_init_module = c0470f50
++ длина файла модуля = 94692 байт
++ адрес буфера чтения = fc3b0000
++ считано из файла ./slave.ko 94692 байт
++ модуль slave.ko загружен: parm1=, parm2=
+
+[olej@notebook user_module]$ lsmod | head -n5
+Module                  Size  Used by
+slave                   1001  0 
+master                  1473  0 
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+[olej@notebook user_module]$ sudo rmmod master
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ модуль master.ko выгружен
+
+[olej@notebook user_module]$ lsmod | head -n4
+Module                  Size  Used by
+slave                   1001  0 
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+[olej@notebook user_module]$ sudo rmmod slave
+
+[olej@notebook user_module]$ lsmod | head -n4
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+ip6_tables              9409  1 ip6table_filter
+
+
+----------------------------------------------------------------------------
+
+[olej@notebook BOOK.Kernel.org]$ cat /proc/kallsyms | grep sys_delete_module
+c046f4e8 T sys_delete_module
+
+----------------------------------------------------------------------------
+
+[olej@notebook user_module]$ sudo insmod master.ko
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ адрес sys_init_module = c0470f50
++ длина файла модуля = 94692 байт
++ адрес буфера чтения = f9d51000
++ считано из файла ./slave.ko 94692 байт
++ модуль slave.ko загружен: parm1=, parm2=
++ модуль master.ko загружен: file=./slave.ko
+
+[olej@notebook user_module]$ lsmod | head -n4
+Module                  Size  Used by
+slave                   1001  0 
+master                  1785  0 
+fuse                   48375  2 
+
+[olej@notebook user_module]$ sudo rmmod master
+
+[olej@notebook user_module]$ dmesg | tail -n30 | grep +
++ выгружается модуль slave
++ адрес sys_delete_module = c046f4e8
++ модуль slave.ko выгружен
++ модуль master.ko выгружен
+
+
+[olej@notebook user_module]$ lsmod | head -n4
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+ip6_tables              9409  1 ip6table_filter
+
+
+----------------------------------------------------------------------------
+
+[olej@notebook master]$ make disclean
+
+[olej@notebook master]$ ls
+Makefile  master.c  master.hist  slave.c
+
+[olej@notebook master]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/slave.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/master.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/master.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/master.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/slave.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/master/slave.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+============================================================================

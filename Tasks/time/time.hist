@@ -1,0 +1,865 @@
+28.07.2012
+==========
+
+[olej@notebook time]$ cat /proc/cpuinfo
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 14
+model name	: Genuine Intel(R) CPU           T2300  @ 1.66GHz
+stepping	: 8
+cpu MHz		: 1000.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx constant_tsc arch_perfmon bts aperfmperf pni monitor vmx est tm2 xtpr pdcm
+bogomips	: 3324.98
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 32 bits physical, 32 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 14
+model name	: Genuine Intel(R) CPU           T2300  @ 1.66GHz
+stepping	: 8
+cpu MHz		: 1000.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx constant_tsc arch_perfmon bts aperfmperf pni monitor vmx est tm2 xtpr pdcm
+bogomips	: 3324.87
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 32 bits physical, 32 bits virtual
+power management:
+
+
+
+[olej@notebook time]$ ./clock 
+00001D4AAD8FBD34
+00001D4AAD920562
+00001D4AAD923BD6
+1662497985
+
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ ssh -lolej 192.168.1.7
+olej@192.168.1.7's password: 
+Last login: Sat Jun 18 13:47:41 2011
+
+[olej@home ~]$ cat /proc/cpuinfo
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 8
+model name	: Celeron (Coppermine)
+stepping	: 3
+cpu MHz		: 534.569
+cache size	: 128 KB
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 2
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 mtrr pge mca cmov pat pse36 mmx fxsr sse up
+bogomips	: 1069.76
+
+
+
+[olej@home time]$ ./clock 
+0000005E00E366B5
+0000005E00E887B8
+0000005E00EC3F15
+534551251
+
+----------------------------------------------------------------
+
+[olej@notebook ~]$ ssh olej@vpn
+olej@vpn's password: 
+Last login: Fri Jun 17 15:21:00 2011 from 172.25.0.54
+
+[olej@localhost ~]$ cat /proc/cpuinfo
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Core(TM)2 Quad  CPU   Q8200  @ 2.33GHz
+stepping	: 7
+cpu MHz		: 1998.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm sse4_1 lahf_lm
+bogomips	: 4640.22
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Core(TM)2 Quad  CPU   Q8200  @ 2.33GHz
+stepping	: 7
+cpu MHz		: 2331.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm sse4_1 lahf_lm
+bogomips	: 4639.34
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Core(TM)2 Quad  CPU   Q8200  @ 2.33GHz
+stepping	: 7
+cpu MHz		: 1998.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm sse4_1 lahf_lm
+bogomips	: 4639.31
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 23
+model name	: Intel(R) Core(TM)2 Quad  CPU   Q8200  @ 2.33GHz
+stepping	: 7
+cpu MHz		: 1998.000
+cache size	: 2048 KB
+physical id	: 0
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 10
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts rep_good aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm sse4_1 lahf_lm
+bogomips	: 4868.86
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+[olej@localhost time]$ ./clock 
+000000000E98F3BB
+000000000E9A75E8
+000000000E9A925F
+2320044881
+
+----------------------------------------------------------------
+
+$ sudo ./rtprd -z
+./rtprd: invalid option -- 'z'
+usage: ./rtprd [-f 2**n] [-r #] [-n]
+
+
+[olej@notebook time]$ sudo ./rtprd
+interrupt period set 122.07 us
+worst latency was 266.27 us (on cycle 2)
+mean latency was 121.93 us
+
+[olej@notebook time]$ sudo ./rtprd
+interrupt period set 122.07 us
+worst latency was 263.68 us (on cycle 2)
+mean latency was 121.81 us
+
+[olej@notebook time]$ sudo ./rtprd -f16384
+interrupt period set 61.04 us
+worst latency was 235.97 us (on cycle 553)
+mean latency was 61.05 us
+
+[olej@notebook time]$ sudo ./rtprd -f16384
+interrupt period set 61.04 us
+worst latency was 168.79 us (on cycle 658)
+mean latency was 61.24 us
+
+[olej@notebook time]$ sudo ./rtprd -f16384
+interrupt period set 61.04 us
+worst latency was 133.27 us (on cycle 2)
+mean latency was 60.79 us
+
+[olej@notebook time]$ sudo ./rtprd -f16384 -n
+interrupt period set 61.04 us
+worst latency was 8717.90 us (on cycle 491)
+mean latency was 79.45 us
+
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ ./rtcr
+current time: 20:03:07
+
+[olej@notebook time]$ date
+Вск Июн 19 23:03:10 EEST 2011
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ sudo /sbin/insmod ./tick.ko
+insmod: error inserting './tick.ko': -1 Operation not permitted
+
+[olej@notebook time]$ dmesg | tail -n3
+jiffies = 31D2704
+HZ value = 1000
+jiffies 64-bit = 00000001031D2704
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ uname -r
+2.6.32.9-70.fc12.i686.PAE
+
+[olej@notebook time]$ sudo nice -n-19 ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: 1662485456 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+set 0.300 => was 0.300
+set 0.500 => was 0.501
+set 1.000 => was 1.000
+set 1.500 => was 1.500
+set 2.000 => was 2.000
+set 5.000 => was 5.000
+
+[olej@notebook time]$ sudo nice -n-19 ./pdelay -n 1000
+1000 cycles passive delay [millisec. == tick !] :
+processor speed: 1662497096 hz
+set 0.010 => was 0.095
+set 0.100 => was 0.176
+set 0.200 => was 0.281
+set 0.300 => was 0.381
+set 0.500 => was 0.582
+set 1.000 => was 1.084
+set 1.500 => was 1.584
+set 2.000 => was 2.085
+set 5.000 => was 5.086
+
+[olej@notebook time]$ ./pdelay -n 1000 -t
+1000 cycles passive delay [millisec. == tick !] :
+processor speed: 1662482638 hz
+set 0.010 => was 0.110
+set 0.100 => was 0.206
+set 0.200 => was 0.299
+set 0.300 => was 0.395
+set 0.500 => was 0.594
+set 1.000 => was 1.097
+set 1.500 => was 1.585
+set 2.000 => was 2.096
+set 5.000 => was 5.098
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ sudo insmod ./htick.ko
+
+[olej@notebook time]$ dmesg | tail -n4
+timer run #3 at jiffies=52770665
+timer run #2 at jiffies=52771665
+timer run #1 at jiffies=52772665
+timer run #0 at jiffies=52773665
+
+[olej@notebook time]$ sudo rmmod htick
+
+----------------------------------------------------------------
+
+[olej@notebook time]$ date; sudo insmod ./interv.ko
+Сбт Июл 23 23:18:45 EEST 2011
+[olej@notebook time]$ date; sudo rmmod interv
+Сбт Июл 23 23:19:01 EEST 2011
+[olej@notebook time]$ dmesg | tail -n 50 | grep module:
+module: jiffies on start = 131D080
+module: jiffies on finish = 1320CCD
+module: interval of life = 15
+
+================================================================
+
+28.07.2012
+==========
+
+[Olej@modules time]$ make
+make -C /lib/modules/3.13.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+cc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+ar: создаётся libdiag.a
+rm calibr.o
+cc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+cc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+cc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+cc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+cc clock.c -Bstatic -L./ -ldiag -o clock
+cc pdelay.c -Bstatic -L./ -ldiag -o pdelay
+cc     rtcr.c   -o rtcr
+cc rtprd.c -Bstatic -L./ -ldiag -o rtprd
+
+================================================================
+
+25.04.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+cc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+ar: создаётся libdiag.a
+rm calibr.o
+cc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+cc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+cc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+cc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+cc clock.c -Bstatic -L./ -ldiag -o clock
+"clock.c", line 9: warning: syntax error:  empty declaration
+cc pdelay.c -Bstatic -L./ -ldiag -o pdelay
+"pdelay.c", line 47: warning: syntax error:  empty declaration
+cc     rtcr.c   -o rtcr
+"rtcr.c", line 16: warning: implicit function declaration: close
+cc rtprd.c -Bstatic -L./ -ldiag -o rtprd
+"rtprd.c", line 39: warning: implicit function declaration: mlockall
+
+----------------------------------------------------------------
+
+bash-4.2$ gcc --version
+gcc (GCC) 4.8.2 20131212 (Red Hat 4.8.2-7)
+Copyright (C) 2013 Free Software Foundation, Inc.
+Это свободно распространяемое программное обеспечение. Условия копирования
+приведены в исходных текстах. Без гарантии каких-либо качеств, включая 
+коммерческую ценность и применимость для каких-либо целей.
+
+----------------------------------------------------------------
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+gcc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+rm calibr.o
+gcc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+gcc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+gcc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+gcc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+
+----------------------------------------------------------------
+
+bash-4.2$ ./clock 
+00003092EE126478
+00003092EE14478E
+00003092EE146A20
+1662482306
+
+================================================================
+
+25.04.2014
+==========
+
+[Olej@modules ~]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+
+[Olej@modules ~]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+
+
+[Olej@modules time]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+gcc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+ar: создаётся libdiag.a
+rm calibr.o
+gcc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+gcc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+gcc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+gcc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+gcc clock.c -Bstatic -L./ -ldiag -o clock
+gcc pdelay.c -Bstatic -L./ -ldiag -o pdelay
+gcc     rtcr.c   -o rtcr
+gcc rtprd.c -Bstatic -L./ -ldiag -o rtprd
+
+
+----------------------------------------------------------------
+
+(-!) :
+======
+[Olej@modules time]$ ./clock
+000000001A6C2E7E
+000000001A6E0E52
+000000001A6E5748
+-1700926368
+
+
+[Olej@modules time]$ sudo insmod tick.ko
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module tick.ko: Operation not permitted
+
+[Olej@modules time]$ dmesg | tail -n3
+[ 3489.292909] jiffies = 100309FC1
+[ 3489.292912] HZ value = 1000
+[ 3489.292913] jiffies 64-bit = 0000000100309FC1
+
+
+(-!) :
+======
+[Olej@modules time]$ sudo nice -n-19 ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: -1700919235 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+set 0.300 => was 0.300
+^C[Olej@modules time]$ 
+
+================================================================
+
+06.06.2014
+==========
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+gcc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+ar: создаётся libdiag.a
+rm calibr.o
+gcc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+gcc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+gcc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+gcc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+gcc clock.c -Bstatic -L./ -ldiag -o clock
+gcc pdelay.c -Bstatic -L./ -ldiag -o pdelay
+gcc     rtcr.c   -o rtcr
+gcc rtprd.c -Bstatic -L./ -ldiag -o rtprd
+
+bash-4.2$ ./clock 
+000007C1743E3702
+000007C174404790
+000007C1744067CA
+1662470116
+
+bash-4.2$ ./rtprd
+interrupt period set 122.07 us
+worst latency was 1.35 us (on cycle 1)
+mean latency was 0.23 us
+
+bash-4.2$ sudo ./rtcr
+[sudo] password for Olej: 
+
+current time: 05:31:50
+bash-4.2$ date
+Пт июн  6 08:31:55 EEST 2014
+
+
+
+bash-4.2$ sudo insmod ./tick.ko
+insmod: ERROR: could not insert module ./tick.ko: Operation not permitted
+
+bash-4.2$ dmesg | tail -n3
+[ 5439.742616] jiffies = 4E6D1F
+[ 5439.742620] HZ value = 1000
+[ 5439.742623] jiffies 64-bit = 00000001004E6D1F
+
+
+bash-4.2$ ./pdelay -n 1000 
+1000 cycles passive delay [millisec. == tick !] :
+processor speed: 1662468657 hz
+set 0.010 => was 0.096
+set 0.100 => was 0.184
+set 0.200 => was 0.284
+set 0.300 => was 0.384
+set 0.500 => was 0.585
+set 1.000 => was 1.086
+set 1.500 => was 1.587
+set 2.000 => was 2.086
+set 5.000 => was 5.088
+
+bash-4.2$ ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: 1662468854 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+set 0.300 => was 0.300
+set 0.500 => was 0.500
+set 1.000 => was 1.000
+set 1.500 => was 1.500
+set 2.000 => was 2.000
+set 5.000 => was 5.000
+
+bash-4.2$ sudo nice -n-19 ./pdelay -n 1000 -a
+[sudo] password for Olej: 
+1000 cycles active delay [millisec. == tick !] :
+processor speed: 1662483165 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+set 0.300 => was 0.300
+set 0.500 => was 0.500
+set 1.000 => was 1.000
+set 1.500 => was 1.500
+set 2.000 => was 2.000
+set 5.000 => was 5.000
+
+bash-4.2$ sudo nice -n-19 ./pdelay -n 1000
+1000 cycles passive delay [millisec. == tick !] :
+processor speed: 1662483566 hz
+set 0.010 => was 0.096
+set 0.100 => was 0.185
+set 0.200 => was 0.286
+set 0.300 => was 0.385
+set 0.500 => was 0.584
+set 1.000 => was 1.087
+set 1.500 => was 1.586
+set 2.000 => was 2.088
+set 5.000 => was 5.087
+
+----------------------------------------------------------------
+
+[Olej@modules time]$ uname -a
+Linux modules.localdomain 3.14.4-200.fc20.x86_64 #1 SMP Tue May 13 13:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules time]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+[Olej@modules time]$ make
+make -C /lib/modules/3.14.4-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time modules
+make[1]: Вход в каталог `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.o
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.o
+  Building modules, stage 2.
+  MODPOST 3 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/htick.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/interv.ko
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/time/tick.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.14.4-200.fc20.x86_64'
+gcc -c calibr.c -o calibr.o 
+ar -r libdiag.a calibr.o        
+ar: создаётся libdiag.a
+rm calibr.o
+gcc -c rdtsc.c -o rdtsc.o 
+ar -r libdiag.a rdtsc.o        
+rm rdtsc.o
+gcc -c proc_hz.c -o proc_hz.o 
+ar -r libdiag.a proc_hz.o        
+rm proc_hz.o
+gcc -c set_rt.c -o set_rt.o 
+ar -r libdiag.a set_rt.o        
+rm set_rt.o
+gcc -c tick2us.c -o tick2us.o 
+ar -r libdiag.a tick2us.o        
+rm tick2us.o
+ar -t libdiag.a
+calibr.o
+rdtsc.o
+proc_hz.o
+set_rt.o
+tick2us.o
+gcc clock.c -Bstatic -L./ -ldiag -o clock
+gcc pdelay.c -Bstatic -L./ -ldiag -o pdelay
+gcc     rtcr.c   -o rtcr
+gcc rtprd.c -Bstatic -L./ -ldiag -o rtprd
+
+[Olej@modules time]$ ./clock 
+00000000F7BD221A
+00000000F7BF1946
+00000000F7BFD334
+2594044480
+
+[Olej@modules time]$ ./rtprd 
+interrupt period set 122.07 us
+worst latency was 12.14 us (on cycle 196)
+mean latency was 0.07 us
+
+
+
+[Olej@modules time]$ sudo ./rtcr 
+[sudo] password for Olej: 
+current time: 05:32:40
+[Olej@modules time]$ date
+Пт июн  6 08:32:42 EEST 2014
+
+[Olej@modules time]$ dmesg | tail -n3
+[ 5434.099630] jiffies = 1004E4B17
+[ 5434.099638] HZ value = 1000
+[ 5434.099641] jiffies 64-bit = 00000001004E4B17
+
+
+[Olej@modules time]$ sudo nice -n-19 ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: -1700929218 hz
+^C
+[Olej@modules time]$ 
+
+----------------------------------------------------------------
+
+[Olej@modules time]$ sudo nice -n-19 ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: 2594038183 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+^C[Olej@modules time]$ 
+
+----------------------------------------------------------------
+
+[Olej@modules ~]$ gcc --version
+gcc (GCC) 4.8.2 20131212 (Red Hat 4.8.2-7)
+Copyright (C) 2013 Free Software Foundation, Inc.
+Это свободно распространяемое программное обеспечение. Условия копирования
+приведены в исходных текстах. Без гарантии каких-либо качеств, включая 
+коммерческую ценность и применимость для каких-либо целей.
+
+https://gcc.gnu.org/onlinedocs/
+
+----------------------------------------------------------------
+
+[Olej@modules time]$ uname -a
+Linux modules.localdomain 3.14.4-200.fc20.x86_64 #1 SMP Tue May 13 13:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules time]$ cat /etc/system-release
+Fedora release 20 (Heisenbug)
+
+[Olej@modules time]$ ./pdelay -n 1000 -a
+1000 cycles active delay [millisec. == tick !] :
+processor speed: 2594037115 hz
+set 0.010 => was 0.010
+set 0.100 => was 0.100
+set 0.200 => was 0.200
+set 0.300 => was 0.300
+set 0.500 => was 0.501
+set 1.000 => was 1.001
+set 1.500 => was 1.500
+set 2.000 => was 2.000
+set 5.000 => was 5.000
+
+[Olej@modules time]$ ./pdelay -n 1000 
+1000 cycles passive delay [millisec. == tick !] :
+processor speed: 2596631177 hz
+set 0.010 => was 0.063
+set 0.100 => was 0.153
+set 0.200 => was 0.254
+set 0.300 => was 0.356
+set 0.500 => was 0.556
+set 1.000 => was 1.060
+set 1.500 => was 1.556
+set 2.000 => was 2.058
+set 5.000 => was 5.054
+
+================================================================

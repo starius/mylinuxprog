@@ -1,0 +1,3 @@
+c0400000 T startup_32
+c0400000 T _text
+c0400079 t bad_subarch

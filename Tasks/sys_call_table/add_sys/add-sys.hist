@@ -1,0 +1,77 @@
+10.01.2012
+==========
+
+[olej@notebook add_sys]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/ni-test.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/add-sys.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/add-sys.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/add-sys.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/ni-test.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/sys_call_table/add_sys/ni-test.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+cc syscall.c -o syscall
+[olej@notebook add_sys]$ make clean
+
+---------------------------------------------------------------------
+
+[olej@notebook add_sys]$ sudo insmod ni-test.ko
+insmod: error inserting 'ni-test.ko': -1 Operation not permitted
+
+[olej@notebook add_sys]$ dmesg | tail -n 18 | grep !
+! найдено 26 входов: 017, 031, 032, 035, 044, 053, 056, 058, 098, 112, 127, 130, 137, 167, 188, 189, 222, 223, 251, 273, 274, 275, 276, 285, 294, 317, 
+
+
+---------------------------------------------------------------------
+
+
+[olej@notebook add_sys]$ ./syscall 
+syscall return 38 : Function not implemented
+
+[olej@notebook add_sys]$ sudo insmod add-sys.ko
+
+[olej@notebook add_sys]$ lsmod | grep 'sys'
+add_sys                 1432  0 
+
+[olej@notebook add_sys]$ dmesg | tail -n 30 | grep !
+! адрес sys_call_table = c07ab3d8
+! адрес в позиции 223[__NR_own] = c045b9a8
+! адрес sys_ni_syscall = c045b9a8
+! адрес нового sys_call = fdd7c024
+
+[olej@notebook add_sys]$ ./syscall новые аргументы
+syscall return 0 : Success
+syscall return 0 : Success
+
+[olej@notebook add_sys]$ dmesg | tail -n 30 | grep !
+! адрес sys_call_table = c07ab3d8
+! адрес в позиции 223[__NR_own] = c045b9a8
+! адрес sys_ni_syscall = c045b9a8
+! адрес нового sys_call = fdd7c024
+! передано 18 байт: аргументы
+! передано 10 байт: новые
+
+
+[olej@notebook add_sys]$ sudo rmmod add-sys 
+
+
+[olej@notebook add_sys]$ dmesg | tail -n 50 | grep !
+! адрес sys_call_table = c07ab3d8
+! адрес в позиции 223[__NR_own] = c045b9a8
+! адрес sys_ni_syscall = c045b9a8
+! адрес нового sys_call = fdd7c024
+! передано 18 байт: аргументы
+! передано 10 байт: новые
+! адрес sys_call при выгрузке = fdd7c024
+
+
+
+[olej@notebook add_sys]$ ./syscall 1 2 3
+syscall return 38 : Function not implemented
+syscall return 38 : Function not implemented
+syscall return 38 : Function not implemented
+
+---------------------------------------------------------------------

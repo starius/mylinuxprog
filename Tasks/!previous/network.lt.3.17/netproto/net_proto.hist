@@ -1,0 +1,978 @@
+----------------------------------------------------------------------------------
+
+27.07.2012
+==========
+
+[olej@notebook netproto]$ sudo insmod net_proto.ko
+
+[olej@notebook netproto]$ dmesg | tail -n6
+module loaded
+packet received with length: 74
+packet received with length: 60
+packet received with length: 66
+packet received with length: 241
+packet received with length: 52
+
+[olej@notebook netproto]$ sudo rmmod net_proto
+
+----------------------------------------------------------------------------------
+
+[olej@notebook netproto]$ sudo insmod net_protox.ko
+
+[olej@notebook netproto]$ dmesg | tail -n1
+module loaded
+
+[olej@notebook netproto]$ sudo ifconfig xxx0
+xxx0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+
+[olej@notebook netproto]$ sudo ifconfig xxx0 up 192.168.1.199
+
+[olej@notebook netproto]$ sudo ifconfig xxx0
+xxx0      Link encap:Ethernet  HWaddr 00:01:02:03:04:05  
+          inet addr:192.168.1.199  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::201:2ff:fe03:405/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+-------------------------------------------------------------------------------------
+
+<linux.in.h>
+
+/* Standard well-defined IP protocols.  */
+enum {
+  IPPROTO_IP = 0,<-----><------>/* Dummy protocol for TCP<-----><------>*/
+  IPPROTO_ICMP = 1,<---><------>/* Internet Control Message Protocol<-->*/
+  IPPROTO_IGMP = 2,<---><------>/* Internet Group Management Protocol<->*/
+  IPPROTO_IPIP = 4,<---><------>/* IPIP tunnels (older KA9Q tunnels use 94) */
+  IPPROTO_TCP = 6,<----><------>/* Transmission Control Protocol<------>*/
+  IPPROTO_EGP = 8,<----><------>/* Exterior Gateway Protocol<--><------>*/
+  IPPROTO_PUP = 12,<---><------>/* PUP protocol><------><------><------>*/
+  IPPROTO_UDP = 17,<---><------>/* User Datagram Protocol<-----><------>*/
+...
+  IPPROTO_SCTP   = 132,><------>/* Stream Control Transport Protocol<-->*/
+...
+  IPPROTO_RAW<-> = 255,><------>/* Raw IP packets<-----><------><------>*/
+}
+
+<net/protocol.h>
+
+extern int<---->inet_add_protocol(const struct net_protocol *prot, unsigned char num);
+extern int<---->inet_del_protocol(const struct net_protocol *prot, unsigned char num);
+extern void<--->inet_register_protosw(struct inet_protosw *p);
+extern void<--->inet_unregister_protosw(struct inet_protosw *p);
+
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko
+
+[olej@notebook netproto]$ lsmod | head  -n2
+Module                  Size  Used by
+trn_proto                780  0 
+
+
+[olej@notebook netproto]$ dmesg
+...
+proto init: can't add protocol
+proto init: can't add protocol
+proto init: can't add protocol
+proto module loaded
+
+[olej@notebook netproto]$ lsmod | head  -n2
+Module                  Size  Used by
+trn_proto                780  0 
+
+
+
+
+[root@notebook proc]# cat /proc/modules | grep proto
+trn_proto 780 0 - Live 0xf9a26000
+
+[root@notebook module]# ls -R /sys/module/trn_proto 
+/sys/module/trn_proto:
+holders  initstate  notes  refcnt  sections  srcversion
+
+/sys/module/trn_proto/holders:
+
+/sys/module/trn_proto/notes:
+
+/sys/module/trn_proto/sections:
+__mcount_loc
+
+===================================================================================
+
+29.01.2012
+==========
+
+
+#define PROTO IPPROTO_UDP
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko 
+insmod: error inserting 'trn_proto.ko': -1 Operation not permitted
+
+[olej@notebook netproto]$ dmesg | tail -n60 | grep -v ^audit
+proto init: can't add protocol
+
+[olej@notebook netproto]$ lsmod | grep proto
+
+-----------------------------------------------------------------------------------
+
+
+#define PROTO IPPROTO_RAW
+
+[olej@notebook netproto]$ sudo insmod trn_proto.ko 
+
+[olej@notebook netproto]$ dmesg | tail -n30 | grep -v ^audit
+proto module loaded
+
+[olej@notebook netproto]$ sudo rmmod trn_proto 
+
+[olej@notebook netproto]$ dmesg | tail -n60 | grep -v ^audit
+proto module loaded
+proto module unloaded
+
+===================================================================================
+
+24.01.2013
+==========
+
+bash-4.2$ ping 192.168.1.137
+PING 192.168.1.137 (192.168.1.137) 56(84) bytes of data.
+64 bytes from 192.168.1.137: icmp_req=1 ttl=64 time=0.459 ms
+64 bytes from 192.168.1.137: icmp_req=2 ttl=64 time=0.450 ms
+64 bytes from 192.168.1.137: icmp_req=3 ttl=64 time=0.396 ms
+^C
+--- 192.168.1.137 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.396/0.435/0.459/0.027 ms
+
+
+bash-4.2$ ssh olej@192.168.1.137
+olej@192.168.1.137's password: 
+Last login: Wed Jan 23 20:48:42 2013 from 192.168.1.5
+
+
+[olej@fedora ~]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     247464     520620          0      20396     106988
+-/+ buffers/cache:     120080     648004
+Swap:      1540092          0    1540092
+
+
+[olej@fedora ~]$ lsmod | head -n3
+Module                  Size  Used by
+lockd                  77991  0 
+sunrpc                215746  1 lockd
+
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 440  bytes 43321 (42.3 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 387  bytes 83525 (81.5 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+[olej@fedora ~]$ uname -a
+Linux fedora.17 3.6.11-5.fc17.i686 #1 SMP Tue Jan 8 21:55:16 UTC 2013 i686 i686 i386 GNU/Linux
+
+
+=================================================================================================================
+
+[olej@fedora net_proto]$ pwd
+/home/olej/WORK/network/net_proto
+
+
+[olej@fedora net_proto]$ make
+make -C /lib/modules/3.6.11-5.fc17.i686/build M=/home/olej/WORK/network/net_proto modules
+make[1]: Вход в каталог `/usr/src/kernels/3.6.11-5.fc17.i686'
+  CC [M]  /home/olej/WORK/network/net_proto/net_proto.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/WORK/network/net_proto/net_proto.mod.o
+  LD [M]  /home/olej/WORK/network/net_proto/net_proto.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.6.11-5.fc17.i686'
+
+
+[olej@fedora net_proto]$ ls -l
+итого 200
+-rw-rw----. 1 olej olej    418 янв.  23 22:06 Makefile
+-rw-rw----. 1 olej olej    816 янв.  25 01:14 net_proto.c
+-rw-rw-r--. 1 olej olej 195304 янв.  25 01:15 net_proto.ko
+
+[olej@fedora net_proto]$ sudo insmod net_proto.ko
+
+[olej@fedora net_proto]$ lsmod | head -n3
+Module                  Size  Used by
+net_proto              12448  0 
+lockd                  77991  0 
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     272288     495796          0      23156     127912
+-/+ buffers/cache:     121220     646864
+Swap:      1540092          0    1540092
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ scp olej@192.168.1.137:/boot/initramfs-3.6.11-5.fc17.i686.img img1
+olej@192.168.1.137's password: 
+initramfs-3.6.11-5.fc17.i686.img                                                                      100%   18MB  17.6MB/s   00:01    
+
+bash-4.2$ scp olej@192.168.1.137:/boot/initramfs-3.6.11-5.fc17.i686.img img2
+olej@192.168.1.137's password: 
+initramfs-3.6.11-5.fc17.i686.img                                                                      100%   18MB  17.6MB/s   00:01    
+
+bash-4.2$ scp olej@192.168.1.137:/boot/initramfs-3.6.11-5.fc17.i686.img img3
+olej@192.168.1.137's password: 
+initramfs-3.6.11-5.fc17.i686.img                                                                      100%   18MB   8.8MB/s   00:02    
+
+bash-4.2$ ls -l
+итого 54060
+-rw-r--r-- 1 olej olej 18449169 янв.  25 01:18 img1
+-rw-r--r-- 1 olej olej 18449169 янв.  25 01:18 img2
+-rw-r--r-- 1 olej olej 18449169 янв.  25 01:19 img3
+
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     290936     477148          0      23244     146040
+-/+ buffers/cache:     121652     646432
+Swap:      1540092          0    1540092
+
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 10424  bytes 734226 (717.0 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 38968  bytes 97816590 (93.2 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+bash-4.2$ scp img1 olej@192.168.1.137:/home/olej/i1
+olej@192.168.1.137's password: 
+img1                                                                                                  100%   18MB  17.6MB/s   00:01    
+
+bash-4.2$ scp img2 olej@192.168.1.137:/home/olej/i2
+olej@192.168.1.137's password: 
+img2                                                                                                  100%   18MB  17.6MB/s   00:01    
+
+bash-4.2$ scp img3 olej@192.168.1.137:/home/olej/i3
+olej@192.168.1.137's password: 
+img3                                                                                                  100%   18MB  17.6MB/s   00:01    
+bash-4.2$ 
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 55333  bytes 59152531 (56.4 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 74352  bytes 163757241 (156.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     346232     421852          0      23356     200156
+-/+ buffers/cache:     122720     645364
+Swap:      1540092          0    1540092
+
+
+[olej@fedora ~]$ ls -l ~/i*
+-rw-r--r--. 1 olej olej 18449169 янв.  25 01:23 /home/olej/i1
+-rw-r--r--. 1 olej olej 18449169 янв.  25 01:23 /home/olej/i2
+-rw-r--r--. 1 olej olej 18449169 янв.  25 01:23 /home/olej/i3
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ cat img1 >> img
+
+bash-4.2$ cat img2 >> img
+
+bash-4.2$ cat img3 >> img
+
+bash-4.2$ cat img3 >> img
+
+bash-4.2$ cat img2 >> img
+
+bash-4.2$ cat img1 >> img
+
+bash-4.2$ ls -l img
+-rw-rw-r-- 1 olej olej 110695014 янв.  25 01:26 img
+
+
+bash-4.2$ scp img olej@192.168.1.137:/home/olej/img
+olej@192.168.1.137's password: 
+img                                                                                                   100%  106MB  11.7MB/s   00:09    
+
+bash-4.2$ scp img olej@192.168.1.137:/home/olej/img
+olej@192.168.1.137's password: 
+img                                                                                                   100%  106MB  10.6MB/s   00:10    
+
+bash-4.2$ scp img olej@192.168.1.137:/home/olej/img
+olej@192.168.1.137's password: 
+img                                                                                                   100%  106MB  11.7MB/s   00:09    
+bash-4.2$ 
+
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 291061  bytes 407690152 (388.8 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 140297  bytes 168323100 (160.5 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     456272     311812          0      23456     308296
+-/+ buffers/cache:     124520     643564
+Swap:      1540092          0    1540092
+
+
+[olej@fedora ~]$ ls -l /home/olej/ | grep ^-
+-rw-r--r--. 1 olej olej  18449169 янв.  25 01:23 i1
+-rw-r--r--. 1 olej olej  18449169 янв.  25 01:23 i2
+-rw-r--r--. 1 olej olej  18449169 янв.  25 01:23 i3
+-rw-rw-r--. 1 olej olej 110695014 янв.  25 01:28 img
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ cat img >> img.max
+
+bash-4.2$ cat img >> img.max
+
+bash-4.2$ cat img >> img.max
+
+bash-4.2$ cat img >> img.max
+
+bash-4.2$ cat img >> img.max
+
+bash-4.2$ ls -l img.max
+-rw-rw-r-- 1 olej olej 553475070 янв.  25 01:31 img.max
+
+
+
+
+
+bash-4.2$ time scp img.max olej@192.168.1.137:/home/olej/img.max
+olej@192.168.1.137's password: 
+img.max                                                                                               100%  528MB  10.6MB/s   00:50    
+
+real	0m55.862s
+user	0m26.512s
+sys	0m6.480s
+
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 681678  bytes 988540115 (942.7 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 234287  bytes 174862861 (166.7 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     702016      66068          0       6280     566336
+-/+ buffers/cache:     129400     638684
+Swap:      1540092          4    1540088
+
+
+
+
+bash-4.2$ time scp img.max olej@192.168.1.137:/home/olej/img.max
+olej@192.168.1.137's password: 
+img.max                                                                                               100%  528MB  11.0MB/s   00:48    
+
+real	0m53.345s
+user	0m26.028s
+sys	0m6.141s
+
+
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 1067377  bytes 1569066878 (1.4 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 329857  bytes 181481400 (173.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     702936      65148          0       6288     566964
+-/+ buffers/cache:     129684     638400
+Swap:      1540092          4    1540088
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time scp img.max olej@192.168.1.137:/home/olej/img.max
+olej@192.168.1.137's password: 
+Permission denied, please try again.
+olej@192.168.1.137's password: 
+img.max                                                                                               100%  528MB  11.0MB/s   00:48    
+
+real	0m59.141s
+user	0m26.332s
+sys	0m6.513s
+
+
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     703948      64136          0       6300     568040
+-/+ buffers/cache:     129608     638476
+Swap:      1540092          4    1540088
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time scp img.max olej@192.168.1.137:/home/olej/img.max
+olej@192.168.1.137's password: 
+img.max                                                                                               100%  528MB  11.0MB/s   00:48    
+
+real	0m53.525s
+user	0m26.553s
+sys	0m6.457s
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     704204      63880          0       6312     568608
+-/+ buffers/cache:     129284     638800
+Swap:      1540092          4    1540088
+
+-----------------------------------------------------------------------------------------------------------------
+
+bash-4.2$ time scp img.max olej@192.168.1.137:/home/olej/img.max
+olej@192.168.1.137's password: 
+img.max                                                                                               100%  528MB  11.0MB/s   00:48    
+
+real	0m52.907s
+user	0m26.064s
+sys	0m6.757s
+
+
+[olej@fedora net_proto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     703608      64476          0       6320     567892
+-/+ buffers/cache:     129396     638688
+Swap:      1540092          4    1540088
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+[olej@fedora ~]$ ifconfig p2p1
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 2228438  bytes 3310911887 (3.0 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 693832  bytes 206550709 (196.9 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+===================================================================================
+
+25.01.2013
+==========
+
+[olej@nvidia ~]$ uname -a
+Linux nvidia.localdomain 2.6.42.12-1.fc15.i686.PAE #1 SMP Tue Mar 20 16:19:17 UTC 2012 i686 i686 i386 GNU/Linux
+
+
+[olej@nvidia ~]$ ifconfig vboxnet0
+vboxnet0  Link encap:Ethernet  HWaddr 0A:00:27:00:00:00  
+          inet addr:192.168.56.1  Bcast:192.168.56.255  Mask:255.255.255.0
+          inet6 addr: fe80::800:27ff:fe00:0/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:49 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 b)  TX bytes:8944 (8.7 KiB)
+
+
+[olej@nvidia ~]$ ping 192.168.56.3
+PING 192.168.56.3 (192.168.56.3) 56(84) bytes of data.
+64 bytes from 192.168.56.3: icmp_req=1 ttl=64 time=4.86 ms
+64 bytes from 192.168.56.3: icmp_req=2 ttl=64 time=0.279 ms
+64 bytes from 192.168.56.3: icmp_req=3 ttl=64 time=0.290 ms
+64 bytes from 192.168.56.3: icmp_req=4 ttl=64 time=0.282 ms
+^C
+--- 192.168.56.3 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3001ms
+rtt min/avg/max/mdev = 0.279/1.429/4.866/1.984 ms
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+[olej@fedora netproto]$ ifconfig
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 16436
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 0  (Local Loopback)
+        RX packets 42  bytes 3092 (3.0 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 42  bytes 3092 (3.0 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p2p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.137  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::a00:27ff:fe87:ea29  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:87:ea:29  txqueuelen 1000  (Ethernet)
+        RX packets 1071  bytes 412037 (402.3 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 802  bytes 157525 (153.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p7p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.56.3  netmask 255.255.255.255  broadcast 192.168.56.3
+        inet6 fe80::a00:27ff:fe08:9abd  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:08:9a:bd  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 25  bytes 4295 (4.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+[olej@fedora netproto]$ sudo insmod net_proto.ko
+
+[olej@fedora netproto]$ sudo rmmod net_proto
+
+[olej@fedora netproto]$ dmesg | tail -n2 | grep !
+[ 2826.253811] ! module net_proto loaded
+[ 2846.039099] ! module net_proto unloaded
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko
+
+[olej@fedora netproto]$ sudo rmmod net_proto2
+
+[olej@fedora netproto]$ dmesg | tail -n2 | grep !
+[ 7039.242688] ! module net_proto2 loaded for all links
+[ 7056.119078] ! module net_proto2 unloaded
+
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko link=eth0
+Error: could not insert module net_proto2.ko: Invalid parameters
+
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko link=p7p1
+
+[olej@fedora netproto]$ lsmod | head -n3
+Module                  Size  Used by
+net_proto2             12531  0 
+lockd                  77991  0 
+
+[olej@fedora netproto]$ sudo rmmod net_proto2
+
+[olej@fedora netproto]$ dmesg | tail -n2 | grep !
+[ 7126.656456] ! module net_proto2 loaded for link p7p1
+[ 7146.727076] ! module net_proto2 unloaded
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko link=p7p1
+
+[olej@fedora netproto]$ dmesg | tail -n1 | grep !
+[ 9097.858345] ! module net_proto2 loaded for link p7p1
+
+[olej@nvidia ~]$ ping 192.168.56.3
+PING 192.168.56.3 (192.168.56.3) 56(84) bytes of data.
+64 bytes from 192.168.56.3: icmp_req=1 ttl=64 time=0.508 ms
+64 bytes from 192.168.56.3: icmp_req=2 ttl=64 time=0.304 ms
+64 bytes from 192.168.56.3: icmp_req=3 ttl=64 time=0.290 ms
+^C
+--- 192.168.56.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.290/0.367/0.508/0.100 ms
+
+
+[olej@fedora netproto]$ sudo rmmod net_proto2
+
+[olej@fedora netproto]$ dmesg | tail -n8 | grep !
+[ 9097.858345] ! module net_proto2 loaded for link p7p1
+[ 9142.121590] ! filter function #2: ed9bbcc0
+[ 9142.121596] ! filter function #1: ed9bbcc0
+[ 9143.121499] ! filter function #2: ed9bbd80
+[ 9143.121504] ! filter function #1: ed9bbd80
+[ 9144.121650] ! filter function #2: ed9bb0c0
+[ 9144.121655] ! filter function #1: ed9bb0c0
+[ 9257.459095] ! module net_proto2 unloaded
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@nvidia _TMP]$ ip address
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+    link/ether f4:6d:04:60:78:6f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.1.9/24 brd 192.168.1.255 scope global eth0
+    inet6 fe80::f66d:4ff:fe60:786f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: vboxnet0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
+    link/ether 0a:00:27:00:00:00 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.1/24 brd 192.168.56.255 scope global vboxnet0
+    inet6 fe80::800:27ff:fe00:0/64 scope link 
+       valid_lft forever preferred_lft forever
+
+[olej@nvidia _TMP]$ echo 0123456789 > dg.txt
+
+[olej@nvidia _TMP]$ cat dg.txt | nc -l 12345
+
+
+
+
+
+
+[olej@fedora netproto]$ nc 192.168.56.1 12345 > file.txt
+
+[olej@fedora netproto]$ cat file.txt 
+0123456789
+
+[olej@fedora netproto]$ dmesg | tail -n20
+[15252.925763] ! filter function #2: eb50d600
+[15252.925764] ! filter function #1: eb50d600
+[15346.592897] ! filter function #2: ed4f4000
+[15346.592902] ! filter function #1: ed4f4000
+[15404.210491] ! filter function #2: ed4f4000
+[15404.210495] ! filter function #1: ed4f4000
+[15404.210753] ! filter function #2: ed431900
+[15404.210756] ! filter function #1: ed431900
+[15404.210808] ! filter function #2: ed431f00
+[15404.210810] ! filter function #1: ed431f00
+[15404.211728] ! filter function #2: ed431f00
+[15404.211732] ! filter function #1: ed431f00
+[15505.423315] ! filter function #2: eb50d6c0
+[15505.423319] ! filter function #1: eb50d6c0
+[15505.423492] ! filter function #2: eb50d780
+[15505.423493] ! filter function #1: eb50d780
+[15505.423528] ! filter function #2: eb50d3c0
+[15505.423529] ! filter function #1: eb50d3c0
+[15505.423775] ! filter function #2: eb50d6c0
+[15505.423777] ! filter function #1: eb50d6c0
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     320040     448044          0      57524     137332
+-/+ buffers/cache:     125184     642900
+Swap:      1540092          0    1540092
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@nvidia _TMP]$ dd if=/dev/zero of=z.txt bs=1M count=1
+1+0 записей считано
+1+0 записей написано
+ скопировано 1048576 байт (1,0 MB), 0,0024816 c, 423 MB/c
+
+
+[olej@nvidia _TMP]$ date
+Пт. янв. 25 19:58:06 EET 2013
+
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     322332     445752          0      58092     139620
+-/+ buffers/cache:     124620     643464
+Swap:      1540092          0    1540092
+
+
+
+[olej@fedora netproto]$ ifconfig p7p1
+p7p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.56.3  netmask 255.255.255.255  broadcast 192.168.56.3
+        inet6 fe80::a00:27ff:fe08:9abd  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:08:9a:bd  txqueuelen 1000  (Ethernet)
+        RX packets 831342  bytes 1243991247 (1.1 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 197324  bytes 13063513 (12.4 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     694556      73528          0      45728     440836
+-/+ buffers/cache:     207992     560092
+Swap:      1540092        136    1539956
+
+
+[olej@fedora log]$ dmesg | grep ! | wc -l
+5350
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@nvidia ~]$ date
+Пт. янв. 25 21:24:32 EET 2013
+
+
+[olej@fedora netproto]$ ls -l *.txt
+-rw-rw-r--. 1 olej olej 1048576 янв.  25 21:25 z.txt
+
+
+bash-4.2$ date
+Сб. янв. 26 01:50:14 EET 2013
+
+
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     696292      71792          0      70968     413760
+-/+ buffers/cache:     211564     556520
+Swap:      1540092        136    1539956
+
+
+[olej@fedora netproto]$ ls -l *.txt
+-rw-rw-r--. 1 olej olej 1048576 янв.  26 01:49 z.txt
+
+[olej@fedora netproto]$ ifconfig p7p1
+p7p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.56.3  netmask 255.255.255.255  broadcast 192.168.56.3
+        inet6 fe80::a00:27ff:fe08:9abd  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:08:9a:bd  txqueuelen 1000  (Ethernet)
+        RX packets 2336242  bytes 3486613263 (3.2 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 550927  bytes 36526123 (34.8 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+=================================================================================================================
+
+27.07.2012
+==========
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko link=p7p1
+[olej@fedora netproto]$ dmesg | tail -n1
+
+[  403.339591] ! module net_proto2 loaded for link p7p1
+
+
+
+[olej@nvidia ~]$ ping -c3 192.168.56.3 
+PING 192.168.56.3 (192.168.56.3) 56(84) bytes of data.
+64 bytes from 192.168.56.3: icmp_req=1 ttl=64 time=0.668 ms
+64 bytes from 192.168.56.3: icmp_req=2 ttl=64 time=0.402 ms
+64 bytes from 192.168.56.3: icmp_req=3 ttl=64 time=0.330 ms
+
+--- 192.168.56.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+rtt min/avg/max/mdev = 0.330/0.466/0.668/0.147 ms
+
+
+
+
+[olej@fedora netproto]$ dmesg | tail -n7
+[  403.339591] ! module net_proto2 loaded for link p7p1
+[  420.305824] ! function #2 - eb6873c0 => users: 2->1
+[  420.305829] ! function #1 - eb6873c0 => users: 2->1
+[  421.306302] ! function #2 - eb687c00 => users: 2->1
+[  421.306308] ! function #1 - eb687c00 => users: 2->1
+[  422.306289] ! function #2 - eb687180 => users: 2->1
+[  422.306294] ! function #1 - eb687180 => users: 2->1
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     269796     498288          0      22912     139112
+-/+ buffers/cache:     107772     660312
+Swap:      1540092          0    1540092
+
+
+
+[olej@fedora netproto]$ ./client 
+rm: невозможно удалить «z.txt»: Нет такого файла или каталога
+
+[olej@nvidia netproto]$ ./server 
+1+0 записей считано
+1+0 записей написано
+ скопировано 10485760 байт (10 MB), 0,0184482 c, 568 MB/c
+
+
+
+
+[olej@fedora netproto]$ ifconfig p7p1
+p7p1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.56.3  netmask 255.255.255.255  broadcast 192.168.56.3
+        inet6 fe80::a00:27ff:fe08:9abd  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:08:9a:bd  txqueuelen 1000  (Ethernet)
+        RX packets 2017560  bytes 3048762624 (2.8 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 398156  bytes 26283474 (25.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     260636     507448          0      23392     129108
+-/+ buffers/cache:     108136     659948
+Swap:      1540092          0    1540092
+
+
+
+
+
+[olej@fedora netproto]$ ip -s link show p7p1
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:08:9a:bd brd ff:ff:ff:ff:ff:ff
+    RX: bytes  packets  errors  dropped overrun mcast   
+    962157960  17691740 0       0       0       0      
+    TX: bytes  packets  errors  dropped carrier collsns 
+    228138604  3456305  0       0       0       0      
+
+[olej@fedora netproto]$ free
+             total       used       free     shared    buffers     cached
+Mem:        768084     275516     492568          0      27888     139308
+-/+ buffers/cache:     108320     659764
+Swap:      1540092          0    1540092
+
+
+=================================================================================================================
+
+29.01.2013
+==========
+
+[olej@fedora ~]$ cd WORK/network/netproto/
+
+
+[olej@fedora netproto]$ sudo insmod net_proto2.ko link=p7p1
+
+[olej@fedora netproto]$ dmesg | tail -n1
+[11256.409523] ! module net_proto2 loaded for link p7p1
+
+[olej@fedora netproto]$ lsmod | grep net_proto
+net_proto2             12680  0 
+
+
+[olej@nvidia ~]$ ping -c3 192.168.56.3
+PING 192.168.56.3 (192.168.56.3) 56(84) bytes of data.
+64 bytes from 192.168.56.3: icmp_req=1 ttl=64 time=0.357 ms
+64 bytes from 192.168.56.3: icmp_req=2 ttl=64 time=0.481 ms
+64 bytes from 192.168.56.3: icmp_req=3 ttl=64 time=0.316 ms
+
+--- 192.168.56.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 1999ms
+rtt min/avg/max/mdev = 0.316/0.384/0.481/0.073 ms
+
+
+[olej@fedora netproto]$ dmesg | tail -n7
+[11373.754524] ! module net_proto2 loaded for link p7p1
+[11398.930057] ! function #2 - ed3dfc00 => users: 2->2
+[11398.930061] ! function #1 - ed3dfc00 => users: 3->3
+[11399.929838] ! function #2 - ed3dfb40 => users: 2->2
+[11399.929843] ! function #1 - ed3dfb40 => users: 3->3
+[11400.929522] ! function #2 - ed3df480 => users: 2->2
+[11400.929527] ! function #1 - ed3df480 => users: 3->3
+
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+30.01.2013
+==========
+
+[olej@fedora netproto]$ sudo insmod net_protox.ko 
+
+[olej@fedora netproto]$ dmesg | tail -n2
+[50478.100916] ! setup interface 
+[50478.101658] ! module loaded
+
+[olej@fedora netproto]$ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN mode DEFAULT 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p2p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:87:ea:29 brd ff:ff:ff:ff:ff:ff
+3: p7p1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT qlen 1000
+    link/ether 08:00:27:08:9a:bd brd ff:ff:ff:ff:ff:ff
+4: xxx0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT qlen 1000
+    link/ether 00:01:02:03:04:05 brd ff:ff:ff:ff:ff:ff
+
+
+[olej@fedora netproto]$ sudo ifconfig xxx0 192.168.1.222
+
+
+
+[olej@fedora netproto]$ dmesg | tail -n20
+[50478.100916] ! setup interface 
+[50478.101658] ! module loaded
+[50600.071654] ! my_open(xxx0)
+[50600.134848] ! packet received with length: 181
+[50600.153787] ! packet received with length: 278
+[50600.404303] ! packet received with length: 278
+[50600.654856] ! packet received with length: 278
+[50600.855140] ! packet received with length: 254
+[50601.164782] ! packet received with length: 181
+[50601.712695] ! packet received with length: 178
+[50601.713147] ! packet received with length: 91
+[50601.884743] ! packet received with length: 215
+[50601.965274] ! packet received with length: 178
+[50602.214005] ! packet received with length: 178
+[50602.214449] ! packet received with length: 91
+[50602.415021] ! packet received with length: 166
+[50603.194800] ! packet received with length: 298
+[50603.444333] ! packet received with length: 138
+[50603.914575] ! packet received with length: 282
+[50605.475139] ! packet received with length: 166
+
+[olej@fedora netproto]$ ifconfig xxx0
+xxx0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.1.222  netmask 255.255.255.0  broadcast 192.168.1.255
+        inet6 fe80::201:2ff:fe03:405  prefixlen 64  scopeid 0x20<link>
+        ether 00:01:02:03:04:05  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+[olej@fedora netproto]$ sudo ifconfig xxx0 down
+
+[olej@fedora netproto]$ dmesg | tail -n2
+[50605.475139] ! packet received with length: 166
+[50772.181773] ! my_close(xxx0)
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------

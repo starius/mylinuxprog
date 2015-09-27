@@ -1,0 +1,345 @@
+======================================================================
+
+22.01.2012
+==========
+
+[olej@notebook ioctl]$ sudo insmod ioctl_dev.ko
+
+[olej@notebook ioctl]$ dmesg | tail -n100 | grep ==
+
+[olej@notebook ioctl]$ cat /proc/devices | grep ioctl
+200 my_ioctl_dev
+
+[olej@notebook ioctl]$ sudo mknod -m0666 /dev/ioctl c 200 0
+
+[olej@notebook ioctl]$ ls -l /dev/ioctl
+crw-rw-rw- 1 root root 200, 0 Янв 22 23:27 /dev/ioctl
+
+[olej@notebook ioctl]$ cat /dev/ioctl
+Hello, world!
+
+[olej@notebook ioctl]$ ./ioctl
+Hello, world!
+
+[olej@notebook ioctl]$ sudo rmmod ioctl_dev
+
+[olej@notebook ioctl]$ ./ioctl
+Open device error: No such device or address
+
+[olej@notebook ioctl]$ cat /dev/ioctl
+cat: /dev/ioctl: Нет такого устройства или адреса
+
+----------------------------------------------------------------------
+
+[olej@notebook ioctl]$ sudo mknod -m0666 /dev/ioctl c 200 200
+
+[olej@notebook ioctl]$ ls -l /dev/ioctl
+crw-rw-rw- 1 root root 200, 200 Янв 22 23:35 /dev/ioctl
+
+[olej@notebook ioctl]$ sudo insmod ioctl_dev.ko
+
+[olej@notebook ioctl]$ ./ioctl
+Hello, world!
+
+----------------------------------------------------------------------
+
+[olej@notebook ioctl]$ sudo mknod -m0666 /dev/ioctl c 200 0
+
+[olej@notebook ioctl]$ sudo mknod -m0666 /dev/ioctl200 c 200 200
+
+[olej@notebook ioctl]$ ls -l /dev/ioctl*
+crw-rw-rw- 1 root root 200,   0 Янв 22 23:52 /dev/ioctl
+crw-rw-rw- 1 root root 200, 200 Янв 22 23:51 /dev/ioctl200
+
+[olej@notebook ioctl]$ cat /dev/ioctl
+Hello, world!
+
+[olej@notebook ioctl]$ cat /dev/ioctl200
+Hello, world!
+
+
+======================================================================
+
+01.11.2013
+==========
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ make
+make -C /lib/modules/3.2.0-4-486/build M=/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-4-486'
+  CC [M]  /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:33:4: error: unknown field ‘ioctl’ specified in initializer
+/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:34:1: warning: initialization from incompatible pointer type [enabled by default]
+/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:34:1: warning: (near initialization for ‘hello_fops.write’) [enabled by default]
+make[4]: *** [/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o] Ошибка 1
+make[3]: *** [_module_/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl] Ошибка 2
+make[2]: *** [sub-make] Ошибка 2
+make[1]: *** [all] Ошибка 2
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-4-486'
+make: *** [default] Ошибка 2
+
+----------------------------------------------------------------------
+
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ uname -a
+Linux notebook 3.2.0-4-486 #1 Debian 3.2.51-1 i686 GNU/Linux
+
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.IBM/Python/01$ cat /etc/debian_version 
+7.2
+
+----------------------------------------------------------------------
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ sudo mknod -m0666 /dev/ioctl c 200 200
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ls -l /dev/ioctl
+crw-rw-rw- 1 root root 200, 200 Ноя  1 15:07 /dev/ioctl
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ sudo insmod ioctl_dev.ko
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ./ioctl
+IOCTL_GET_STRING error: Inappropriate ioctl for device
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ sudo rmmod ioctl_dev
+
+
+----------------------------------------------------------------------
+
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ make
+make -C /lib/modules/3.2.0-4-486/build M=/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-4-486'
+  CC [M]  /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:38:4: warning: initialization from incompatible pointer type [enabled by default]
+/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:38:4: warning: (near initialization for ‘hello_fops.unlocked_ioctl’) [enabled by default]
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-4-486'
+
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ls -l /dev/ioctl
+crw-rw-rw- 1 root root 200, 200 Ноя  1 15:07 /dev/ioctl
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ sudo insmod ioctl_dev.ko
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ./ioctl
+IOCTL_GET_STRING error: Invalid argument
+
+----------------------------------------------------------------------
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ make
+make -C /lib/modules/3.2.0-4-486/build M=/home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Entering directory `/usr/src/linux-headers-3.2.0-4-486'
+  CC [M]  /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/olej/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.2.0-4-486'
+
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ sudo insmod ioctl_dev.ko
+
+olej@notebook:~/2013_WORK/OWN.BOOKS/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ./ioctl
+Hello, world!
+
+
+======================================================================
+
+09.04.2014
+==========
+
+[Olej@modules ioctl]$ make
+make -C /lib/modules/3.13.8-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+In file included from /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.c:2:0:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/../dev.h: В функции «dev_read»:
+/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/../dev.h:15:4: предупреждение: format «%d» expects argument of type «int», but argument 2 has type «size_t» [-Wformat=]
+    printk( KERN_INFO "=== read : %d\n", count );
+    ^
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.8-200.fc20.x86_64'
+gcc ioctl.c -o ioctl
+
+======================================================================
+
+21.04.2014
+==========
+
+[Olej@modules ioctl]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+----------------------------------------------------------------------
+
+bash-4.2$ uname -a
+Linux notebook.localdomain 3.13.6-200.fc20.i686 #1 SMP Fri Mar 7 17:28:21 UTC 2014 i686 i686 i386 GNU/Linux
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+gcc ioctl.c -o ioctl
+
+
+bash-4.2$ sudo insmod ioctl_dev.ko 
+
+bash-4.2$ dmesg | tail -n5
+[   92.357768] EXT4-fs (mmcblk0p1): warning: mounting unchecked fs, running e2fsck is recommended
+[   93.035641] EXT4-fs (mmcblk0p1): mounted filesystem without journal. Opts: (null)
+[  939.066948] perf samples too long (2507 > 2500), lowering kernel.perf_event_max_sample_rate to 50000
+[21189.710071] CE: hpet increased min_delta_ns to 20115 nsec
+[40549.727127] ioctl_dev: module verification failed: signature and/or  required key missing - tainting kernel
+
+
+bash-4.2$ sudo mknod -m0666 /dev/ioctl c 200 200
+
+bash-4.2$ ls -l /dev/ioctl
+crw-rw-rw- 1 root root 200, 200 апр 21 19:47 /dev/ioctl
+
+bash-4.2$ cat /dev/ioctl 
+Hello, world!
+
+bash-4.2$ ./ioctl
+Hello, world!
+
+bash-4.2$ sudo rm /dev/ioctl
+
+bash-4.2$ ls -l /dev/ioctl
+ls: невозможно получить доступ к /dev/ioctl: Нет такого файла или каталога
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+ioctl_dev              12522  0 
+fuse                   80271  2 
+
+bash-4.2$ sudo rmmod ioctl_dev
+
+bash-4.2$ lsmod | head -n3
+Module                  Size  Used by
+fuse                   80271  2 
+ip6table_filter        12711  0 
+
+
+bash-4.2$ ./test
+Module                  Size  Used by
+ioctl_dev              12522  0 
+crw-rw-rw- 1 root root 200, 200 апр 21 19:54 /dev/ioctl
+Hello, world!
+Hello, world!
+Module                  Size  Used by
+fuse                   80271  2 
+
+
+----------------------------------------------------------------------
+
+olej@atom:~/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+
+olej@atom:~/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ make
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+gcc ioctl.c -o ioctl
+ioctl.c: In function ‘main’:
+ioctl.c:14: warning: format not a string literal and no format arguments
+
+
+olej@atom:~/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl$ ./test 
+[sudo] password for olej: 
+Module                  Size  Used by
+ioctl_dev               1260  0 
+crw-rw-rw- 1 root root 200, 200 2014-04-21 19:59 /dev/ioctl
+Hello, world!
+Hello, world!
+Module                  Size  Used by
+binfmt_misc             6587  1 
+
+
+----------------------------------------------------------------------
+
+
+[Olej@modules ioctl]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules dev]$ uname -a
+Linux modules.localdomain 3.13.10-200.fc20.x86_64 #1 SMP Mon Apr 14 20:34:16 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules ioctl]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+[Olej@modules ioctl]$ ./test 
+[sudo] password for Olej: 
+Module                  Size  Used by
+ioctl_dev              12594  0 
+crw-rw-rw-. 1 root root 200, 200 апр 21 20:01 /dev/ioctl
+Hello, world!
+IOCTL_GET_STRING error: Inappropriate ioctl for device
+Module                  Size  Used by
+fuse                   86889  3 
+
+
+[Olej@modules ioctl]$ file ioctl 
+ioctl: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=1bb7d82c6851b35dcf099e725b5afeaab2dd04a7, not stripped
+
+
+----------------------------------------------------------------------
+
+[Olej@modules ioctl]$ make disclean
+
+[Olej@modules ioctl]$ make
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/ioctl/ioctl_dev.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+gcc ioctl.c -o ioctl
+
+
+[Olej@modules ioctl]$ file ioctl 
+ioctl: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=8534deca470d2428ed1a49f70d1415bda7cbb4a0, not stripped
+
+[Olej@modules ioctl]$ ./test 
+Module                  Size  Used by
+ioctl_dev              12594  0 
+crw-rw-rw-. 1 root root 200, 200 апр 21 20:03 /dev/ioctl
+Hello, world!
+Hello, world!
+Module                  Size  Used by
+fuse                   86889  3 
+
+----------------------------------------------------------------------
+
+======================================================================

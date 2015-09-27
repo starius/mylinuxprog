@@ -1,0 +1,63 @@
+01.03.2012
+==========
+
+[olej@notebook config]$ cat config.sh 
+sudo insmod config.ko
+dmesg | tail -n30 | grep CONF
+
+[olej@notebook config]$ ./config.sh
+insmod: error inserting 'config.ko': -1 Operation not permitted
+CONFIG_SMP = 1
+CONFIG_64BIT не определено
+CONFIG_MICROCODE не определено
+CONFIG_OUTPUT_FORMAT = elf32-i386
+
+--------------------------------------------------------------------
+
+[olej@notebook linux]$ pwd
+/lib/modules/2.6.32.9-70.fc12.i686.PAE/build/include/linux
+
+[olej@notebook linux]$ cat autoconf.h | grep CONFIG_SMP
+#define CONFIG_SMP 1
+
+[olej@notebook linux]$ cat autoconf.h | grep CONFIG_MICROCODE
+#define CONFIG_MICROCODE_INTEL 1
+#define CONFIG_MICROCODE_MODULE 1
+#define CONFIG_MICROCODE_OLD_INTERFACE 1
+#define CONFIG_MICROCODE_AMD 1
+
+[olej@notebook linux]$ cat autoconf.h | grep CONFIG_64BIT
+
+[olej@notebook linux]$ cat autoconf.h | grep CONFIG_OUTPUT_FORMAT
+#define CONFIG_OUTPUT_FORMAT "elf32-i386"
+
+====================================================================
+
+[olej@notebook config]$ ./config.sh 
+insmod: error inserting 'config.ko': -1 Operation not permitted
+CONFIG_SMP = 1
+CONFIG_64BIT не определено
+CONFIG_MICROCODE не определено
+CONFIG_MICROCODE_MODULE = 1
+CONFIG_OUTPUT_FORMAT = elf32-i386
+
+
+====================================================================
+
+31.03.2014
+==========
+
+[Olej@modules config]$ sudo insmod config.ko 
+[sudo] password for Olej: 
+insmod: ERROR: could not insert module config.ko: Operation not permitted
+
+
+[Olej@modules config]$ dmesg | tail -n5
+[51778.867191] CONFIG_SMP = 1
+[51778.867194] CONFIG_64BIT = 1
+[51778.867195] CONFIG_MICROCODE не определено
+[51778.867196] CONFIG_MICROCODE_MODULE = 1
+[51778.867197] CONFIG_OUTPUT_FORMAT = elf64-x86-64
+
+
+--------------------------------------------------------------------

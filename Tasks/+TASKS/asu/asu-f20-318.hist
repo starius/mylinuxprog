@@ -1,0 +1,117 @@
+09.02.2015
+==========
+
+[Olej@modules asu]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules asu]$ make 
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+gcc -Wall -Wno-unused-variable -lm cli.c kernp.c -o cli_krnp
+gcc -Wall -Wno-unused-variable -lm cli.c kerns.c -o cli_krns
+
+====================================================================================================
+
+[Olej@modules asu]$ sudo insmod modsasu.ko
+
+[Olej@modules asu]$ dmesg | tail -n2
+[61805.305749] ! it's work only for kernel LE 3.9
+[61849.025398] ! register 3 nodes in /sys/asu
+
+[Olej@modules asu]$ ls -l /sys/class/asu
+итого 0
+--w-------. 1 root root 4096 фев 10 02:44 increment
+-rw-r--r--. 1 root root 4096 фев 10 02:44 multiply
+-rw-r--r--. 1 root root 4096 фев 10 02:44 value
+
+[Olej@modules asu]$ cat /sys/class/asu/value 
+0
+
+[Olej@modules asu]$ echo 30 | sudo tee 1>/dev/null /sys/class/asu/increment 
+
+[Olej@modules asu]$ cat /sys/class/asu/value 
+0
+
+[Olej@modules asu]$ echo 30 | sudo tee 1>/dev/null /sys/class/asu/value 
+
+[Olej@modules asu]$ cat /sys/class/asu/value 
+0
+[Olej@modules asu]$ echo 30 | sudo tee 1>/dev/null /sys/class/asu/multiply 
+
+[Olej@modules asu]$ cat /sys/class/asu/multiply 
+0
+
+[Olej@modules asu]$ sudo rmmod modsasu.ko
+
+====================================================================================================
+
+11.02.2015
+==========
+
+[Olej@modules asu]$ make
+make -C /lib/modules/3.18.5-101.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu modules
+make[1]: Вход в каталог `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.o
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modpasu.ko
+  CC      /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.mod.o
+  LD [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/+TASKS/asu/modsasu.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.18.5-101.fc20.x86_64'
+gcc -Wall -Wno-unused-variable -lm cli.c locl.c -o cli_locl
+gcc -Wall -Wno-unused-variable -DPROC -lm cli.c kern.c -o cli_krnp
+gcc -Wall -Wno-unused-variable -DSYS -lm cli.c kern.c -o cli_krns
+
+[Olej@modules asu]$ uname -a
+Linux modules.localdomain 3.18.5-101.fc20.x86_64 #1 SMP Mon Feb 2 20:58:23 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+----------------------------------------------------------------------------------------------------
+
+[Olej@modules asu]$ make cli_krns 
+gcc -Wall -Wno-unused-variable -DSYS -lm cli.c kern.c -o cli_krns
+
+[Olej@modules asu]$ ./cli_krns 
+команда (h-подсказка): =
+новое значение = 1
+команда (h-подсказка): *86
+усиление = 86%
+команда (h-подсказка): =-100   
+новое значение = -100
+-100 +100 => -14
+-14 +14 => -2
+-2 +2 => -1
+команда (h-подсказка): *189
+усиление = 189%
+команда (h-подсказка): 100 
+нераспознанная команда!
+реализованные команды: ? =N *[N] h q
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -89
+-89 +89 => 79
+79 -79 => -70
+-70 +70 => 62
+62 -62 => -55
+-55 +55 => 48
+48 -48 => -42
+-42 +42 => 37
+37 -37 => -32
+-32 +32 => 28
+28 -28 => -24
+команда (h-подсказка): q
+
+[Olej@modules asu]$ cat /sys/kernel/asu/value
+-24
+
+====================================================================================================

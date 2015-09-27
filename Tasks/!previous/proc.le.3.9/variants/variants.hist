@@ -1,0 +1,703 @@
+========================================================================
+
+12.03.2012
+==========
+
+[olej@notebook variants]$ make VARIANT=1
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_procr.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_procr_1.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_procr_1.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_procr_1.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=1
+
+[olej@notebook variants]$ ls *.ko
+mod_procr_0.ko  mod_procr_1.ko
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ lsmod | head -n5
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+ip6_tables              9409  1 ip6table_filter
+ebtable_nat             1407  0 
+
+[olej@notebook variants]$ sudo insmod mod_procr_0.ko
+
+[olej@notebook variants]$ lsmod | head -n3
+Module                  Size  Used by
+mod_procr_0             1180  0 
+fuse                   48375  2 
+
+[olej@notebook variants]$ sudo rmmod mod_procr_0
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./insm
+Module                  Size  Used by
+mod_procr_3             1256  0 
+mod_procr_2             1216  0 
+mod_procr_1             1187  0 
+mod_procr_0             1184  0 
+fuse                   48375  2 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+[olej@notebook variants]$ ./mcat 10 mod_node_0
+read + 10 bytes, input buffer: .........1
+read + 10 bytes, input buffer: .........1.........2
+read + 10 bytes, input buffer: .........1.........2.........3
+read + 10 bytes, input buffer: .........1.........2.........3.........4
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+[olej@notebook variants]$ 
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! read: 10 (buffer=f1133000, off=0)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=10)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=20)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=30)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=40)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=50)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=60)
+! copy bytes: 61
+! return bytes: 61
+! read: 9 (buffer=f1133000, off=61)
+! copy bytes: 61
+! return bytes: 61
+! read: 10 (buffer=f1133000, off=61)
+! copy bytes: 61
+! return bytes: 61
+
+
+[olej@notebook variants]$ ./remm
+Module                  Size  Used by
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./mcat 10 mod_node_2
+read + 10 bytes, input buffer: .........1
+read + 10 bytes, input buffer: .........1.........2
+read + 10 bytes, input buffer: .........1.........2.........3
+read + 10 bytes, input buffer: .........1.........2.........3.........4
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5
+read + 10 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! read: 10 (buffer=f12fb000, off=0)
+! copy bytes: 10
+! return bytes: 10
+! read: 10 (buffer=f12fb000, off=10)
+! copy bytes: 10
+! return bytes: 20
+! read: 10 (buffer=f12fb000, off=20)
+! copy bytes: 10
+! return bytes: 30
+! read: 10 (buffer=f12fb000, off=30)
+! copy bytes: 10
+! return bytes: 40
+! read: 10 (buffer=f12fb000, off=40)
+! copy bytes: 10
+! return bytes: 50
+! read: 10 (buffer=f12fb000, off=50)
+! copy bytes: 10
+! return bytes: 60
+! read: 10 (buffer=f12fb000, off=60)
+! copy bytes: 1
+! return bytes: 61
+! read: 9 (buffer=f12fb000, off=61)
+! copy bytes: 0
+! return bytes: 61
+! read: 10 (buffer=f12fb000, off=61)
+! copy bytes: 0
+! return bytes: 61
+
+========================================================================
+
+[olej@notebook variants]$ ./insm
+Module                  Size  Used by
+mod_procr_3             1264  0 
+mod_procr_2             1224  0 
+mod_procr_1             1228  0 
+mod_procr_0             1192  0 
+fuse                   48375  2 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./mcat 40 mod_node_0
+read + 40 bytes, input buffer: .........1.........2.........3.........4
+read + 21 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n15 | grep !
+! read: 40 (buffer=f4042000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 40 (buffer=f4042000, off=40, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 19 (buffer=f4042000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 40 (buffer=f4042000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./mcat 40 mod_node_1
+read + 40 bytes, input buffer: .........1.........2.........3.........4
+read + 21 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n20 | grep !
+! read: 40 (buffer=f1e6e000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 40 (buffer=f1e6e000, off=40, start=(null))
+! copy bytes: 61
+! return bytes: 61 ... EOF
+! read: 40 (buffer=f1e6e000, off=61, start=(null))
+! return bytes: 0 ... EOF
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./mcat 40 mod_node_2
+read + 40 bytes, input buffer: .........1.........2.........3.........4
+read + 21 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n7 | grep !
+! read: 40 (buffer=f242b000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 40 (buffer=f242b000, off=40, start=(null))
+! return bytes: 61 ... EOF
+! read: 40 (buffer=f242b000, off=61, start=(null))
+! return bytes: 61 ... EOF
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./mcat 40 mod_node_3
+read + 40 bytes, input buffer: .........1.........2.........3.........4
+read + 21 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n8 | grep !
+! read: 40 (buffer=f1e6e000, off=0, start=(null))
+! copy bytes: 40
+! return bytes: 40
+! read: 40 (buffer=f1e6e000, off=40, start=(null))
+! copy bytes: 21
+! return bytes: 61 ... EOF
+! read: 40 (buffer=f1e6e000, off=61, start=(null))
+! return bytes: 0 ... EOF
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ sudo insmod mod_proc_0.ko
+[olej@notebook variants]$ cat /proc/mod_node_0 
+.........1.........2.........3.........4.........5.........6
+[olej@notebook variants]$ echo 235135 > /proc/mod_node_0 
+[olej@notebook variants]$ cat /proc/mod_node_0 
+235135
+[olej@notebook variants]$ sudo rmmod mod_proc_0
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./build 
+...
+mod_proc_0.ko  mod_proc_1.ko  mod_proc_2.ko  mod_proc_3.ko
+
+
+[olej@notebook variants]$ ./insm 
+Module                  Size  Used by
+mod_proc_3              1514  0 
+mod_proc_2              1474  0 
+mod_proc_1              1486  0 
+mod_proc_0              1442  0 
+fuse                   48375  2 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+
+[olej@notebook variants]$ dmesg | tail -n100 | grep !
+! /proc/mod_node_0 installed
+! /proc/mod_node_1 installed
+! /proc/mod_node_2 installed
+! /proc/mod_node_3 installed
+
+
+
+[olej@notebook variants]$ cat /proc/mod_node_0
+.........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ echo 235135 > /proc/mod_node_0
+
+[olej@notebook variants]$ cat /proc/mod_node_0
+235135
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! read: 3072 (buffer=f265b000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 3072 (buffer=f265b000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 3072 (buffer=f265b000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! write: 7 (buffer=b789f000)
+! parameter set to 235135
+! read: 3072 (buffer=f265b000, off=0, start=(null))
+! copy bytes: 7
+! return bytes: 7
+! read: 3072 (buffer=f265b000, off=7, start=(null))
+! copy bytes: 7
+! return bytes: 7
+! read: 3072 (buffer=f265b000, off=7, start=(null))
+! copy bytes: 7
+! return bytes: 7
+
+
+========================================================================
+
+13.03.2012
+==========
+
+[olej@notebook variants]$ sudo insmod mod_proc_0.ko size=70
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! /proc/mod_node_0 installed, buffer size 70
+
+[olej@notebook variants]$ ls /proc/mod_*
+/proc/mod_node_0
+
+[olej@notebook variants]$ cat /proc/mod_node_0
+
+[olej@notebook variants]$ echo *********1*********2 > /proc/mod_node_0
+
+[olej@notebook variants]$ cat /proc/mod_node_0
+*********1*********2
+
+[olej@notebook variants]$ cp mod_proc.c /proc/mod_node_0
+[olej@notebook variants]$ echo $?
+0
+
+[olej@notebook variants]$ cp /proc/mod_node_0 mod_proc.dubl
+
+[olej@notebook variants]$ ls -l mod_proc*
+-rw-rw-r-- 1 olej olej 121262 Мар 13 10:49 mod_proc_0.ko
+-rw-r--r-- 1 olej olej   1689 Мар 13 10:48 mod_proc.c
+-rw-rw-r-- 1 olej olej     70 Мар 13 10:54 mod_proc.dubl
+-rw-r--r-- 1 olej olej    334 Мар 13 10:49 mod_proc.h
+
+[olej@notebook variants]$ cat mod_proc.dubl
+#include "mod_proc.h"
+
+static ulong size = 0;
+module_param( size, ulon[olej@notebook variants]$ 
+
+[olej@notebook variants]$ sudo rmmod mod_proc_0
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ make VARIANT=1
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_proc.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_proc_1.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_proc_1.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/proc/variants/mod_proc_1.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=1
+
+[olej@notebook variants]$ sudo insmod mod_proc_0.ko size=1000000
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! /proc/mod_node_0 installed, buffer size 1000000
+
+[olej@notebook variants]$ cp -v mod_proc.c /proc/mod_node_0
+`mod_proc.c' -> `/proc/mod_node_0'
+
+[olej@notebook variants]$ cp -v /proc/mod_node_0 mod_proc.dubl
+`/proc/mod_node_0' -> `mod_proc.dubl'
+
+[olej@notebook variants]$ ls -l mod_proc.*
+-rw-r--r-- 1 olej olej 1546 Мар 13 11:03 mod_proc.c
+-rw-rw-r-- 1 olej olej 1546 Мар 13 11:05 mod_proc.dubl
+-rw-r--r-- 1 olej olej  334 Мар 13 10:49 mod_proc.h
+
+[olej@notebook variants]$ diff -a mod_proc.c mod_proc.dubl
+
+[olej@notebook variants]$ cmp mod_proc.c mod_proc.dubl 
+[olej@notebook variants]$ echo $?
+0
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ make recho
+cc     recho.c common.h def_prog.c   -o recho
+
+[olej@notebook variants]$ make rtest
+cc     rtest.c common.h def_prog.c   -o rtest
+
+[olej@notebook variants]$ ./recho 27 mod_node_0
+
+[olej@notebook variants]$ ./mcat 10 mod_node_0
+read + 10 bytes, input buffer: 0123456789
+read + 10 bytes, input buffer: 0123456789:;<=>?@ABC
+read + 07 bytes, input buffer: 0123456789:;<=>?@ABCDEFGHIJ
+read + 00 bytes, input buffer: 0123456789:;<=>?@ABCDEFGHIJ
+
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 27 байт, все значения совпали с ожидаемыми
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ sudo insmod mod_proc_0.ko size=100000
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! /proc/mod_node_0 installed, buffer size 100000
+
+[olej@notebook variants]$ ./recho 270 mod_node_0
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 270 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ ./recho 3072 mod_node_0
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 3072 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ ./recho 3073 mod_node_0
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 3073 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ ./recho 4096 mod_node_0
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 4096 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ ./recho 4097 mod_node_0
+[olej@notebook variants]$ ./rtest  mod_node_0
+считано 4096 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ sudo rmmod mod_proc_0
+
+========================================================================
+
+14.03.2012
+==========
+
+[olej@notebook variants]$ ./build 
+...
+
+[olej@notebook variants]$ ls -l *.ko
+-rw-rw-r-- 1 olej olej 122923 Мар 14 17:39 mod_proc_0.ko
+-rw-rw-r-- 1 olej olej 122999 Мар 14 17:39 mod_proc_1.ko
+-rw-rw-r-- 1 olej olej 122987 Мар 14 17:39 mod_proc_2.ko
+-rw-rw-r-- 1 olej olej 123427 Мар 14 17:39 mod_proc_3.ko
+
+
+[olej@notebook variants]$ lsmod | grep mod_
+[olej@notebook variants]$ 
+
+
+[olej@notebook variants]$ ./insm 
+Module                  Size  Used by
+mod_proc_3              1662  0 
+mod_proc_2              1638  0 
+mod_proc_1              1642  0 
+mod_proc_0              1610  0 
+vfat                    6740  1 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+[olej@notebook variants]$ lsmod | grep mod_
+mod_proc_3              1662  0 
+mod_proc_2              1638  0 
+mod_proc_1              1642  0 
+mod_proc_0              1610  0 
+
+
+[olej@notebook variants]$ dmesg | tail -n130 | grep !
+! /proc/mod_node_0 installed, buffer size 161
+! /proc/mod_node_1 installed, buffer size 161
+! /proc/mod_node_2 installed, buffer size 161
+! /proc/mod_node_3 installed, buffer size 161
+
+[olej@notebook variants]$ ./mcat 20 /proc/mod_node_0
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 20 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n30 | grep !
+! read: 20 (buffer=f30ab000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f30ab000, off=20, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f30ab000, off=40, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f30ab000, off=60, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 19 (buffer=f30ab000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f30ab000, off=61, start=(null))
+! copy bytes: 61
+! return bytes: 61
+
+[olej@notebook variants]$ ./mcat 20 /proc/mod_node_1
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 20 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read device error: Success
+
+[olej@notebook variants]$ dmesg | tail -n14 | grep !
+! read: 20 (buffer=c4775000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=20, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=40, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=60, start=(null))
+! copy bytes: 61
+! return bytes: 61 ... EOF
+! read: 20 (buffer=c4775000, off=61, start=(null))
+! return bytes: -119947264 ... EOF
+
+???????
+=======
+
+
+[olej@notebook variants]$ ./remm 
+Module                  Size  Used by
+vfat                    6740  1 
+fat                    37704  1 vfat
+
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./insm 
+Module                  Size  Used by
+mod_proc_3              1662  0 
+mod_proc_2              1638  0 
+mod_proc_1              1638  0 
+mod_proc_0              1610  0 
+vfat                    6740  1 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+[olej@notebook variants]$ ./mcat 20 /proc/mod_node_1
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 20 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n14 | grep !
+! read: 20 (buffer=f67e8000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f67e8000, off=20, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f67e8000, off=40, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=f67e8000, off=60, start=(null))
+! copy bytes: 61
+! return bytes: 61 ... EOF
+! read: 20 (buffer=f67e8000, off=61, start=(null))
+! return bytes: 0 ... EOF
+
+
+[olej@notebook variants]$ ./mcat 20 /proc/mod_node_2
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 20 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n11 | grep !
+! read: 20 (buffer=c4775000, off=0, start=(null))
+! copy bytes: 61
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=20, start=(null))
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=40, start=(null))
+! return bytes: 61
+! read: 20 (buffer=c4775000, off=60, start=(null))
+! return bytes: 61 ... EOF
+! read: 20 (buffer=c4775000, off=61, start=(null))
+! return bytes: 61 ... EOF
+
+
+[olej@notebook variants]$ ./mcat 20 /proc/mod_node_3
+read + 20 bytes, input buffer: .........1.........2
+read + 20 bytes, input buffer: .........1.........2.........3.........4
+read + 20 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 01 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+read + 00 bytes, input buffer: .........1.........2.........3.........4.........5.........6
+
+[olej@notebook variants]$ dmesg | tail -n14 | grep !
+! read: 20 (buffer=e5633000, off=0, start=(null))
+! copy bytes: 20
+! return bytes: 20
+! read: 20 (buffer=e5633000, off=20, start=(null))
+! copy bytes: 20
+! return bytes: 40
+! read: 20 (buffer=e5633000, off=40, start=(null))
+! copy bytes: 20
+! return bytes: 60
+! read: 20 (buffer=e5633000, off=60, start=(null))
+! copy bytes: 1
+! return bytes: 61 ... EOF
+! read: 20 (buffer=e5633000, off=61, start=(null))
+! return bytes: 0 ... EOF
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./recho 270 ./r270
+
+[olej@notebook variants]$ ls -l r270 
+---------- 1 olej olej 270 Мар 14 17:58 r270
+
+[olej@notebook variants]$ ./recho 270 ./r270
+open file ./r270 error: Permission denied
+
+[olej@notebook variants]$ sudo rm r270
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ make recho
+cc     recho.c common.h def_prog.c   -o recho
+
+[olej@notebook variants]$ ./recho 270 ./r270
+
+[olej@notebook variants]$ ls -l r270 
+-rw-rw-r-- 1 olej olej 270 Мар 14 18:45 r270
+
+[olej@notebook variants]$ head -c20 r270 ; echo
+0123456789:;<=>?@ABC
+
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./insm 
+Module                  Size  Used by
+mod_proc_3              1662  0 
+mod_proc_2              1638  0 
+mod_proc_1              1638  0 
+mod_proc_0              1606  0 
+vfat                    6740  1 
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+
+[olej@notebook variants]$ ./recho 270 r270
+
+[olej@notebook variants]$ ls -l r270 
+-rw-rw---- 1 olej olej 270 Мар 14 23:05 r270
+
+[olej@notebook variants]$ ls /proc/mod_*
+/proc/mod_node_0  /proc/mod_node_1  /proc/mod_node_2  /proc/mod_node_3
+
+[olej@notebook variants]$ cp r270 /proc/mod_node_0
+
+[olej@notebook variants]$ dmesg | tail -n50000 | grep !
+! write: 270 (buffer=093c5000)
+! parameter set to 123456789
+
+[olej@notebook variants]$ ./rtest /proc/mod_node_0
+считано 270 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ cp r270 /proc/mod_node_1
+
+[olej@notebook variants]$ ./rtest /proc/mod_node_1
+считано 270 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ cp r270 /proc/mod_node_2
+
+[olej@notebook variants]$ ./rtest /proc/mod_node_1
+считано 270 байт, все значения совпали с ожидаемыми
+
+[olej@notebook variants]$ cp r270 /proc/mod_node_3
+
+[olej@notebook variants]$ ./rtest /proc/mod_node_1
+считано 270 байт, все значения совпали с ожидаемыми
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ cp r3072 /proc/mod_node_0
+[olej@notebook variants]$ cp r3072 /proc/mod_node_1
+[olej@notebook variants]$ cp r3072 /proc/mod_node_2
+[olej@notebook variants]$ cp r3072 /proc/mod_node_3
+
+[olej@notebook variants]$ ./rtest /proc/mod_node_0
+считано 3072 байт, все значения совпали с ожидаемыми
+[olej@notebook variants]$ ./rtest /proc/mod_node_1
+считано 3072 байт, все значения совпали с ожидаемыми
+[olej@notebook variants]$ ./rtest /proc/mod_node_2
+считано 3072 байт, все значения совпали с ожидаемыми
+[olej@notebook variants]$ ./rtest /proc/mod_node_3
+считано 3072 байт, все значения совпали с ожидаемыми
+
+
+
+------------------------------------------------------------------------
+
+[olej@notebook variants]$ ./recho 3100 r3100
+[olej@notebook variants]$ cp r3100 /proc/mod_node_3
+
+[olej@notebook variants]$ dmesg | tail -n2 | grep !
+! write: 3100 (buffer=09ccb000)
+! parameter set to 123456789
+
+[olej@notebook variants]$ cp /proc/mod_node_3 r3100.3
+
+[olej@notebook variants]$ ls -l r3100*
+-rw-rw---- 1 olej olej 3100 Мар 14 23:28 r3100
+-rw-rw-r-- 1 olej olej 3100 Мар 14 23:30 r3100.3
+
+[olej@notebook variants]$ dmesg | tail -n8 | grep !
+! read: 3072 (buffer=f313b000, off=0, start=(null))
+! copy bytes: 3072
+! return bytes: 3072
+! read: 3072 (buffer=f313b000, off=3072, start=(null))
+! copy bytes: 28
+! return bytes: 3100 ... EOF
+! read: 3072 (buffer=f313b000, off=3100, start=(null))
+! return bytes: 0 ... EOF
+
+------------------------------------------------------------------------
+

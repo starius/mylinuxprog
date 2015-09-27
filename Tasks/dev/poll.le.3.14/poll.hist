@@ -1,0 +1,247 @@
+===========================================================================
+30.06.2011
+==========
+
+[olej@notebook poll]$ sudo insmod poll.ko
+
+[olej@notebook poll]$ ls -l /dev/po*
+crw-rw---- 1 root root 10, 54 Июн 30 11:57 /dev/poll
+crw-r----- 1 root kmem  1,  4 Июн 30 09:52 /dev/port
+
+[olej@notebook poll]$ cat /dev/poll
+not initialized yet!
+
+[olej@notebook poll]$ echo NEW > /dev/poll
+
+[olej@notebook poll]$ cat /dev/poll
+NEW
+
+[olej@notebook poll]$ sudo rmmod poll
+
+---------------------------------------------------------------------------
+
+[olej@notebook poll]$ sudo insmod poll.ko
+
+[olej@notebook poll]$ echo qwerqr > /dev/poll
+
+[olej@notebook poll]$ echo qwerqr > /dev/poll
+
+[olej@notebook poll]$ echo qwerqr > /dev/poll
+
+[olej@notebook poll]$ cat /dev/poll
+qwerqr
+
+[olej@notebook poll]$ cat /dev/poll
+...
+12346456
+
+[olej@notebook poll]$ echo 12346456 > /dev/poll
+
+
+[olej@notebook poll]$ ./pcat -v 3
+nonblocked: yes, multiplexed: yes, read block size: 3 bytes
+interval 43:271 read 3 bytes: xxx
+interval 00:100 read 3 bytes: xx 
+interval 00:100 read 3 bytes: yyy
+interval 00:100 read 3 bytes: yyy
+interval 00:100 read 3 bytes:  zz
+interval 00:100 read 3 bytes: zzz
+interval 00:100 read 3 bytes:  tt
+interval 00:100 read 1 bytes: 
+
+interval 00:100 read 0 bytes: read EOF
+
+[olej@notebook poll]$ ./pecho 'xxxxx yyyyyy zzzzz tt'
+interval 00:099 write 21 bytes: xxxxx yyyyyy zzzzz tt
+
+[olej@notebook poll]$ sudo rmmod poll
+
+---------------------------------------------------------------------------
+
+[olej@notebook poll]$ ./pcat -v 3 -m
+nonblocked: yes, multiplexed: no, read block size: 3 bytes
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read 3 bytes: 123
+interval 00:000 read 3 bytes: 45 
+interval 00:000 read 3 bytes: 678
+interval 00:000 read 3 bytes: 90
+
+interval 00:000 read 0 bytes: read EOF
+
+
+[olej@notebook poll]$ ./pecho '12345 67890'
+interval 00:099 write 11 bytes: 12345 67890
+
+---------------------------------------------------------------------------
+24.01.2012
+==========
+
+[poll]$ cat /dev/poll
+not initialized yet!
+
+[olej@notebook poll]$ echo новое содержимое > /dev/poll
+
+[olej@notebook poll]$ cat /dev/poll
+новое содержимое
+
+-----------------------------------------------------------
+
+[olej@notebook poll]$ cat /dev/poll
+not initialized yet!
+
+[olej@notebook poll]$ cat /dev/poll
+1234567
+
+[olej@notebook ~]$ sh
+sh-4.0$
+
+sh-4.0$ echo 1234567 > /dev/poll
+
+-----------------------------------------------------------
+
+===========================================================
+25.01.2012
+==========
+
+[olej@notebook poll]$ ./pecho 
+usage: ./pecho [-b][-m][-v] <write string>
+
+[olej@notebook poll]$ ./pecho -v
+usage: ./pecho [-b][-m][-v] <write string>
+
+[olej@notebook poll]$ ./pcat 
+usage: ./pcat [-b][-m][-v] [<read block size>]
+
+[olej@notebook poll]$ ./pcat -v
+usage: ./pcat [-b][-m][-v] [<read block size>]
+
+[olej@notebook poll]$ ./pcat a
+usage: ./pcat [-b][-m][-v] [<read block size>]
+
+[olej@notebook poll]$ ./pcat 3 4 5
+usage: ./pcat [-b][-m][-v] [<read block size>]
+
+-----------------------------------------------------------
+
+[olej@notebook poll]$ cat /dev/poll
+not initialized yet!
+
+[olej@notebook poll]$ echo 12.34.56.78. > /dev/poll
+
+[olej@notebook poll]$ pcat 3
+bash: pcat: команда не найдена
+[olej@notebook poll]$ ./pcat 3
+interval 00:100 read 3 bytes: 12.
+interval 00:100 read 3 bytes: 34.
+interval 00:100 read 3 bytes: 56.
+interval 00:100 read 3 bytes: 78.
+interval 00:100 read 1 bytes:
+
+interval 00:100 read 0 bytes: read EOF
+
+-----------------------------------------------------------
+
+$ ./pcat -v 3
+nonblocked: yes, multiplexed: yes, read block size: 3 bytes
+interval 03:143 read 3 bytes: 12.
+interval 00:100 read 3 bytes: 34.
+interval 00:100 read 3 bytes: 56.
+interval 00:100 read 3 bytes: 78.
+interval 00:100 read 1 bytes: 
+
+interval 00:100 read 0 bytes: read EOF
+
+sh-4.0$ ./pecho -v '12.34.56.78.'
+nonblocked: yes, multiplexed: yes, string for output: 12.34.56.78.
+interval 00:100 write 12 bytes: 12.34.56.78.
+
+-----------------------------------------------------------
+
+[olej@notebook poll]$ ./pcat -v -m -b 3
+nonblocked: no, multiplexed: no, read block size: 3 bytes
+interval 04:812 read 3 bytes: 12.
+interval 00:000 read 3 bytes: 34.
+interval 00:000 read 3 bytes: 56.
+interval 00:000 read 3 bytes: 78.
+interval 00:000 read 1 bytes: 
+
+interval 00:000 read 0 bytes: read EOF
+[olej@notebook poll]$ 
+[olej@notebook poll]$ ./pcat -v  3
+nonblocked: yes, multiplexed: yes, read block size: 3 bytes
+interval 03:063 read 3 bytes: 12.
+interval 00:100 read 3 bytes: 34.
+interval 00:100 read 3 bytes: 56.
+interval 00:101 read 3 bytes: 78.
+interval 00:099 read 1 bytes: 
+
+interval 00:100 read 0 bytes: read EOF
+[olej@notebook poll]$ ./pcat -v -m 3
+nonblocked: yes, multiplexed: no, read block size: 3 bytes
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read -1 bytes: device NOT READY
+interval 00:000 read 3 bytes: 12.
+interval 00:000 read 3 bytes: 34.
+interval 00:000 read 3 bytes: 56.
+interval 00:000 read 3 bytes: 78.
+interval 00:000 read 1 bytes: 
+
+interval 00:000 read 0 bytes: read EOF
+
+
+===========================================================
+
+21.04.2014
+==========
+
+[Olej@modules poll]$ make disclean
+[Olej@modules poll]$ make
+gcc pcat.c -o pcat
+gcc pecho.c -o pecho
+make -C /lib/modules/3.13.10-200.fc20.x86_64/build M=/home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/poll modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+  CC [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/poll/poll.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/poll/poll.mod.o
+  LD [M]  /home/Olej/2014-WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/dev/poll/poll.ko
+make[1]: Выход из каталога `/usr/src/kernels/3.13.10-200.fc20.x86_64'
+
+===========================================================
+
+[Olej@modules poll]$ uname -a
+Linux modules.localdomain 3.17.8-200.fc20.x86_64 #1 SMP Thu Jan 8 23:26:57 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+
+[Olej@modules poll]$ make
+gcc pcat.c -o pcat
+gcc pecho.c -o pecho
+make -C /lib/modules/3.17.8-200.fc20.x86_64/build M=/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll modules
+make[1]: Вход в каталог `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+  CC [M]  /home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.o
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c: В функции «read»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c:27:7: ошибка: неявная декларация функции «interruptible_sleep_on» [-Werror=implicit-function-declaration]
+       else interruptible_sleep_on( &qwait );
+       ^
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c: В функции «poll»:
+/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.c:55:4: ошибка: неявная декларация функции «sleep_on_timeout» [-Werror=implicit-function-declaration]
+    sleep_on_timeout( &qwait, pause );
+    ^
+cc1: some warnings being treated as errors
+make[2]: *** [/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll/poll.o] Ошибка 1
+make[1]: *** [_module_/home/Olej/2015-WORK/GlobalLogic/PRACTIS.Kernel/PRACTIS.Tasks/dev/poll] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/3.17.8-200.fc20.x86_64'
+make: *** [module] Ошибка 2
+
+===========================================================

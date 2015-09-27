@@ -1,0 +1,308 @@
+31.01.2015
+==========
+
+Задача: Создайте модель системы авторегулирования в /proc:
+1. Есть некоторое регулируемое значение (это одна переменная, /proc/.../val);
+2. Есть корректирующая переменная (это одна переменная, /proc/.../cor) — при записи
+в эту переменную регулируемое значение корректируется (суммируется) с записанным значением,
+умноженным на коэффициент петлевого усиления (константу).
+Последовательно считывая (cat) val — выбираем значение коррекции и записываем (echo) в cor,
+с целью привести val к условному значению 0.
+Значение /proc/.../val должно допускать запись для начальной инициализации,  коэффициент
+петлевого усиления задаём как параметр при старте модуля.
+
+Задача: Для предыдущей задачи сделать приложение, которое будет циклически, с фиксированным
+интервалом времени, формировать разницу и записывать корректирующее значение до тех пор,
+пока val не установится в 0. 
+
+Подсказка: Для упрощения обеих предыдущих задач сделайте сначала в одногм приложении модель
+циклического авторегулирования:
+3. Значение управляемой переменной считывается, и в зависимости от разбалансировки вырабатывается
+управляющее воздействие (разница значений); 
+4. Из управляющего воздействия формируется шаг корректировки (умножением разбалансировки
+на коэффициент петлевого усиления), поэтому можно имитировать недорегулирование, перерегулирование...
+5. Шаг корректировки записывается во вторую переменную;
+6. Устройство корректирует регулируемое значение на полученный шаг корректировки;
+7. Если в результате записи п.5 разбалансировка всё ещё не нулевая — возвращаемся на п.3.
+
+Задача: Проанализируйте, как такие именнованные «точки данных» могут использоваться в качестве базы для SCADA системы.
+
+---------------------------------------------------------------------------------------------------------------------
+
+Задача: Проделайте в /sys аналогичные действия как для /proc.
+
+===========================================================================================================
+
+06.02.2015
+==========
+
+olej@ubuntu:~$ ifconfig
+eth0      Link encap:Ethernet  HWaddr 08:00:27:29:e5:a9  
+          inet addr:192.168.1.21  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe29:e5a9/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:17892 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10876 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:21648282 (21.6 MB)  TX bytes:1137977 (1.1 MB)
+
+eth1      Link encap:Ethernet  HWaddr 08:00:27:29:8d:45  
+          inet addr:192.168.56.101  Bcast:192.168.56.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe29:8d45/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:31 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:51 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:8816 (8.8 KB)  TX bytes:10506 (10.5 KB)
+
+lo        Link encap:Локальная петля (Loopback)  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:362 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:362 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:51637 (51.6 KB)  TX bytes:51637 (51.6 KB)
+
+olej@ubuntu:~$ uname -a
+Linux ubuntu 3.2.0-25-generic-pae #40-Ubuntu SMP Wed May 23 22:11:24 UTC 2012 i686 i686 i386 GNU/Linux
+
+olej@ubuntu:/etc$ cat debian_version 
+wheezy/sid
+
+olej@ubuntu:/etc$ which sshd
+olej@ubuntu:/etc$
+
+=========================================================================================================
+
+olej@ubuntu:~$ aptitude search ssh
+p   aolserver4-nssha1                        - AOLserver4 module: performs SHA1 hashes Provides a 
+p   autossh                                  - Automatically restart SSH sessions and tunnels     
+p   clusterssh                               - administer multiple ssh or rsh shells simultaneousl
+p   crosshurd                                - Install a Debian system                            
+p   dpsyco-ssh                               - Automate administration of access via ssh          
+p   erlang-ssh                               - Erlang/OTP implementation of SSH protocol          
+p   gosa-plugin-ssh                          - ssh plugin for GOsa²                               
+p   gosa-plugin-ssh-schema                   - LDAP schema for GOsa² ssh plugin                   
+p   gpsshogi                                 - Shogi playing program based on OpenShogiLib        
+p   gpsshogi-data                            - data files for gpsshogi                            
+p   gpsshogi-dbg                             - Shogi playing program based on OpenShogiLib        
+p   hotssh                                   - графический интерфейс к "безопасной оболочке" (secu
+p   jenkins-ssh-cli-auth                     - SSH CLI client authentication module for Jenkins CI
+p   ksshaskpass                              - interactively prompt users for a passphrase for ssh
+p   libconfig-model-openssh-perl             - configuration file editor for OpenSsh              
+p   libganymed-ssh2-java                     - pure Java implementation of the SSH-2 protocol     
+p   libj2ssh-java                            - Java library for the SSH protocol                  
+p   libj2ssh-java-doc                        - Java library for the SSH protocol - documentation a
+p   libjenkins-trilead-ssh2-java             - Trilead SSH2 implementation for Java (Jenkins varia
+p   libjenkins-trilead-ssh2-java-doc         - Documentation for libjenkins-trilead-ssh2-java     
+p   libnet-ssh-gateway-ruby                  - Transitional package for ruby-net-ssh-gateway      
+p   libnet-ssh-gateway-ruby1.8               - Transitional package for ruby-net-ssh-gateway      
+p   libnet-ssh-gateway-ruby1.9.1             - Transitional package for ruby-net-ssh-gateway      
+p   libnet-ssh-multi-ruby                    - Transitional package for ruby-net-ssh-multi        
+p   libnet-ssh-multi-ruby1.8                 - Transitional package for ruby-net-ssh-multi        
+p   libnet-ssh-multi-ruby1.9.1               - Transitional package for ruby-net-ssh-multi        
+p   libnet-ssh-perl                          - Perl extension for secure shell                    
+p   libnet-ssh-ruby1.8                       - Transitional package for ruby-net-ssh              
+p   libnet-ssh2-perl                         - Perl module for the SSH 2 protocol                 
+p   libnet-ssh2-ruby                         - Transitional package for ruby-net-ssh              
+p   libnet-ssh2-ruby1.8                      - Transitional package for ruby-net-ssh              
+p   libnet-ssh2-ruby1.9.1                    - Transitional package for ruby-net-ssh              
+p   libnss-sshsock2                          - NSS module using an ssh socket connection          
+p   libpam-sshauth                           - authenticate using an SSH server                   
+i   libssh-4                                 - tiny C SSH library                                 
+p   libssh-dbg                               - tiny C SSH library. Debug symbols                  
+p   libssh-dev                               - tiny C SSH library. Development files              
+p   libssh-doc                               - tiny C SSH library. Documentation files            
+p   libssh2-1                                - SSH2 client-side library                           
+p   libssh2-1-dbg                            - SSH2 client-side library (debug package)           
+p   libssh2-1-dev                            - SSH2 client-side library (development headers)     
+p   libssh2-php                              - PHP Bindings for libssh2                           
+p   libtrilead-ssh2-java                     - Java SSH libarary                                  
+p   mssh                                     - инструмент для одновременного администрирования нес
+p   mussh                                    - MUltihost SSH Wrapper                              
+p   opendrim-lmp-ssh                         - OpenDRIM SSH provider                              
+p   openssh-blacklist                        - list of default blacklisted OpenSSH RSA and DSA key
+p   openssh-blacklist-extra                  - list of non-default blacklisted OpenSSH RSA and DSA
+i   openssh-client                           - клиент протокола SSH, для защищённого удалённого до
+p   openssh-server                           - secure shell (SSH) server, for secure access from r
+p   pssh                                     - Parallel versions of SSH-based tools               
+p   python-libssh2                           - Python binding for libssh2 library                 
+v   python2.7-libssh2                        -                                                    
+p   rssh                                     - Restricted shell allowing scp, sftp, cvs, svn, rsyn
+p   ruby-net-ssh                             - Ruby implementation of the SSH protocol            
+p   ruby-net-ssh-gateway                     - Ruby library for tunneling connections to servers w
+p   ruby-net-ssh-multi                       - Ruby library for making multiple SSH connections to
+p   scanssh                                  - получает версии серверов SSH во всей сети          
+p   ssh                                      - оболочка и сервер SSH (метапакет)                  
+p   ssh-askpass                              - under X, asks user for a passphrase for ssh-add    
+p   ssh-askpass-fullscreen                   - запрос пользовательского пароля для ssh-add (Gnome2
+i   ssh-askpass-gnome                        - интерактивая X-программа запроса у пользователей па
+v   ssh-client                               -                                                    
+p   ssh-contact                              - establish SSH connections to your IM contacts using
+p   ssh-contact-client                       - establish SSH connections to your IM contacts using
+p   ssh-contact-service                      - establish SSH connections to your IM contacts using
+p   ssh-import-id                            - securely retrieve an SSH public key and install it 
+p   ssh-krb5                                 - secure shell client and server (transitional packag
+v   ssh-server                               -                                                    
+p   sshfp                                    - DNS SSHFP records generator                        
+p   sshfs                                    - клиент файловой системы, основанный на протоколе пе
+p   sshfs-dbg                                - filesystem client based on SSH File Transfer Protoc
+p   sshguard                                 - Protects from brute force attacks against ssh      
+p   sshm                                     - command-line tool to manage your ssh servers       
+p   sshmenu                                  - Menu for quick connections to your remote hosts    
+p   sshpass                                  - Non-interactive ssh password authentication        
+p   sshuttle                                 - Transparent proxy server for VPN over SSH          
+p   unity-lens-sshsearch                     - SSH search lens for unity                          
+p   zssh                                     - интерактивные передачи файлов через ssh     
+
+
+olej@ubuntu:~$ sudo aptitude install ssh
+[sudo] password for olej: 
+Следующие НОВЫЕ пакеты будут установлены:        
+  openssh-server{a} ssh ssh-import-id{a} 
+Следующие пакеты будут обновлены:
+  openssh-client 
+1 пакетов обновлено, 3 установлено новых, 0 пакетов отмечено для удаления, и 699 пакетов не обновлено.
+Необходимо получить 1.311 kБ архивов. После распаковки 925 kБ будет занято.
+Хотите продолжить? [Y/n/?] y
+Получить: 1 http://ua.archive.ubuntu.com/ubuntu/ precise-updates/main openssh-client i386 1:5.9p1-5ubuntu1.4 [960 kB]
+Получить: 2 http://ua.archive.ubuntu.com/ubuntu/ precise-updates/main openssh-server i386 1:5.9p1-5ubuntu1.4 [343 kB]
+Получить: 3 http://ua.archive.ubuntu.com/ubuntu/ precise-updates/main ssh all 1:5.9p1-5ubuntu1.4 [1.282 B]
+Получить: 4 http://ua.archive.ubuntu.com/ubuntu/ precise/main ssh-import-id all 2.10-0ubuntu1 [6.598 B]
+Получено 1.311 kБ в 2с (467 kБ/с)       
+Предварительная настройка пакетов ...
+(Чтение базы данных ... на данный момент установлено 207334 файла и каталога.)
+Подготовка к замене пакета openssh-client 1:5.9p1-5ubuntu1 (используется файл .../openssh-client_1%3a5.9p1-5ubuntu1.4_i386.deb) ...
+Распаковывается замена для пакета openssh-client ...
+Выбор ранее не выбранного пакета openssh-server.
+Распаковывается пакет openssh-server (из файла .../openssh-server_1%3a5.9p1-5ubuntu1.4_i386.deb)...
+Выбор ранее не выбранного пакета ssh.
+Распаковывается пакет ssh (из файла .../ssh_1%3a5.9p1-5ubuntu1.4_all.deb)...
+Выбор ранее не выбранного пакета ssh-import-id.
+Распаковывается пакет ssh-import-id (из файла .../ssh-import-id_2.10-0ubuntu1_all.deb)...
+Обрабатываются триггеры для man-db ...
+Обрабатываются триггеры для ureadahead ...
+ureadahead will be reprofiled on next reboot
+Обрабатываются триггеры для ufw ...
+Настраивается пакет openssh-client (1:5.9p1-5ubuntu1.4) ...
+Настраивается пакет openssh-server (1:5.9p1-5ubuntu1.4) ...
+Creating SSH2 RSA key; this may take some time ...
+Creating SSH2 DSA key; this may take some time ...
+Creating SSH2 ECDSA key; this may take some time ...
+ssh start/running, process 3443
+Настраивается пакет ssh (1:5.9p1-5ubuntu1.4) ...
+Настраивается пакет ssh-import-id (2.10-0ubuntu1) ...
+                                                 
+Текущее состояние: 699 обновлено [-1].
+
+
+olej@ubuntu:~$ ps -A | grep ssh
+ 1330 ?        00:00:00 ssh-agent
+ 3443 ?        00:00:00 sshd
+
+=======================================================================================================
+
+olej@ubuntu:~/WORK_2015/asu$ make
+make -C /lib/modules/3.2.0-25-generic-pae/build M=/home/olej/WORK_2015/asu modules
+make[1]: Вход в каталог `/usr/src/linux-headers-3.2.0-25-generic-pae'
+  CC [M]  /home/olej/WORK_2015/asu/modpasu.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/WORK_2015/asu/modpasu.mod.o
+  LD [M]  /home/olej/WORK_2015/asu/modpasu.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-3.2.0-25-generic-pae'
+gcc  -lm cli.c locl.c -o cli_locl
+gcc  -lm cli.c kern.c -o cli_kern
+
+-------------------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/asu$ ./cli_locl 
+команда (h-подсказка): *130
+усиление = 130%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -30
+-30 +30 => 9
+9 -9 => -2
+-2 +2 => 0
+команда (h-подсказка): q
+
+-------------------------------------------------------------------------------------------------------
+
+olej@ubuntu:~/WORK_2015/asu$ sudo insmod modpasu.ko
+[sudo] password for olej: 
+
+olej@ubuntu:~/WORK_2015/asu$ ./cli_kern 
+команда (h-подсказка): *130
+усиление = 130%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -30
+-30 +30 => 9
+9 -9 => -2
+-2 +2 => 0
+команда (h-подсказка): q
+
+olej@ubuntu:~/WORK_2015/asu$ sudo rmmod modpasu.ko
+
+=======================================================================================================
+
+olej@atom:~$ uname -a
+Linux atom 2.6.32-45-generic #100-Ubuntu SMP Wed Nov 14 10:41:11 UTC 2012 i686 GNU/Linux
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ 
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ 
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ 
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ make
+make -C /lib/modules/2.6.32-45-generic/build M=/home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-45-generic'
+  CC [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu/modpasu.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu/modpasu.mod.o
+  LD [M]  /home/olej/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu/modpasu.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-45-generic'
+gcc  -lm cli.c locl.c -o cli_locl
+gcc  -lm cli.c kern.c -o cli_kern
+
+-------------------------------------------------------------------------------------------------------
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ ./cli_locl
+команда (h-подсказка): *160
+усиление = 160%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -60
+-60 +60 => 36
+36 -36 => -21
+-21 +21 => 12
+12 -12 => -7
+-7 +7 => 4
+4 -4 => -2
+-2 +2 => 1
+команда (h-подсказка): q
+
+-------------------------------------------------------------------------------------------------------
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ sudo insmod modpasu.ko
+[sudo] password for olej: 
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ ./cli_kern
+команда (h-подсказка): *160
+усиление = 160%
+команда (h-подсказка): =100
+новое значение = 100
+100 -100 => -60
+-60 +60 => 36
+36 -36 => -21
+-21 +21 => 12
+12 -12 => -7
+-7 +7 => 4
+4 -4 => -2
+-2 +2 => 1
+команда (h-подсказка): q           
+
+olej@atom:~/2015-WORK/PRACTIS.Kernel/PRACTIS.Tasks/TASKS/asu$ sudo rmmod modpasu.ko
+
+=======================================================================================================

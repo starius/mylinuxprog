@@ -1,0 +1,5 @@
+make VARIANT=0
+make VARIANT=1
+make VARIANT=2
+make VARIANT=3
+ls *.ko

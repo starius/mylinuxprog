@@ -1,0 +1,262 @@
+olej@vmUBUNTU:~$ uname -a
+Linux vmUBUNTU 2.6.32-33-generic #70-Ubuntu SMP Thu Jul 7 21:09:46 UTC 2011 i686 GNU/Linux
+
+olej@vmUBUNTU:~$ ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 08:00:27:ff:db:84  
+          inet addr:192.168.1.22  Bcast:192.168.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:feff:db84/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:28526 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:18872 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:41005237 (41.0 MB)  TX bytes:1483272 (1.4 MB)
+
+olej@vmUBUNTU:~$ who
+olej     tty7         2011-08-10 11:53 (:0)
+olej     pts/0        2011-08-10 12:35 (192.168.1.20)
+olej     pts/1        2011-08-10 12:36 (:0.0)
+olej     pts/2        2011-08-10 12:37 (:0.0)
+olej     pts/3        2011-08-10 12:38 (localhost)
+
+
+olej@vmUBUNTU:~$ cat /proc/interrupts 
+           CPU0       
+  0:        760    XT-PIC-XT        timer
+  1:        181    XT-PIC-XT        i8042
+  2:          0    XT-PIC-XT        cascade
+  5:       9037    XT-PIC-XT        ahci, Intel 82801AA-ICH
+  8:          0    XT-PIC-XT        rtc0
+  9:          0    XT-PIC-XT        acpi
+ 10:      21658    XT-PIC-XT        ehci_hcd:usb1, eth0
+ 11:       1820    XT-PIC-XT        ohci_hcd:usb2
+ 12:        140    XT-PIC-XT        i8042
+ 14:          0    XT-PIC-XT        ata_piix
+ 15:      43225    XT-PIC-XT        ata_piix
+NMI:          0   Non-maskable interrupts
+LOC:     349433   Local timer interrupts
+SPU:          0   Spurious interrupts
+PMI:          0   Performance monitoring interrupts
+PND:          0   Performance pending work
+RES:          0   Rescheduling interrupts
+CAL:          0   Function call interrupts
+TLB:          0   TLB shootdowns
+TRM:          0   Thermal event interrupts
+THR:          0   Threshold APIC interrupts
+MCE:          0   Machine check exceptions
+MCP:         10   Machine check polls
+ERR:          0
+MIS:          0
+
+-----------------------------------------------------------------------------------------------
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ pwd
+/home/olej/Kexamples/IRQ
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ make
+make -C /lib/modules/2.6.32-33-generic/build M=/home/olej/Kexamples/IRQ modules
+make[1]: Вход в каталог `/usr/src/linux-headers-2.6.32-33-generic'
+  CC [M]  /home/olej/Kexamples/IRQ/lab1_interrupt.o
+  CC [M]  /home/olej/Kexamples/IRQ/mod_tasklet.o
+  CC [M]  /home/olej/Kexamples/IRQ/mod_workqueue.o
+  CC [M]  /home/olej/Kexamples/IRQ/mod_ser.o
+/home/olej/Kexamples/IRQ/mod_ser.c:34: warning: ‘airq’ defined but not used
+  Building modules, stage 2.
+  MODPOST 4 modules
+  CC      /home/olej/Kexamples/IRQ/lab1_interrupt.mod.o
+  LD [M]  /home/olej/Kexamples/IRQ/lab1_interrupt.ko
+  CC      /home/olej/Kexamples/IRQ/mod_ser.mod.o
+  LD [M]  /home/olej/Kexamples/IRQ/mod_ser.ko
+  CC      /home/olej/Kexamples/IRQ/mod_tasklet.mod.o
+  LD [M]  /home/olej/Kexamples/IRQ/mod_tasklet.ko
+  CC      /home/olej/Kexamples/IRQ/mod_workqueue.mod.o
+  LD [M]  /home/olej/Kexamples/IRQ/mod_workqueue.ko
+make[1]: Выход из каталога `/usr/src/linux-headers-2.6.32-33-generic'
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ sudo insmod mod_ser.ko irq=1
+[sudo] password for olej: 
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ lsmod | head -n5
+Module                  Size  Used by
+mod_ser                 1098  0 
+binfmt_misc             6587  1 
+nfsd                  238871  11 
+lockd                  64849  1 nfsd
+
+-----------------------------------------------------------------------------------------------
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ sudo insmod mod_ser.ko irq=11
+
+МЫШЬ!!!
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ dmesg | grep 'irq=11' | head -n6
+[ 9499.031303] 15199977878339 : irq=11 - handler #1
+[ 9499.031341] 15199977948850 : irq=11 - handler #2
+[ 9499.047312] 15200003431449 : irq=11 - handler #1
+[ 9499.047351] 15200003502182 : irq=11 - handler #2
+[ 9499.072494] 15200043610967 : irq=11 - handler #1
+[ 9499.072532] 15200043682638 : irq=11 - handler #2
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ cat /proc/interrupts | grep hci
+  5:      16120    XT-PIC-XT        ahci, Intel 82801AA-ICH
+ 10:      59800    XT-PIC-XT        ehci_hcd:usb1, eth0
+ 11:       3820    XT-PIC-XT        ohci_hcd:usb2, serial_02, serial_02
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ lsmod | head -n3
+Module                  Size  Used by
+mod_ser                 1130  0 
+binfmt_misc             6587  1 
+
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ dmesg | grep 'irq=11' | tail -n6
+[ 9502.170125] 15204987060373 : irq=11 - handler #1
+[ 9502.170163] 15204987130379 : irq=11 - handler #2
+[ 9502.183807] 15205008904945 : irq=11 - handler #1
+[ 9502.183847] 15205008974000 : irq=11 - handler #2
+[ 9502.197631] 15205030956809 : irq=11 - handler #1
+[ 9502.197669] 15205031026788 : irq=11 - handler #2
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ sudo rmmod mod_ser
+
+olej@vmUBUNTU:~/Kexamples/IRQ$ dmesg | grep 'irq=11' | tail -n6
+[ 9502.170125] 15204987060373 : irq=11 - handler #1
+[ 9502.170163] 15204987130379 : irq=11 - handler #2
+[ 9502.183807] 15205008904945 : irq=11 - handler #1
+[ 9502.183847] 15205008974000 : irq=11 - handler #2
+[ 9502.197631] 15205030956809 : irq=11 - handler #1
+[ 9502.197669] 15205031026788 : irq=11 - handler #2
+
+===============================================================================================
+
+[olej@vmFedora ~]$ uname -a
+Linux vmFedora 2.6.35.13-92.fc14.i686 #1 SMP Sat May 21 17:39:42 UTC 2011 i686 i686 i386 GNU/Linux
+
+[olej@vmFedora ~]$ ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 08:00:27:BF:8B:C5  
+          inet addr:192.168.1.23  Bcast:192.168.1.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:440 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:380 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:59061 (57.6 KiB)  TX bytes:37039 (36.1 KiB)
+
+[olej@vmFedora ~]$ cat /proc/interrupts
+            CPU0       
+   0:       3463   IO-APIC-edge      timer
+   1:          9   IO-APIC-edge      i8042
+   8:          0   IO-APIC-edge      rtc0
+   9:          0   IO-APIC-fasteoi   acpi
+  12:        140   IO-APIC-edge      i8042
+  14:          0   IO-APIC-edge      ata_piix
+  15:        304   IO-APIC-edge      ata_piix
+  19:       2327   IO-APIC-fasteoi   ehci_hcd:usb1, eth0
+  21:       7227   IO-APIC-fasteoi   ahci, Intel 82801AA-ICH
+  22:         25   IO-APIC-fasteoi   ohci_hcd:usb2
+ NMI:          0   Non-maskable interrupts
+ LOC:     365760   Local timer interrupts
+ SPU:          0   Spurious interrupts
+ PMI:          0   Performance monitoring interrupts
+ PND:          0   Performance pending work
+ RES:          0   Rescheduling interrupts
+ CAL:          0   Function call interrupts
+ TLB:          0   TLB shootdowns
+ TRM:          0   Thermal event interrupts
+ THR:          0   Threshold APIC interrupts
+ MCE:          0   Machine check exceptions
+ MCP:         11   Machine check polls
+ ERR:          0
+ MIS:          0
+
+-----------------------------------------------------------------------------------------------
+
+[olej@vmFedora IRQ]$ make
+make -C /lib/modules/2.6.35.13-92.fc14.i686/build M=/home/olej/Kexamples.BOOK/IRQ modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.35.13-92.fc14.i686'
+  CC [M]  /home/olej/Kexamples.BOOK/IRQ/lab1_interrupt.o
+  CC [M]  /home/olej/Kexamples.BOOK/IRQ/mod_tasklet.o
+  CC [M]  /home/olej/Kexamples.BOOK/IRQ/mod_workqueue.o
+/home/olej/Kexamples.BOOK/IRQ/mod_workqueue.c: В функции ‘my_wq_function’:
+/home/olej/Kexamples.BOOK/IRQ/mod_workqueue.c:27:3: ошибка: неявная декларация функции ‘kfree’
+/home/olej/Kexamples.BOOK/IRQ/mod_workqueue.c: В функции ‘init_module’:
+/home/olej/Kexamples.BOOK/IRQ/mod_workqueue.c:37:7: ошибка: неявная декларация функции ‘kmalloc’
+make[2]: *** [/home/olej/Kexamples.BOOK/IRQ/mod_workqueue.o] Ошибка 1
+make[1]: *** [_module_/home/olej/Kexamples.BOOK/IRQ] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/2.6.35.13-92.fc14.i686'
+make: *** [default] Ошибка 2
+
+[olej@vmFedora IRQ]$ pwd
+/home/olej/Kexamples.BOOK/IRQ
+
+-----------------------------------------------------------------------------------------------
+
+[olej@vmFedora IRQ]$ sudo insmod mod_ser.ko irq=22
+
+[olej@vmFedora IRQ]$ lsmod | head -n3
+Module                  Size  Used by
+mod_ser                 1010  0 
+nls_utf8                1041  1 
+
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n6
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n6
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n6
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n6
+[10080.387402] 16112677218414 : irq=22 - handler #1
+[10080.387402] 16112677705499 : irq=22 - handler #2
+[10080.415796] 16112723402369 : irq=22 - handler #1
+[10080.415796] 16112723890050 : irq=22 - handler #2
+[10080.427486] 16112741300815 : irq=22 - handler #1
+[10080.427486] 16112741940237 : irq=22 - handler #2
+
+[olej@vmFedora IRQ]$ cat /proc/interrupts | grep hci
+  19:       8388   IO-APIC-fasteoi   ehci_hcd:usb1, eth0
+  21:       9079   IO-APIC-fasteoi   ahci, Intel 82801AA-ICH
+  22:       1634   IO-APIC-fasteoi   ohci_hcd:usb2, serial_02, serial_02
+
+[olej@vmFedora IRQ]$ sudo rmmod mod_ser
+
+[olej@vmFedora IRQ]$ cat /proc/interrupts | grep hci
+  19:       8683   IO-APIC-fasteoi   ehci_hcd:usb1, eth0
+  21:       9079   IO-APIC-fasteoi   ahci, Intel 82801AA-ICH
+  22:       1634   IO-APIC-fasteoi   ohci_hcd:usb2
+
+-----------------------------------------------------------------------------------------------
+
+[olej@vmFedora IRQ]$ sudo insmod mod_ser.ko irq=22 num=5
+
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n10
+[10618.461201] 16971168382944 : irq=22 - handler #1
+[10618.461201] 16971169270486 : irq=22 - handler #2
+[10618.461201] 16971169630512 : irq=22 - handler #3
+[10618.461201] 16971170481235 : irq=22 - handler #4
+[10618.461201] 16971170810068 : irq=22 - handler #5
+[10618.475392] 16971191379365 : irq=22 - handler #1
+[10618.475392] 16971192198665 : irq=22 - handler #2
+[10618.475392] 16971192685213 : irq=22 - handler #3
+[10618.475392] 16971193423264 : irq=22 - handler #4
+[10618.475392] 16971193880266 : irq=22 - handler #5
+
+[olej@vmFedora IRQ]$ sudo insmod mod_ser.ko irq=22 num=5
+[olej@vmFedora IRQ]$ cat /proc/interrupts | grep 22:
+  22:       1652   IO-APIC-fasteoi   ohci_hcd:usb2, serial_05, serial_05, serial_05, serial_05, serial_05
+
+[olej@vmFedora IRQ]$ sudo rmmod mod_ser
+
+[olej@vmFedora IRQ]$ dmesg | grep 'irq=22' | tail -n10
+[10618.475392] 16971191379365 : irq=22 - handler #1
+[10618.475392] 16971192198665 : irq=22 - handler #2
+[10618.475392] 16971192685213 : irq=22 - handler #3
+[10618.475392] 16971193423264 : irq=22 - handler #4
+[10618.475392] 16971193880266 : irq=22 - handler #5
+[10669.904309] 17053241497863 : irq=22 - handler #1
+[10669.905331] 17053242842991 : irq=22 - handler #2
+[10669.905331] 17053243293397 : irq=22 - handler #3
+[10669.905331] 17053243600477 : irq=22 - handler #4
+[10669.907843] 17053245722371 : irq=22 - handler #5
+
+-----------------------------------------------------------------------------------------------
+
+[olej@vmFedora IRQ]$ sudo insmod mod_ser.ko irq=22 num=5
+[olej@vmFedora IRQ]$ cat /proc/interrupts | grep 22:
+  22:       1653   IO-APIC-fasteoi   ohci_hcd:usb2, serial_01, serial_02, serial_03, serial_04, serial_05
+[olej@vmFedora IRQ]$ sudo rmmod mod_ser
+
+===============================================================================================

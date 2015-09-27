@@ -1,0 +1,585 @@
+28.10.2012
+==========
+
+bash-4.2$ ./mondev 
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4
+SUBSYSTEM=usb
+MAJOR=189
+MINOR=26
+DEVNAME=bus/usb/001/027
+DEVTYPE=usb_device
+PRODUCT=1307/163/100
+TYPE=0/0/0
+BUSNUM=001
+DEVNUM=027
+SEQNUM=2946
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0
+SUBSYSTEM=usb
+DEVTYPE=usb_interface
+PRODUCT=1307/163/100
+TYPE=0/0/0
+INTERFACE=8/6/80
+MODALIAS=usb:v1307p0163d0100dc00dsc00dp00ic08isc06ip50
+SEQNUM=2947
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25
+SUBSYSTEM=scsi
+DEVTYPE=scsi_host
+SEQNUM=2948
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25
+SUBSYSTEM=scsi_host
+SEQNUM=2949
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_target
+SEQNUM=2950
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0
+SUBSYSTEM=scsi
+DEVTYPE=scsi_device
+MODALIAS=scsi:t-0x00
+SEQNUM=2951
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0
+SUBSYSTEM=scsi_disk
+SEQNUM=2952
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0
+SUBSYSTEM=scsi_device
+SEQNUM=2953
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2
+SUBSYSTEM=scsi_generic
+MAJOR=21
+MINOR=2
+DEVNAME=sg2
+SEQNUM=2954
+========= next message ==========
+add@/devices/virtual/bdi/8:16
+ACTION=add
+DEVPATH=/devices/virtual/bdi/8:16
+SUBSYSTEM=bdi
+SEQNUM=2955
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0
+SUBSYSTEM=bsg
+MAJOR=252
+MINOR=2
+DEVNAME=bsg/25:0:0:0
+SEQNUM=2956
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+SUBSYSTEM=block
+MAJOR=8
+MINOR=16
+DEVNAME=sdb
+DEVTYPE=disk
+SEQNUM=2957
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1
+SUBSYSTEM=block
+MAJOR=8
+MINOR=17
+DEVNAME=sdb1
+DEVTYPE=partition
+SEQNUM=2958
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2
+SUBSYSTEM=block
+MAJOR=8
+MINOR=18
+DEVNAME=sdb2
+DEVTYPE=partition
+SEQNUM=2959
+========= next message ==========
+add@/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3
+SUBSYSTEM=block
+MAJOR=8
+MINOR=19
+DEVNAME=sdb3
+DEVTYPE=partition
+SEQNUM=2960
+
+
+...............
+
+
+bash-4.2$ udevadm monitor --env
+monitor will print the received events for:
+UDEV - the event which udev sends out after rule processing
+KERNEL - the kernel uevent
+
+KERNEL[14291.814541] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4 (usb)
+ACTION=add
+BUSNUM=001
+DEVNAME=/dev/bus/usb/001/027
+DEVNUM=027
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4
+DEVTYPE=usb_device
+MAJOR=189
+MINOR=26
+PRODUCT=1307/163/100
+SEQNUM=2946
+SUBSYSTEM=usb
+TYPE=0/0/0
+
+KERNEL[14291.815463] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0 (usb)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0
+DEVTYPE=usb_interface
+INTERFACE=8/6/80
+MODALIAS=usb:v1307p0163d0100dc00dsc00dp00ic08isc06ip50
+PRODUCT=1307/163/100
+SEQNUM=2947
+SUBSYSTEM=usb
+TYPE=0/0/0
+
+KERNEL[14291.815753] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25
+DEVTYPE=scsi_host
+SEQNUM=2948
+SUBSYSTEM=scsi
+
+KERNEL[14291.815834] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25 (scsi_host)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25
+SEQNUM=2949
+SUBSYSTEM=scsi_host
+
+UDEV  [14291.833566] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4 (usb)
+ACTION=add
+BUSNUM=001
+DEVNAME=/dev/bus/usb/001/027
+DEVNUM=027
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4
+DEVTYPE=usb_device
+ID_BUS=usb
+ID_MODEL=USB_Mass_Storage_Device
+ID_MODEL_ENC=USB\x20Mass\x20Storage\x20Device
+ID_MODEL_FROM_DATABASE=256MB/512MB/1GB Flash Drive
+ID_MODEL_ID=0163
+ID_REVISION=0100
+ID_SERIAL=USBest_Technology_USB_Mass_Storage_Device_00000000000003
+ID_SERIAL_SHORT=00000000000003
+ID_USB_INTERFACES=:080650:
+ID_VENDOR=USBest_Technology
+ID_VENDOR_ENC=USBest\x20Technology
+ID_VENDOR_FROM_DATABASE=Transcend Information, Inc.
+ID_VENDOR_ID=1307
+MAJOR=189
+MINOR=26
+PRODUCT=1307/163/100
+SEQNUM=2946
+SUBSYSTEM=usb
+TYPE=0/0/0
+USEC_INITIALIZED=14291829876
+
+UDEV  [14291.847397] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0 (usb)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0
+DEVTYPE=usb_interface
+ID_MODEL_FROM_DATABASE=256MB/512MB/1GB Flash Drive
+ID_VENDOR_FROM_DATABASE=Transcend Information, Inc.
+INTERFACE=8/6/80
+MODALIAS=usb:v1307p0163d0100dc00dsc00dp00ic08isc06ip50
+PRODUCT=1307/163/100
+SEQNUM=2947
+SUBSYSTEM=usb
+TYPE=0/0/0
+USEC_INITIALIZED=14291841431
+
+UDEV  [14291.850652] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25
+DEVTYPE=scsi_host
+SEQNUM=2948
+SUBSYSTEM=scsi
+USEC_INITIALIZED=14291850501
+
+UDEV  [14291.852168] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25 (scsi_host)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/scsi_host/host25
+SEQNUM=2949
+SUBSYSTEM=scsi_host
+USEC_INITIALIZED=14291851920
+
+KERNEL[14292.819686] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0
+DEVTYPE=scsi_target
+SEQNUM=2950
+SUBSYSTEM=scsi
+
+UDEV  [14292.820840] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0
+DEVTYPE=scsi_target
+SEQNUM=2950
+SUBSYSTEM=scsi
+USEC_INITIALIZED=14292820751
+
+KERNEL[14292.821303] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0
+DEVTYPE=scsi_device
+MODALIAS=scsi:t-0x00
+SEQNUM=2951
+SUBSYSTEM=scsi
+
+UDEV  [14292.822589] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0 (scsi)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0
+DEVTYPE=scsi_device
+MODALIAS=scsi:t-0x00
+SEQNUM=2951
+SUBSYSTEM=scsi
+USEC_INITIALIZED=14292822500
+
+KERNEL[14292.822983] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0 (scsi_disk)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0
+SEQNUM=2952
+SUBSYSTEM=scsi_disk
+
+UDEV  [14292.824220] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0 (scsi_disk)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_disk/25:0:0:0
+SEQNUM=2952
+SUBSYSTEM=scsi_disk
+USEC_INITIALIZED=14292824107
+
+KERNEL[14292.824503] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0 (scsi_device)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0
+SEQNUM=2953
+SUBSYSTEM=scsi_device
+
+UDEV  [14292.825789] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0 (scsi_device)
+ACTION=add
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_device/25:0:0:0
+SEQNUM=2953
+SUBSYSTEM=scsi_device
+USEC_INITIALIZED=14292825668
+
+KERNEL[14292.826045] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2 (scsi_generic)
+ACTION=add
+DEVNAME=/dev/sg2
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2
+MAJOR=21
+MINOR=2
+SEQNUM=2954
+SUBSYSTEM=scsi_generic
+
+KERNEL[14292.827404] add      /devices/virtual/bdi/8:16 (bdi)
+ACTION=add
+DEVPATH=/devices/virtual/bdi/8:16
+SEQNUM=2955
+SUBSYSTEM=bdi
+
+UDEV  [14292.827921] add      /devices/virtual/bdi/8:16 (bdi)
+ACTION=add
+DEVPATH=/devices/virtual/bdi/8:16
+SEQNUM=2955
+SUBSYSTEM=bdi
+USEC_INITIALIZED=14292827809
+
+UDEV  [14292.828471] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2 (scsi_generic)
+ACTION=add
+DEVNAME=/dev/sg2
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/scsi_generic/sg2
+MAJOR=21
+MINOR=2
+SEQNUM=2954
+SUBSYSTEM=scsi_generic
+USEC_INITIALIZED=14292828282
+
+KERNEL[14292.828655] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0 (bsg)
+ACTION=add
+DEVNAME=/dev/bsg/25:0:0:0
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0
+MAJOR=252
+MINOR=2
+SEQNUM=2956
+SUBSYSTEM=bsg
+
+UDEV  [14292.830172] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0 (bsg)
+ACTION=add
+DEVNAME=/dev/bsg/25:0:0:0
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/bsg/25:0:0:0
+MAJOR=252
+MINOR=2
+SEQNUM=2956
+SUBSYSTEM=bsg
+USEC_INITIALIZED=14292829977
+
+KERNEL[14292.893451] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb (block)
+ACTION=add
+DEVNAME=/dev/sdb
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+DEVTYPE=disk
+MAJOR=8
+MINOR=16
+SEQNUM=2957
+SUBSYSTEM=block
+
+KERNEL[14292.893569] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1 (block)
+ACTION=add
+DEVNAME=/dev/sdb1
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1
+DEVTYPE=partition
+MAJOR=8
+MINOR=17
+SEQNUM=2958
+SUBSYSTEM=block
+
+KERNEL[14292.893661] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2 (block)
+ACTION=add
+DEVNAME=/dev/sdb2
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2
+DEVTYPE=partition
+MAJOR=8
+MINOR=18
+SEQNUM=2959
+SUBSYSTEM=block
+
+KERNEL[14292.893751] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3 (block)
+ACTION=add
+DEVNAME=/dev/sdb3
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3
+DEVTYPE=partition
+MAJOR=8
+MINOR=19
+SEQNUM=2960
+SUBSYSTEM=block
+
+UDEV  [14293.099040] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb (block)
+ACTION=add
+DEVLINKS=/dev/disk/by-id/usb-Ut163_USB2FlashStorage_00000000000003-0:0 /dev/disk/by-label/RFRemix-17-i686-Live-GNOME /dev/disk/by-path/pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0
+DEVNAME=/dev/sdb
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+DEVTYPE=disk
+ID_BUS=usb
+ID_FS_LABEL=RFRemix-17-i686-Live-GNOME
+ID_FS_LABEL_ENC=RFRemix-17-i686-Live-GNOME
+ID_FS_TYPE=iso9660
+ID_FS_USAGE=filesystem
+ID_INSTANCE=0:0
+ID_MODEL=USB2FlashStorage
+ID_MODEL_ENC=USB2FlashStorage
+ID_MODEL_ID=0163
+ID_PART_TABLE_TYPE=dos
+ID_PATH=pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0
+ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_4_1_0-scsi-0_0_0_0
+ID_REVISION=0.00
+ID_SERIAL=Ut163_USB2FlashStorage_00000000000003-0:0
+ID_SERIAL_SHORT=00000000000003
+ID_TYPE=disk
+ID_USB_DRIVER=usb-storage
+ID_USB_INTERFACES=:080650:
+ID_USB_INTERFACE_NUM=00
+ID_VENDOR=Ut163
+ID_VENDOR_ENC=Ut163\x20\x20\x20
+ID_VENDOR_ID=1307
+MAJOR=8
+MINOR=16
+MPATH_SBIN_PATH=/sbin
+SEQNUM=2957
+SUBSYSTEM=block
+TAGS=:systemd:
+UDISKS_PRESENTATION_NOPOLICY=0
+USEC_INITIALIZED=14293098561
+
+UDEV  [14293.126204] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2 (block)
+ACTION=add
+DEVLINKS=/dev/disk/by-id/usb-Ut163_USB2FlashStorage_00000000000003-0:0-part2 /dev/disk/by-label/EFI /dev/disk/by-path/pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0-part2 /dev/disk/by-uuid/3A39-1767
+DEVNAME=/dev/sdb2
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb2
+DEVTYPE=partition
+ID_BUS=usb
+ID_FS_LABEL=EFI
+ID_FS_LABEL_ENC=EFI
+ID_FS_TYPE=vfat
+ID_FS_USAGE=filesystem
+ID_FS_UUID=3A39-1767
+ID_FS_UUID_ENC=3A39-1767
+ID_FS_VERSION=FAT12
+ID_INSTANCE=0:0
+ID_MODEL=USB2FlashStorage
+ID_MODEL_ENC=USB2FlashStorage
+ID_MODEL_ID=0163
+ID_PART_ENTRY_DISK=8:16
+ID_PART_ENTRY_NUMBER=2
+ID_PART_ENTRY_OFFSET=164
+ID_PART_ENTRY_SCHEME=dos
+ID_PART_ENTRY_SIZE=1592
+ID_PART_ENTRY_TYPE=0xef
+ID_PART_TABLE_TYPE=dos
+ID_PATH=pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0
+ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_4_1_0-scsi-0_0_0_0
+ID_REVISION=0.00
+ID_SERIAL=Ut163_USB2FlashStorage_00000000000003-0:0
+ID_SERIAL_SHORT=00000000000003
+ID_TYPE=disk
+ID_USB_DRIVER=usb-storage
+ID_USB_INTERFACES=:080650:
+ID_USB_INTERFACE_NUM=00
+ID_VENDOR=Ut163
+ID_VENDOR_ENC=Ut163\x20\x20\x20
+ID_VENDOR_ID=1307
+MAJOR=8
+MINOR=18
+MPATH_SBIN_PATH=/sbin
+SEQNUM=2959
+SUBSYSTEM=block
+TAGS=:systemd:
+UDISKS_IGNORE=1
+UDISKS_PARTITION=1
+UDISKS_PARTITION_ALIGNMENT_OFFSET=0
+UDISKS_PARTITION_FLAGS=boot
+UDISKS_PARTITION_NUMBER=2
+UDISKS_PARTITION_OFFSET=83968
+UDISKS_PARTITION_SCHEME=mbr
+UDISKS_PARTITION_SIZE=811597824
+UDISKS_PARTITION_SLAVE=/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+UDISKS_PARTITION_TYPE=0x00
+UDISKS_PRESENTATION_HIDE=1
+UDISKS_PRESENTATION_NOPOLICY=0
+USEC_INITIALIZED=14293125768
+
+UDEV  [14293.200806] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3 (block)
+ACTION=add
+DEVLINKS=/dev/disk/by-id/usb-Ut163_USB2FlashStorage_00000000000003-0:0-part3 /dev/disk/by-label/RFRemix /dev/disk/by-path/pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0-part3 /dev/disk/by-uuid/4219a05c-a49e-3879-8ce9-1a69a8b425fc
+DEVNAME=/dev/sdb3
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb3
+DEVTYPE=partition
+ID_BUS=usb
+ID_FS_LABEL=RFRemix
+ID_FS_LABEL_ENC=RFRemix
+ID_FS_TYPE=hfsplus
+ID_FS_USAGE=filesystem
+ID_FS_UUID=4219a05c-a49e-3879-8ce9-1a69a8b425fc
+ID_FS_UUID_ENC=4219a05c-a49e-3879-8ce9-1a69a8b425fc
+ID_INSTANCE=0:0
+ID_MODEL=USB2FlashStorage
+ID_MODEL_ENC=USB2FlashStorage
+ID_MODEL_ID=0163
+ID_PART_ENTRY_DISK=8:16
+ID_PART_ENTRY_NUMBER=3
+ID_PART_ENTRY_OFFSET=1804
+ID_PART_ENTRY_SCHEME=dos
+ID_PART_ENTRY_SIZE=2704
+ID_PART_ENTRY_TYPE=0x0
+ID_PART_TABLE_TYPE=dos
+ID_PATH=pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0
+ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_4_1_0-scsi-0_0_0_0
+ID_REVISION=0.00
+ID_SERIAL=Ut163_USB2FlashStorage_00000000000003-0:0
+ID_SERIAL_SHORT=00000000000003
+ID_TYPE=disk
+ID_USB_DRIVER=usb-storage
+ID_USB_INTERFACES=:080650:
+ID_USB_INTERFACE_NUM=00
+ID_VENDOR=Ut163
+ID_VENDOR_ENC=Ut163\x20\x20\x20
+ID_VENDOR_ID=1307
+MAJOR=8
+MINOR=19
+MPATH_SBIN_PATH=/sbin
+SEQNUM=2960
+SUBSYSTEM=block
+TAGS=:systemd:
+UDISKS_IGNORE=1
+UDISKS_PARTITION=1
+UDISKS_PARTITION_ALIGNMENT_OFFSET=0
+UDISKS_PARTITION_FLAGS=boot
+UDISKS_PARTITION_NUMBER=3
+UDISKS_PARTITION_OFFSET=923648
+UDISKS_PARTITION_SCHEME=mbr
+UDISKS_PARTITION_SIZE=811597824
+UDISKS_PARTITION_SLAVE=/sys/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb
+UDISKS_PARTITION_TYPE=0x00
+UDISKS_PRESENTATION_HIDE=1
+UDISKS_PRESENTATION_NOPOLICY=0
+USEC_INITIALIZED=14292893551
+
+UDEV  [14293.275491] add      /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1 (block)
+ACTION=add
+DEVLINKS=/dev/disk/by-id/usb-Ut163_USB2FlashStorage_00000000000003-0:0-part1 /dev/disk/by-label/RFRemix-17-i686-Live-GNOME /dev/disk/by-path/pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0-part1
+DEVNAME=/dev/sdb1
+DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.4/1-4.4:1.0/host25/target25:0:0/25:0:0:0/block/sdb/sdb1
+DEVTYPE=partition
+ID_BUS=usb
+ID_FS_LABEL=RFRemix-17-i686-Live-GNOME
+ID_FS_LABEL_ENC=RFRemix-17-i686-Live-GNOME
+ID_FS_TYPE=iso9660
+ID_FS_USAGE=filesystem
+ID_INSTANCE=0:0
+ID_MODEL=USB2FlashStorage
+ID_MODEL_ENC=USB2FlashStorage
+ID_MODEL_ID=0163
+ID_PART_ENTRY_DISK=8:16
+ID_PART_ENTRY_FLAGS=0x80
+ID_PART_ENTRY_NUMBER=1
+ID_PART_ENTRY_OFFSET=0
+ID_PART_ENTRY_SCHEME=dos
+ID_PART_ENTRY_SIZE=1585152
+ID_PART_ENTRY_TYPE=0x0
+ID_PART_TABLE_TYPE=dos
+ID_PATH=pci-0000:00:1d.7-usb-0:4.4:1.0-scsi-0:0:0:0
+ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_4_1_0-scsi-0_0_0_0
+ID_REVISION=0.00
+ID_SERIAL=Ut163_USB2FlashStorage_00000000000003-0:0
+ID_SERIAL_SHORT=00000000000003
+ID_TYPE=disk
+ID_USB_DRIVER=usb-storage
+ID_USB_INTERFACES=:080650:
+ID_USB_INTERFACE_NUM=00
+ID_VENDOR=Ut163
+ID_VENDOR_ENC=Ut163\x20\x20\x20
+ID_VENDOR_ID=1307
+MAJOR=8
+MINOR=17
+MPATH_SBIN_PATH=/sbin
+SEQNUM=2958
+SUBSYSTEM=block
+TAGS=:systemd:
+UDISKS_IGNORE=0
+UDISKS_PRESENTATION_NOPOLICY=0
+USEC_INITIALIZED=14293274993
+
+==================================================================================================================================
+
+

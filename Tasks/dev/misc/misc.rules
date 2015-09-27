@@ -1,0 +1,1 @@
+KERNEL=="my_misc_dev", SYMLINK+="hello_world", MODE="0444"

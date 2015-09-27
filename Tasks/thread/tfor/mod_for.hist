@@ -1,0 +1,17 @@
+20.01.2012
+==========
+
+[olej@notebook tfor]$ sudo insmod mod_for.ko
+insmod: error inserting 'mod_for.ko': -1 Operation not permitted
+
+[olej@notebook tfor]$ dmesg | tail -n30 | grep !
+! 05019276 : kthread [08114:0] is running
+! 05019276 : kthread [08115:1] is running
+! 05019276 : kthread [08116:2] is running
+! 05020275 : kthread [08116:2] is finished
+! 05020276 : kthread [08115:1] is finished
+! 05020277 : kthread [08114:0] is finished
+! 05020277 : kthread [08113:3] is finished
+
+--------------------------------------------------------------------
+

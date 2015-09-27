@@ -1,0 +1,375 @@
+=============================================================================================
+
+09.02.2012
+==========
+
+[olej@notebook plugin]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+WARNING: /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex: 'translate' exported twice. Previous export was in /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+WARNING: /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct: 'translate' exported twice. Previous export was in /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+
+[olej@notebook plugin]$ ls -l *.ko
+-rw-rw-r-- 1 olej olej  95051 Фев 10 04:29 dec.ko
+-rw-rw-r-- 1 olej olej  95377 Фев 10 04:29 hex.ko
+-rw-rw-r-- 1 olej olej 122816 Фев 10 04:29 master.ko
+-rw-rw-r-- 1 olej olej  95047 Фев 10 04:29 oct.ko
+
+
+[olej@notebook plugin]$ sudo insmod hex.ko
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ модуль hex.ko загружен
+
+[olej@notebook plugin]$ cat /proc/kallsyms | grep T | grep translate 
+c0579604 T isofs_name_translate
+c063f888 T set_translate
+c063f8a4 T inverse_translate
+f9beb000 T translate	[hex]
+
+[olej@notebook plugin]$ sudo insmod oct.ko
+insmod: error inserting 'oct.ko': -1 Invalid module format
+
+[olej@notebook plugin]$ dmesg | tail -n30
+...
+oct: exports duplicate symbol translate (owned by hex)
+...
+
+
+[olej@notebook plugin]$ sudo rmmod hex
+
+[olej@notebook plugin]$ sudo insmod oct.ko
+
+[olej@notebook plugin]$ cat /proc/kallsyms | grep T | grep translate 
+c0579604 T isofs_name_translate
+c063f888 T set_translate
+c063f8a4 T inverse_translate
+fbd5b000 T translate	[oct]
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ модуль oct.ko загружен
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook umaster]$ cat /proc/kallsyms | grep sys_init_module
+c0470f50 T sys_init_module
+
+[olej@notebook umaster]$ cat /proc/kallsyms | grep load_module
+c046fbe5 t load_module
+
+
+
+[olej@notebook umaster]$ cat /proc/kallsyms | grep sys_delete_module
+c046f4e8 T sys_delete_module
+
+[olej@notebook umaster]$ cat /proc/kallsyms | grep T | grep find_module
+c046e7d6 T find_module
+
+
+[olej@notebook umaster]$ cat /proc/kallsyms | grep T | grep request_module
+c04568df T __request_module
+
+
+---------------------------------------------------------------------------------------------
+
+
+<linux/module.h>
+
+/* Search for module by name: must hold module_mutex. */
+struct module *find_module(const char *name);
+
+
+<linux/kmod.h>
+
+#ifdef CONFIG_MODULES
+/* modprobe exit status on success, -ve on error.  Return value
+ * usually useless though. */
+extern int __request_module(bool wait, const char *name, ...) \
+        __attribute__((format(printf, 2, 3)));
+#define request_module(mod...) __request_module(true, mod)
+#define request_module_nowait(mod...) __request_module(false, mod)
+#define try_then_request_module(x, mod...) \
+        ((x) ?: (__request_module(true, mod), (x)))
+#else
+static inline int request_module(const char *name, ...) { return -ENOSYS; }
+static inline int request_module_nowait(const char *name, ...) { return -ENOSYS; }
+#define try_then_request_module(x, mod...) (x)
+#endif
+
+
+=============================================================================================
+
+10.02.2012
+==========
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook plugin]$ sudo insmod master.ko
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ адрес sys_call_table = c07ab3d8
++ адрес в позиции 223[__NR_str_trans] = c045b9a8
++ адрес sys_ni_syscall = c045b9a8
++ адрес нового sys_call = f7f9c024
++ модуль  загружен
+
+[olej@notebook plugin]$ ./syscall 
+syscall return 0 : Success
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ адрес sys_call_table = c07ab3d8
++ адрес в позиции 223[__NR_str_trans] = c045b9a8
++ адрес sys_ni_syscall = c045b9a8
++ адрес нового sys_call = f7f9c024
++ модуль  загружен
++ системный запрос 14 байт: DEFAULT STRING
+
+[olej@notebook plugin]$ ./syscall 123 0123 0x123
+syscall return 0 : Success
+syscall return 0 : Success
+syscall return 0 : Success
+
+[olej@notebook plugin]$ sudo rmmod master
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ системный запрос 14 байт: DEFAULT STRING
++ системный запрос 5 байт: 0x123
++ системный запрос 4 байт: 0123
++ системный запрос 3 байт: 123
++ адрес sys_call при выгрузке = f7f9c024
++ модуль  выгружен
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook plugin]$ sudo insmod dec.ko
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ модуль dec.ko загружен
+
+[olej@notebook plugin]$ sudo rmmod dec.ko
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ модуль dec.ko выгружен
+
+
+
+[olej@notebook plugin]$ sudo insmod master.ko
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ адрес sys_call_table = c07ab3d8
++ адрес в позиции 223[__NR_str_trans] = c045b9a8
++ адрес sys_ni_syscall = c045b9a8
++ адрес нового sys_call = f8857024
++ адрес sys_init_module = c0470f50
++ адрес sys_delete_module = c046f4e8
++ модуль master.ko загружен
+
+
+[olej@notebook plugin]$ cat /proc/kallsyms | grep T | grep sys_init_module
+c0470f50 T sys_init_module
+
+[olej@notebook plugin]$ cat /proc/kallsyms | grep T | grep sys_delete_module
+c046f4e8 T sys_delete_module
+
+[olej@notebook plugin]$ ./syscall 11
+syscall error -1 : Operation not permitted
+
+[olej@notebook plugin]$ dmesg | tail -n10 | grep +
++ системный запрос 2 байт: 11
++ длина файла модуля = 95083 байт
++ адрес буфера чтения = fc4d1000
++ считано из файла dec.ko 95083 байт
++ ошибка загрузки модуля dec.ko
+
+[olej@notebook plugin]$ sudo ./syscall 11
+syscall return 0
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ системный запрос 2 байт: 11
++ длина файла модуля = 95083 байт
++ адрес буфера чтения = fc4d1000
++ считано из файла dec.ko 95083 байт
++ ошибка загрузки модуля dec.ko
++ системный запрос 2 байт: 11
++ длина файла модуля = 95083 байт
++ адрес буфера чтения = fd105000
++ считано из файла dec.ko 95083 байт
++ модуль dec.ko загружен
++ модуль dec.ko выгружен
+
+[olej@notebook plugin]$ lsmod | head -n4
+Module                  Size  Used by
+master                  2994  0 
+minix                  19212  1 
+fuse                   48375  2 
+
+---------------------------------------------------------------------------------------------
+
+[olej@notebook plugin]$ make
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.o
+  Building modules, stage 2.
+  MODPOST 4 modules
+WARNING: /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex: 'str_translate' exported twice. Previous export was in /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+WARNING: /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct: 'str_translate' exported twice. Previous export was in /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/dec.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/hex.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/master.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/load_module/plugin/oct.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+
+
+[olej@notebook plugin]$ sudo ./syscall 0x077
+syscall error -1 : Operation not permitted
+
+
+
+
+[olej@notebook plugin]$ sudo insmod master.ko
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ адрес sys_call_table = c07ab3d8
++ адрес в позиции 223[__NR_str_trans] = c045b9a8
++ адрес sys_ni_syscall = c045b9a8
++ адрес нового sys_call = f99db024
++ адрес sys_init_module = c0470f50
++ адрес sys_delete_module = c046f4e8
++ модуль master.ko загружен
+
+[olej@notebook plugin]$ sudo ./syscall 077
+syscall return 63
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ системный запрос 3 байт: 077
++ длина файла модуля = 95223 байт
++ адрес буфера чтения = f9c09000
++ считано из файла oct.ko 95223 байт
++ модуль oct.ko загружен
++ адрес обработчика = f9b83000
++ oct.ko : запрос : 77
++ вычислено значение 63
++ модуль oct.ko выгружен
+
+
+
+[olej@notebook plugin]$ sudo ./syscall 77
+syscall return 77
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ системный запрос 2 байт: 77
++ длина файла модуля = 95223 байт
++ адрес буфера чтения = f9c41000
++ считано из файла dec.ko 95223 байт
++ модуль dec.ko загружен
++ адрес обработчика = f9c75000
++ dec.ko : запрос : 77
++ вычислено значение 77
++ модуль dec.ko выгружен
+
+
+
+
+[olej@notebook plugin]$ sudo ./syscall 0x77
+syscall return 119
+
+[olej@notebook plugin]$ dmesg | tail -n30 | grep +
++ системный запрос 4 байт: 0x77
++ длина файла модуля = 95553 байт
++ адрес буфера чтения = f9c7b000
++ считано из файла hex.ko 95553 байт
++ модуль hex.ko загружен
++ адрес обработчика = f9caf000
++ hex.ko : запрос : 77
++ вычислено значение 119
++ модуль hex.ko выгружен
+
+
+
+[olej@notebook plugin]$ ./syscall 0x77
+syscall error -1 : Operation not permitted
+
+[olej@notebook plugin]$ dmesg | tail -n10 | grep +
++ системный запрос 4 байт: 0x77
++ длина файла модуля = 95553 байт
++ адрес буфера чтения = f9cb5000
++ считано из файла hex.ko 95553 байт
++ ошибка загрузки модуля hex.ko - -1:
+
+
+[olej@notebook plugin]$ sudo ./syscall z77
+syscall error -1 : Operation not permitted
+
+
+[olej@notebook plugin]$ lsmod | head -n4
+Module                  Size  Used by
+master                  3222  0 
+minix                  19212  1 
+fuse                   48375  2 
+
+
+
+
+[olej@notebook plugin]$ sudo rmmod master
+
+[olej@notebook plugin]$ lsmod | head -n4
+Module                  Size  Used by
+minix                  19212  1 
+fuse                   48375  2 
+ip6table_filter         2227  0 
+
+[olej@notebook plugin]$ dmesg | tail -n37 | grep +
++ адрес syscall при выгрузке = f99db024
++ восстановлен адрес syscall = c045b9a8
++ модуль master.ko выгружен
+
+[olej@notebook plugin]$ sudo ./syscall 0x77
+syscall error -1 : Operation not permitted
+
+
+=============================================================================================
+
+12.02.2012
+==========
+
+$ sudo insmod hex.ko
+
+$ dmesg | tail -n30 | grep +
++ модуль hex.ko загружен
+
+$ cat /proc/kallsyms | grep T | grep translate
+c0579604 T isofs_name_translate
+c063f888 T set_translate
+c063f8a4 T inverse_translate
+f8ab2000 T str_translate	[hex]
+
+$ sudo insmod oct.ko
+insmod: error inserting 'oct.ko': -1 Invalid module format
+
+$ dmesg | tail -n30 | grep oct
+oct: exports duplicate symbol str_translate (owned by hex)
+
+
+=============================================================================================

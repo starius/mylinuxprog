@@ -1,0 +1,70 @@
+[olej@nvidia call_table]$ uname -r
+2.6.35.14-96.fc14.i686.PAE
+
+[olej@nvidia call_table]$ make
+make -C /lib/modules/2.6.35.14-96.fc14.i686.PAE/build M=/home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table modules
+make[1]: Вход в каталог `/usr/src/kernels/2.6.35.14-96.fc14.i686.PAE'
+  CC [M]  /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_rct.o
+  CC [M]  /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_kct.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_kct.mod.o
+  LD [M]  /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_kct.ko
+  CC      /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_rct.mod.o
+  LD [M]  /home/olej/2011_WORK/examples.DRAFT/sys_call_table/call_table/mod_rct.ko
+make[1]: Выход из каталога `/usr/src/kernels/2.6.35.14-96.fc14.i686.PAE'
+
+[olej@nvidia call_table]$ make clean
+
+
+[olej@nvidia call_table]$ time sudo insmod mod_rct.ko
+insmod: error inserting 'mod_rct.ko': -1 Operation not permitted
+real	0m0.728s
+user	0m0.003s
+sys	0m0.719s
+[olej@nvidia call_table]$ dmesg | tail -n4
+[57478.736476] + openning file: /proc/kallsyms
+[57478.912136] + sys_call_table address = c07c2438
+[57478.912140] + sys_call_table : c044e80c c0443af8 c0408a04 c04e39e3 c04e3a45 c04e2e59 c04e1e59 c0443dce c04e2ead c04ed654  ...
+[57479.453508] + close file: /proc/kallsyms
+
+[olej@nvidia call_table]$ uname -r
+2.6.35.14-96.fc14.i686.PAE
+
+
+
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c044e80c
+c044e80c T sys_restart_syscall
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c0443af8
+c0443af8 T sys_exit
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c0408a04
+c0408a04 t ptregs_fork
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04e39e3
+c04e39e3 T sys_read
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04e3a45
+c04e3a45 T sys_write
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04e2e59
+c04e2e59 T sys_open
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04e1e59
+c04e1e59 T sys_close
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c0443dce
+c0443dce T sys_waitpid
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04e2ead
+c04e2ead T sys_creat
+[olej@nvidia call_table]$ cat /proc/kallsyms | grep c04ed654
+c04ed654 T sys_link
+
+--------------------------------------------------------------------
+
+[olej@nvidia call_table]$ time sudo insmod mod_kct.ko
+insmod: error inserting 'mod_kct.ko': -1 Operation not permitted
+real	0m0.022s
+user	0m0.005s
+sys	0m0.013s
+
+[olej@nvidia call_table]$ dmesg | tail -n2
+[59595.918185] + sys_call_table address = c07c2438
+[59595.918193] + sys_call_table : c044e80c c0443af8 c0408a04 c04e39e3 c04e3a45 c04e2e59 c04e1e59 c0443dce c04e2ead c04ed654  ...
+
+
+--------------------------------------------------------------------

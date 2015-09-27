@@ -1,0 +1,102 @@
+20.01.2012
+==========
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=30 num=3
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 50 | grep !
+! repeat 30 times in 2 levels; synch. in level 1
+! 10036006 : kthread [11660:2] is running
+! 10036006 : kthread [11661:1] is running
+! 10036006 : kthread [11662:0] is running
+! 10041304 : kthread [11660:2] do 900 units
+! 10041364 : kthread [11661:1] do 900 units
+! 10041424 : kthread [11662:0] do 900 units
+! 10041424 : kthread [11659:3] is finished
+!! working time was 5 seconds
+
+---------------------------------------------------------------------
+
+20.01.2012
+==========
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=4 sync=-1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep !
+! repeat 10 times in 4 levels; synch. in level -1
+! 01915560 : kthread [05275:1] is running
+! 01915560 : kthread [05276:0] is running
+! 01935606 : kthread [05276:0] do 10000 units
+! 01935608 : kthread [05275:1] do 10000 units
+! 01935608 : kthread [05274:2] is finished
+!! working time was 20.0 seconds, locked 0 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=-1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep !
+! repeat 10 times in 3 levels; synch. in level -1
+! 02050218 : kthread [05316:1] is running
+! 02050218 : kthread [05317:0] is running
+! 02052220 : kthread [05317:0] do 1000 units
+! 02052222 : kthread [05316:1] do 1000 units
+! 02052222 : kthread [05315:2] is finished
+!! working time was 2.0 seconds, locked 0 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=2 sync=-1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep !
+! repeat 10 times in 2 levels; synch. in level -1
+! 02094515 : kthread [05336:1] is running
+! 02094515 : kthread [05337:0] is running
+! 02094716 : kthread [05337:0] do 100 units
+! 02094716 : kthread [05336:1] do 100 units
+! 02094716 : kthread [05335:2] is finished
+!! working time was 0.2 seconds, locked 0 times
+
+---------------------------------------------------------------------
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=-1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep !
+! repeat 10 times in 3 levels; synch. in level -1
+! 02239291 : kthread [05373:1] is running
+! 02239291 : kthread [05374:0] is running
+! 02241304 : kthread [05374:0] do 1000 units
+! 02241304 : kthread [05373:1] do 1000 units
+! 02241304 : kthread [05372:2] is finished
+!! working time was 2.0 seconds, locked 0 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=-1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep '!!'
+!! working time was 2.0 seconds, locked 0 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=0
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep '!!'
+!! working time was 4.0 seconds, locked 2000 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=1
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep '!!'
+!! working time was 4.0 seconds, locked 200 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=2
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep '!!'
+!! working time was 4.0 seconds, locked 20 times
+
+[olej@notebook mlock]$ sudo insmod mlock.ko rep=10 num=2 max_level=3 sync=3
+insmod: error inserting 'mlock.ko': -1 Operation not permitted
+
+[olej@notebook mlock]$ dmesg | tail -n 30 | grep '!!'
+!! working time was 4.0 seconds, locked 2 times
+
+---------------------------------------------------------------------
+

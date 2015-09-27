@@ -1,0 +1,8 @@
+dd if=/dev/zero of=z.txt bs=1M count=1
+
+LIMIT=1000000
+for ((a=1; a <= LIMIT ; a++))
+do
+   cat z.txt | nc -l 12345
+done
+

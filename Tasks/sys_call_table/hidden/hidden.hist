@@ -1,0 +1,334 @@
+18.01.2012
+==========
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=0
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=0 SYSCALL=0
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ ./syscall 1 23 456
+syscall return 0 [00000000], reason: Success
+syscall return 0 [00000000], reason: Success
+syscall return 0 [00000000], reason: Success
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=0
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ecd000, конец=f7ecd00f, длина=15 
+! выделен блок 15 байт с адреса d9322030
+! сдвиг кода = e1455030 байт
+! адрес нового sys_call = d9322030
+
+[olej@notebook hidden]$ sudo insmod restore.ko
+insmod: error inserting 'restore.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ ./syscall 
+syscall return -38 [ffffffda], reason: Function not implemented
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=1
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=1 SYSCALL=0
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ ./syscall 
+syscall return 16 [00000010], reason: Success
+
+[olej@notebook hidden]$ ./syscall 123
+syscall return 5 [00000005], reason: Success
+
+[olej@notebook hidden]$ ./syscall 123
+syscall return 5 [00000005], reason: Success
+
+[olej@notebook hidden]$ ./syscall 1 22 333 4444
+syscall return 6 [00000006], reason: Success
+syscall return 5 [00000005], reason: Success
+syscall return 4 [00000004], reason: Success
+syscall return 3 [00000003], reason: Success
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=1
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ede000, конец=f7ede011, длина=17 
+! выделен блок 17 байт с адреса e7509280
+! сдвиг кода = ef62b280 байт
+! адрес нового sys_call = e7509280
+
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=2
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+In file included from /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.c:30:
+/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/getpid.c: В функции ‘new_sys_call’:
+/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/getpid.c:6: предупреждение: в присваивании целое преобразуется в указатель без приведения типа
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=2 SYSCALL=0
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ ./syscall
+syscall return 15721 [00003d69], reason: Success
+
+[olej@notebook hidden]$ ./syscall 1 22 333
+syscall return 15722 [00003d6a], reason: Success
+syscall return 15722 [00003d6a], reason: Success
+syscall return 15722 [00003d6a], reason: Success
+
+[olej@notebook hidden]$ ./syscall 
+syscall return 15723 [00003d6b], reason: Success
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=2
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ecd000, конец=f7ecd01f, длина=31 
+! выделен блок 31 байт с адреса f488d980
+! сдвиг кода = fc9c0980 байт
+! адрес нового sys_call = f488d980
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=3
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=3 SYSCALL=0
+
+[olej@notebook hidden]$ ./syscall 
+syscall return -38 [ffffffda], reason: Function not implemented
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=3
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ff1000, конец=f7ff1014, длина=20 
+! выделен блок 20 байт с адреса e75b5c80
+! сдвиг кода = ef5c4c80 байт
+! адрес нового sys_call = e75b5c80
+
+[olej@notebook hidden]$ ./syscall 1 23 456 'новая строка'
+syscall return 24 [00000018], reason: Success
+syscall return 4 [00000004], reason: Success
+syscall return 3 [00000003], reason: Success
+syscall return 2 [00000002], reason: Success
+
+[olej@notebook hidden]$ sudo insmod restore.ko
+insmod: error inserting 'restore.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ ./syscall 
+syscall return -38 [ffffffda], reason: Function not implemented
+
+[olej@notebook hidden]$ dmesg | tail -n30 | grep !
+! адрес sys_call_table = c07ab3d8
+! адрес sys_ni_syscall = c045b9a8
+! адрес в позиции 223 = e75b5c80
+! итоговый адрес обработчика c045b9a8
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=4
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=4 SYSCALL=0
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ ./syscall 1 23 456 'новая строка'
+syscall return 24 [00000018], reason: Success
+syscall return 4 [00000004], reason: Success
+syscall return 3 [00000003], reason: Success
+syscall return 2 [00000002], reason: Success
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=4
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ede000, конец=f7ede018, длина=24 
+! выделен блок 24 байт с адреса d9085940
+! сдвиг кода = e11a7940 байт
+! адрес нового sys_call = d9085940
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden]$ make VARIANT=5
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.o
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/hidden.ko
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden/restore.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=5 SYSCALL=0
+
+[olej@notebook hidden]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden]$ lsmod | grep hid
+
+[olej@notebook hidden]$ ./syscall 1 23 456 'новая строка'
+новая строка
+syscall return 24 [00000018], reason: Success
+456
+syscall return 4 [00000004], reason: Success
+23
+syscall return 3 [00000003], reason: Success
+1
+syscall return 2 [00000002], reason: Success
+
+[olej@notebook hidden]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=5
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f7ecd000, конец=f7ecd019, длина=25 
+! выделен блок 25 байт с адреса f488df60
+! сдвиг кода = fc9c0f60 байт
+! адрес нового sys_call = f488df60
+
+
+=====================================================================
+
+19.01.2012
+==========
+
+[olej@notebook hidden.6]$ make VARIANT=6
+make -C /lib/modules/2.6.32.9-70.fc12.i686.PAE/build M=/home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden.6 modules
+make[1]: Entering directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+  CC [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden.6/hidden.o
+  Building modules, stage 2.
+  MODPOST 2 modules
+  CC      /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden.6/hidden.mod.o
+  LD [M]  /home/olej/2012_WORK/OWN.BOOKS/examples.DRAFT/add_sys_call/hidden.6/hidden.ko
+make[1]: Leaving directory `/usr/src/kernels/2.6.32.9-70.fc12.i686.PAE'
+VARIANT=6 SYSCALL=0
+
+[olej@notebook hidden.6]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden.6]$ ./syscall 
+syscall return 13 [0000000d], reason: : Success
+
+[olej@notebook hidden.6]$ ./syscall 1 22 333
+syscall return 13 [0000000d], reason: : Success
+syscall return 13 [0000000d], reason: : Success
+syscall return 13 [0000000d], reason: : Success
+
+[olej@notebook hidden.6]$ sudo insmod restore.ko
+insmod: error inserting 'restore.ko': -1 Operation not permitted
+
+---------------------------------------------------------------------
+
+[olej@notebook hidden.6]$ sudo insmod hidden.ko
+insmod: error inserting 'hidden.ko': -1 Operation not permitted
+
+[olej@notebook hidden.6]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=7
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f875a000, конец=f875a042, длина=66 
+! выделен блок 66 байт с адреса f3a86600
+! сдвиг кода = fb32c600 байт
+! адрес нового sys_call = f3a86600
+
+[olej@notebook hidden.6]$ ./syscall 
+syscall return 23 [00000017], reason: : Success
+
+[olej@notebook hidden.6]$ dmesg | tail -n60 | grep !
+!... SYSCALL=223, VARIANT=7
+! адрес sys_call_table = c07ab3d8
+! статическая функция: начало= f875a000, конец=f875a042, длина=66 
+! выделен блок 66 байт с адреса f3a86600
+! сдвиг кода = fb32c600 байт
+! адрес нового sys_call = f3a86600
+! STRING FOR PRINTK
+
+=====================================================================
+
+18.01.2012
+==========
+
+bash-4.2$ make
+make -C /lib/modules/3.13.6-200.fc20.i686/build M=/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden modules
+make[1]: Вход в каталог `/usr/src/kernels/3.13.6-200.fc20.i686'
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/hidden.o
+  CC [M]  /home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.o
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.c: В функции «new_sys_init»:
+/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.c:23:7: ошибка: неявная декларация функции «kfree» [-Werror=implicit-function-declaration]
+       kfree( old_sys_addr );
+       ^
+cc1: some warnings being treated as errors
+make[2]: *** [/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden/restore.o] Ошибка 1
+make[1]: *** [_module_/home/Olej/2014_WORK/GlobalLogic/BOOK.Kernel.org/Kexamples.BOOK/sys_call_table/hidden] Ошибка 2
+make[1]: Выход из каталога `/usr/src/kernels/3.13.6-200.fc20.i686'
+make: *** [modules] Ошибка 2
+
+---------------------------------------------------------------------
+
+=====================================================================

@@ -1,0 +1,9 @@
+sudo insmod ioctl_dev.ko
+lsmod | head -n2
+sudo mknod -m0666 /dev/ioctl c 200 200
+ls -l /dev/ioctl
+cat /dev/ioctl
+./ioctl
+sudo rm /dev/ioctl
+sudo rmmod ioctl_dev
+lsmod | head -n2
